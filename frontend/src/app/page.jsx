@@ -1,0 +1,421 @@
+import { ChevronIcon, DiagramIcon, GalleryIcon, HomeWifiIcon, MenuIcon, SearchIcon, ShoppingCardIcon, UserIcon } from "@/assets/Icons";
+import Link from "next/link";
+
+export default function Home() {
+  return (
+    <>
+
+      {/*//! START Navbar */}
+      <header className="sticky top-0 bg-white z-10">
+        <div className="container flex items-center justify-between py-3.5">
+
+          <Link href="/">
+            <img src="/images/logo.png" alt="" className="w-[160px]" />
+          </Link>
+
+          <nav>
+            <ul className="flex items-center gap-3 text-[#717171]">
+              <li className="px-2 py-1 text-[#417F56] border-b border-b-[#417F56]">صفحه اصلی</li>
+              <li className="px-2 py-1">شعبه ها <ChevronIcon className="inline" /></li>
+              <li className="px-2 py-1">منو <ChevronIcon className="inline" /></li>
+              <li className="px-2 py-1">اعطای نمایندگی</li>
+              <li className="px-2 py-1">درباره ما</li>
+              <li className="px-2 py-1">تماس با ما</li>
+            </ul>
+          </nav>
+
+          <div className="flex gap-3">
+            <button className="bg-[#E5F2E9] rounded-md p-2">
+              <SearchIcon />
+            </button>
+            <button className="bg-[#E5F2E9] rounded-md p-2">
+              <ShoppingCardIcon />
+            </button>
+            <button className="bg-[#E5F2E9] rounded-md p-2">
+              <UserIcon />
+            </button>
+          </div>
+
+        </div>
+      </header>
+      {/*//? END Navbar */}
+
+
+      {/*//! START Header Slider */}
+      <section className="w-full h-[400px] bg-[url('/images/background-hero-1.png')] bg-center bg-cover">
+
+        <div className="relative w-full h-full flex flex-col items-end justify-center">
+
+          <div className="w-full flex items-center justify-between px-6">
+            <button>
+              <ChevronIcon className="-rotate-90 stroke-white w-7 h-7" />
+            </button>
+            <h1 className="text-white text-4.5xl font-bold">
+              تجربه غذای سالم و گیاهی به سبک ترخینه
+            </h1>
+            <button>
+              <ChevronIcon className="rotate-90 stroke-white w-7 h-7" />
+            </button>
+          </div>
+
+          <div className="justify-items-end self-center mt-8">
+            <button className="bg-[#417F56] rounded-lg py-2 px-8 text-white">
+              سفارش آنلاین غذا
+            </button>
+          </div>
+
+          <div className="bg-white flex items-center gap-2.5 py-3 px-9 rounded-t-2xl absolute bottom-0 left-[50%] translate-x-[-50%]">
+
+            <div className="w-3 h-3 bg-[#417F56] rounded-full"></div>
+            <div className="w-2 h-2 bg-[#ADADAD] rounded-full"></div>
+            <div className="w-2 h-2 bg-[#ADADAD] rounded-full"></div>
+            <div className="w-2 h-2 bg-[#ADADAD] rounded-full"></div>
+            <div className="w-2 h-2 bg-[#ADADAD] rounded-full"></div>
+
+          </div>
+
+        </div>
+
+      </section>
+      {/*//? Header Slider */}
+
+
+      {/*//! START Menu Type */}
+      <section className="pt-16 pb-24 container">
+        <h4 className="text-3xl font-semibold text-center">
+          منو رستوران
+        </h4>
+
+        {/*//! Food Menu List */}
+        <div className="grid grid-cols-4 gap-8 mt-44">
+
+
+          {/*//! Single Item */}
+          <div className="relative w-full h-[170px] bg-[#417F56] rounded-lg">
+
+            <img
+              src="/images/food-image.png"
+              alt=""
+              className="absolute bottom-[30px] right-[50%] translate-x-[50%] w-[85%]"
+            />
+
+            {/*//TODO Title Label */}
+            <div
+              className="absolute bottom-[-25px] right-[50%] translate-x-[50%] w-[65%] h-[50px] bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
+            >
+              <p className="text-lg text-[#353535] font-medium">غذای اصلی</p>
+            </div>
+
+          </div>
+
+          {/*//! Single Item */}
+          <div className="relative w-full h-[170px] bg-[#417F56] rounded-lg">
+
+            <img
+              src="/images/appetizer-image.png"
+              alt=""
+              className="absolute bottom-[30px] right-[50%] translate-x-[50%] w-[85%]"
+            />
+
+            {/*//TODO Title Label */}
+            <div
+              className="absolute bottom-[-25px] right-[50%] translate-x-[50%] w-[65%] h-[50px] bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
+            >
+              <p className="text-lg text-[#353535] font-medium">پیش غذا</p>
+            </div>
+
+          </div>
+
+          {/*//! Single Item */}
+          <div className="relative w-full h-[170px] bg-[#417F56] rounded-lg">
+
+            <img
+              src="/images/dessert-image.png"
+              alt=""
+              className="absolute bottom-[30px] right-[50%] translate-x-[50%] w-[85%]"
+            />
+
+            {/*//TODO Title Label */}
+            <div
+              className="absolute bottom-[-25px] right-[50%] translate-x-[50%] w-[65%] h-[50px] bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
+            >
+              <p className="text-lg text-[#353535] font-medium">دسر</p>
+            </div>
+
+          </div>
+
+          {/*//! Single Item */}
+          <div className="relative w-full h-[170px] bg-[#417F56] rounded-lg">
+
+            <img
+              src="/images/drink-image.png"
+              alt=""
+              className="absolute bottom-[30px] right-[50%] translate-x-[50%] w-[85%]"
+            />
+
+            {/*//TODO Title Label */}
+            <div
+              className="absolute bottom-[-25px] right-[50%] translate-x-[50%] w-[65%] h-[50px] bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
+            >
+              <p className="text-lg text-[#353535] font-medium">نوشیدنی</p>
+            </div>
+
+          </div>
+
+
+
+
+        </div>
+
+      </section>
+      {/*//? END Menu Type */}
+
+      {/*//! START About Section */}
+      <section className="w-full bg-[url('/images/about-background-hero.jpg')] bg-cover bg-center py-20">
+        <div className="container grid grid-cols-2 gap-10">
+
+          {/*//TODO Right Side */}
+          <div>
+
+            <h2 className="text-2.5xl text-white font-semibold mb-5">
+              رستوران های زنجیره ای ترخینه
+            </h2>
+            <p className="text-white text-justify leading-8 tracking-wide font-light">
+              مهمان‌نوازی یکی از مهم‌ترین مشخصه‌های ایرانیان است و باعث افتخار
+              ماست که بیش از 20 سال است خدمت‌گزار مردم شریف ایران هستیم. ما در رستوران‌های زنجیره‌ای ترخینه همواره تلاش کردیم که
+              در محیطی اصیل بر پایه معماری و طراحی مدرن در کنار طبیعتی دلنواز، غذایی سالم و درخور شان شما عزیزان ارائه دهیم.
+            </p>
+
+            <button
+              className="flex items-center justify-between gap-2 border border-white rounded-md py-2 px-5 mt-7 float-left"
+            >
+              <ShoppingCardIcon className="stroke-white w-[22px] h-[22px]" />
+              <span className="text-white text-super-sm">اطلاعات بیشتر</span>
+              <ChevronIcon className="stroke-white rotate-90" />
+            </button>
+
+          </div>
+
+          {/*//TODO Left Side */}
+          <div className="flex flex-col gap-20">
+
+            <div className="flex items-center justify-center gap-20">
+
+              <div className="flex flex-col items-justify items-center">
+                <UserIcon className="w-10 h-10 stroke-white" />
+                <span className="text-white mt-3">
+                  پرسنلی مجرب و حرفه ای
+                </span>
+              </div>
+              <div className="flex flex-col items-justify items-center">
+                <DiagramIcon className="w-10 h-10 stroke-white" />
+                <span className="text-white mt-3">
+                  پرسنلی مجرب و حرفه ای
+                </span>
+              </div>
+
+            </div>
+
+            <div className="flex items-center justify-center gap-20">
+
+              <div className="flex flex-col items-justify items-center">
+                <HomeWifiIcon className="w-10 h-10 stroke-white" />
+                <span className="text-white mt-3">
+                  پرسنلی مجرب و حرفه ای
+                </span>
+              </div>
+              <div className="flex flex-col items-justify items-center">
+                <MenuIcon className="w-10 h-10 stroke-white" />
+                <span className="text-white mt-3">
+                  پرسنلی مجرب و حرفه ای
+                </span>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+      {/*//? END About Section */}s
+
+
+      {/*//! START Branch Section */}
+      <section className="container py-16 mb-40">
+
+        {/*//! Branch List */}
+        <div className="grid grid-cols-4 gap-7">
+
+
+
+          {/*//Todo Single Card  */}
+          <div
+            className="bg-white h-[410px] group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
+          >
+
+            <div
+              className="relative w-full h-[280px] group-hover:h-[230px] transition-all duration-500"
+            >
+              <img
+                src="/images/restaurant-image-1.jpg"
+                alt=""
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute top-0 right-0 w-full h-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 duration-600">
+                <button className="w-16 h-16 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center duration-300">
+                  <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center">
+                    <GalleryIcon />
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div className="relative px-4 pb-8 pt-5 text-center">
+              <h3 className="text-xl font-medium text-[#353535] mb-3.5">
+                شعبه تهرانپارس
+              </h3>
+              <p className="text-[#717171] mb-4">
+                تهران پارس، فلکه سوم، پاساژ سیوان
+              </p>
+
+              <button
+                className="absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
+              >
+                صفحه شعبه <ChevronIcon className="rotate-90 inline stroke-[#315F41]" />
+              </button>
+
+            </div>
+
+          </div>
+
+          {/*//Todo Single Card  */}
+          <div
+            className="bg-white h-[410px] group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
+          >
+
+            <div
+              className="relative w-full h-[280px] group-hover:h-[230px] transition-all duration-500"
+            >
+              <img
+                src="/images/restaurant-image-2.jpg"
+                alt=""
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute top-0 right-0 w-full h-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 duration-600">
+                <button className="w-16 h-16 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center duration-300">
+                  <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center">
+                    <GalleryIcon />
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div className="relative px-4 pb-8 pt-5 text-center">
+              <h3 className="text-xl font-medium text-[#353535] mb-3.5">
+                شعبه چالوس
+              </h3>
+              <p className="text-[#717171] mb-4">
+                چالوس، خیابان ۱۷ شهریور، بعد کوچه کوروش، جنب داروخانه دکتر میلانی
+              </p>
+
+              <button
+                className="absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
+              >
+                صفحه شعبه <ChevronIcon className="rotate-90 inline stroke-[#315F41]" />
+              </button>
+
+            </div>
+
+          </div>
+
+          {/*//Todo Single Card  */}
+          <div
+            className="bg-white h-[410px] group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
+          >
+
+            <div
+              className="relative w-full h-[280px] group-hover:h-[230px] transition-all duration-500"
+            >
+              <img
+                src="/images/restaurant-image-3.jpg"
+                alt=""
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute top-0 right-0 w-full h-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 duration-600">
+                <button className="w-16 h-16 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center duration-300">
+                  <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center">
+                    <GalleryIcon />
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div className="relative px-4 pb-8 pt-5 text-center">
+              <h3 className="text-xl font-medium text-[#353535] mb-3.5">
+                شعبه اقدسیه
+              </h3>
+              <p className="text-[#717171] mb-4">
+                خیابان اقدسیه ، نرسیده به میدان خیام، پلاک ۸
+              </p>
+
+              <button
+                className="absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
+              >
+                صفحه شعبه <ChevronIcon className="rotate-90 inline stroke-[#315F41]" />
+              </button>
+
+            </div>
+
+          </div>
+
+          {/*//Todo Single Card  */}
+          <div
+            className="bg-white h-[410px] group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
+          >
+
+            <div
+              className="relative w-full h-[280px] group-hover:h-[230px] transition-all duration-500"
+            >
+              <img
+                src="/images/restaurant-image-4.jpg"
+                alt=""
+                className="w-full h-full object-cover object-center"
+              />
+              <div className="absolute top-0 right-0 w-full h-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 duration-600">
+                <button className="w-16 h-16 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center duration-300">
+                  <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center">
+                    <GalleryIcon />
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div className="relative px-4 pb-8 pt-5 text-center">
+              <h3 className="text-xl font-medium text-[#353535] mb-3.5">
+                شعبه ونک
+              </h3>
+              <p className="text-[#717171] mb-4">
+                میدان ونک، خیابان فردوسی، نبش کوچه نیلوفر، پلاک ۲۶
+              </p>
+
+              <button
+                className="absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
+              >
+                صفحه شعبه <ChevronIcon className="rotate-90 inline stroke-[#315F41]" />
+              </button>
+
+            </div>
+
+          </div>
+
+
+
+        </div>
+
+      </section>
+      {/*//? END Branch Section */}
+
+
+    </>
+  );
+}
