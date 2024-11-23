@@ -1,4 +1,4 @@
-import { ChevronIcon, DiagramIcon, GalleryIcon, HomeWifiIcon, MenuIcon, SearchIcon, ShoppingCardIcon, UserIcon } from "@/assets/Icons";
+import { ChevronIcon, DiagramIcon, GalleryIcon, HomeWifiIcon, InstagramIcon, MenuIcon, SearchIcon, ShoppingCardIcon, TelegramIcon, TwitterIcon, UserIcon } from "@/assets/Icons";
 import Link from "next/link";
 
 export default function Home() {
@@ -237,15 +237,18 @@ export default function Home() {
 
         </div>
       </section>
-      {/*//? END About Section */}s
+      {/*//? END About Section */}
 
 
       {/*//! START Branch Section */}
-      <section className="container py-16 mb-40">
+      <section className="container py-20">
+
+        <h4 className="text-3xl font-semibold text-center">
+          ترخینه گردی
+        </h4>
 
         {/*//! Branch List */}
-        <div className="grid grid-cols-4 gap-7">
-
+        <div className="grid grid-cols-4 gap-7 mt-11">
 
 
           {/*//Todo Single Card  */}
@@ -415,6 +418,95 @@ export default function Home() {
       </section>
       {/*//? END Branch Section */}
 
+
+
+      {/*//! START Footer */}
+      <footer className="w-full py-20 bg-[url('/images/footer-background-hero.jpg')] bg-cover bg-center">
+        <div className="container grid grid-cols-2">
+
+          {/*//TODO Right Side */}
+          <div className="flex items-center justify-around gap-4">
+
+            {/*//TODO Links */}
+            <div>
+              <h6 className="text-white text-lg font-semibold mb-6">
+                دسترسی آسان
+              </h6>
+              <ul className="space-y-4 text-[#EDEDED] text-super-sm font-light">
+                <li><Link href="">پرسش های متداول</Link></li>
+                <li><Link href="">قوانین ترخینه</Link></li>
+                <li><Link href="">حریم خصوصی</Link></li>
+                <div className="flex items-center gap-5">
+                  <a href=""><TwitterIcon /></a>
+                  <a href=""><InstagramIcon /></a>
+                  <a href=""><TelegramIcon /></a>
+                </div>
+              </ul>
+            </div>
+
+            {/*//TODO Links */}
+            <div>
+              <h6 className="text-white text-lg font-semibold mb-6">
+                شعبه های ترخینه
+              </h6>
+              <ul className="space-y-4 text-[#EDEDED] text-super-sm font-light">
+                <li><Link href="">شهبه تهرانپارس</Link></li>
+                <li><Link href="">شعبه چالوس</Link></li>
+                <li><Link href="">شعبه اقدسیه</Link></li>
+                <li><Link href="">شعبه ونک</Link></li>
+              </ul>
+            </div>
+
+          </div>
+
+          {/*//TODO Left Side */}
+          <div className="">
+            <h6 className="text-white text-2.5xl font-semibold mb-7">
+              پیام به ترخینه
+            </h6>
+
+            <form action="" className="">
+              <div className="grid grid-cols-2 gap-4">
+
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    placeholder="نام و نام خانوادگی"
+                    className="bg-transparent w-full backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
+                  />
+                  <input
+                    type="text"
+                    placeholder="شماره تماس"
+                    className="bg-transparent w-full backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
+                  />
+                  <input
+                    type="text"
+                    placeholder="آدرس ایمیل (اختیاری)"
+                    className="bg-transparent w-full backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
+                  />
+                </div>
+
+                <textarea
+                  name=""
+                  id=""
+                  placeholder="پیام شما"
+                  className="bg-transparent w-full backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
+                />
+
+              </div>
+
+              <p className="text-sm text-[#CBCBCB] mt-2 text-left">۰/۲۰۰</p>
+              <button className="text-[#F9F9F9] text-super-sm border border-[#717171] rounded-lg float-left mt-2 py-2.5 px-16">
+                ارسال پیام
+              </button>
+            </form>
+
+          </div>
+
+
+        </div>
+      </footer>
+      {/*//? END Footer */}
 
     </>
   );
