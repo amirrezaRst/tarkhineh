@@ -208,48 +208,50 @@ export default function Home() {
 
 
       {/*//! START Branch Section */}
-      <section className="container py-20">
+      <section className="container lg:py-20 pt-12 pb-20">
 
-        <h4 className="text-3xl font-semibold text-center">
+        <h4 className="md:text-3xl text-2.5xl font-semibold text-center">
           ترخینه گردی
         </h4>
 
         {/*//! Branch List */}
-        <div className="grid grid-cols-4 gap-7 mt-11">
+        <div className="grid xl:grid-cols-4 md:grid-cols-2 xl:gap-7 md:gap-10 gap-5 mt-11">
 
 
           {/*//Todo Single Card  */}
           <div
-            className="bg-white h-[410px] group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
+            className="bg-white md:h-[410px] h-[140px] md:block flex group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
           >
 
             <div
-              className="relative w-full h-[280px] group-hover:h-[230px] transition-all duration-500"
+              className="relative md:w-full w-[45%] md:h-[280px] group-hover:md:h-[230px] transition-all duration-500"
             >
               <img
                 src="/images/restaurant-image-1.jpg"
                 alt=""
                 className="w-full h-full object-cover object-center"
               />
-              <div className="absolute top-0 right-0 w-full h-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 duration-600">
-                <button className="w-16 h-16 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center duration-300">
-                  <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center">
-                    <GalleryIcon />
+              <div
+                className="absolute top-0 right-0 w-full h-full md:bg-black/50 flex md:items-center md:justify-center justify-start items-end p-2 md:opacity-0 group-hover:opacity-100 duration-600"
+              >
+                <button className="md:w-16 md:h-16 w-11 h-11 md:bg-white/20 hover:md:bg-white/30 bg-black/30 hover:bg-black/40 rounded-full flex items-center justify-center duration-300">
+                  <div className="md:w-12 md:h-12 w-9 h-9 md:bg-white/30 bg-black/40 rounded-full flex items-center justify-center">
+                    <GalleryIcon className="md:w-8 md:h-8 w-7 h-7" />
                   </div>
                 </button>
               </div>
             </div>
 
-            <div className="relative px-4 pb-8 pt-5 text-center">
-              <h3 className="text-xl font-medium text-[#353535] mb-3.5">
+            <div className="relative md:block flex flex-col justify-center px-4 md:pb-8 pb-5 pt-5 flex-1 text-center">
+              <h3 className="md:text-xl font-medium text-[#353535] md:mb-3.5 mb-2">
                 شعبه تهرانپارس
               </h3>
-              <p className="text-[#717171] mb-4">
+              <p className="text-[#717171] md:text-base text-sm md:mb-4">
                 تهران پارس، فلکه سوم، پاساژ سیوان
               </p>
 
               <button
-                className="absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
+                className="md:flex items-center flex-nowrap hidden absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
               >
                 صفحه شعبه <ChevronIcon className="rotate-90 inline stroke-[#315F41]" />
               </button>
@@ -260,36 +262,38 @@ export default function Home() {
 
           {/*//Todo Single Card  */}
           <div
-            className="bg-white h-[410px] group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
+            className="bg-white md:h-[410px] h-[140px] md:block flex group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
           >
 
             <div
-              className="relative w-full h-[280px] group-hover:h-[230px] transition-all duration-500"
+              className="relative md:w-full w-[45%] md:h-[280px] group-hover:md:h-[230px] transition-all duration-500"
             >
               <img
                 src="/images/restaurant-image-2.jpg"
                 alt=""
                 className="w-full h-full object-cover object-center"
               />
-              <div className="absolute top-0 right-0 w-full h-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 duration-600">
-                <button className="w-16 h-16 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center duration-300">
-                  <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center">
-                    <GalleryIcon />
+              <div
+                className="absolute top-0 right-0 w-full h-full md:bg-black/50 flex md:items-center md:justify-center justify-start items-end p-2 md:opacity-0 group-hover:opacity-100 duration-600"
+              >
+                <button className="md:w-16 md:h-16 w-11 h-11 md:bg-white/20 hover:md:bg-white/30 bg-black/30 hover:bg-black/40 rounded-full flex items-center justify-center duration-300">
+                  <div className="md:w-12 md:h-12 w-9 h-9 md:bg-white/30 bg-black/40 rounded-full flex items-center justify-center">
+                    <GalleryIcon className="md:w-8 md:h-8 w-7 h-7" />
                   </div>
                 </button>
               </div>
             </div>
 
-            <div className="relative px-4 pb-8 pt-5 text-center">
-              <h3 className="text-xl font-medium text-[#353535] mb-3.5">
+            <div className="relative md:block flex flex-col justify-center px-4 md:pb-8 pb-5 pt-5 flex-1 text-center">
+              <h3 className="md:text-xl font-medium text-[#353535] md:mb-3.5 mb-2">
                 شعبه چالوس
               </h3>
-              <p className="text-[#717171] mb-4">
+              <p className="text-[#717171] md:text-base text-sm md:mb-4">
                 چالوس، خیابان ۱۷ شهریور، بعد کوچه کوروش، جنب داروخانه دکتر میلانی
               </p>
 
               <button
-                className="absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
+                className="md:flex items-center flex-nowrap hidden absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
               >
                 صفحه شعبه <ChevronIcon className="rotate-90 inline stroke-[#315F41]" />
               </button>
@@ -300,36 +304,38 @@ export default function Home() {
 
           {/*//Todo Single Card  */}
           <div
-            className="bg-white h-[410px] group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
+            className="bg-white md:h-[410px] h-[140px] md:block flex group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
           >
 
             <div
-              className="relative w-full h-[280px] group-hover:h-[230px] transition-all duration-500"
+              className="relative md:w-full w-[45%] md:h-[280px] group-hover:md:h-[230px] transition-all duration-500"
             >
               <img
                 src="/images/restaurant-image-3.jpg"
                 alt=""
                 className="w-full h-full object-cover object-center"
               />
-              <div className="absolute top-0 right-0 w-full h-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 duration-600">
-                <button className="w-16 h-16 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center duration-300">
-                  <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center">
-                    <GalleryIcon />
+              <div
+                className="absolute top-0 right-0 w-full h-full md:bg-black/50 flex md:items-center md:justify-center justify-start items-end p-2 md:opacity-0 group-hover:opacity-100 duration-600"
+              >
+                <button className="md:w-16 md:h-16 w-11 h-11 md:bg-white/20 hover:md:bg-white/30 bg-black/30 hover:bg-black/40 rounded-full flex items-center justify-center duration-300">
+                  <div className="md:w-12 md:h-12 w-9 h-9 md:bg-white/30 bg-black/40 rounded-full flex items-center justify-center">
+                    <GalleryIcon className="md:w-8 md:h-8 w-7 h-7" />
                   </div>
                 </button>
               </div>
             </div>
 
-            <div className="relative px-4 pb-8 pt-5 text-center">
-              <h3 className="text-xl font-medium text-[#353535] mb-3.5">
+            <div className="relative md:block flex flex-col justify-center px-4 md:pb-8 pb-5 pt-5 flex-1 text-center">
+              <h3 className="md:text-xl font-medium text-[#353535] md:mb-3.5 mb-2">
                 شعبه اقدسیه
               </h3>
-              <p className="text-[#717171] mb-4">
+              <p className="text-[#717171] md:text-base text-sm md:mb-4">
                 خیابان اقدسیه ، نرسیده به میدان خیام، پلاک ۸
               </p>
 
               <button
-                className="absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
+                className="md:flex items-center flex-nowrap hidden absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
               >
                 صفحه شعبه <ChevronIcon className="rotate-90 inline stroke-[#315F41]" />
               </button>
@@ -340,36 +346,38 @@ export default function Home() {
 
           {/*//Todo Single Card  */}
           <div
-            className="bg-white h-[410px] group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
+            className="bg-white md:h-[410px] h-[140px] md:block flex group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden"
           >
 
             <div
-              className="relative w-full h-[280px] group-hover:h-[230px] transition-all duration-500"
+              className="relative md:w-full w-[45%] md:h-[280px] group-hover:md:h-[230px] transition-all duration-500"
             >
               <img
                 src="/images/restaurant-image-4.jpg"
                 alt=""
                 className="w-full h-full object-cover object-center"
               />
-              <div className="absolute top-0 right-0 w-full h-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 duration-600">
-                <button className="w-16 h-16 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center duration-300">
-                  <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center">
-                    <GalleryIcon />
+              <div
+                className="absolute top-0 right-0 w-full h-full md:bg-black/50 flex md:items-center md:justify-center justify-start items-end p-2 md:opacity-0 group-hover:opacity-100 duration-600"
+              >
+                <button className="md:w-16 md:h-16 w-11 h-11 md:bg-white/20 hover:md:bg-white/30 bg-black/30 hover:bg-black/40 rounded-full flex items-center justify-center duration-300">
+                  <div className="md:w-12 md:h-12 w-9 h-9 md:bg-white/30 bg-black/40 rounded-full flex items-center justify-center">
+                    <GalleryIcon className="md:w-8 md:h-8 w-7 h-7" />
                   </div>
                 </button>
               </div>
             </div>
 
-            <div className="relative px-4 pb-8 pt-5 text-center">
-              <h3 className="text-xl font-medium text-[#353535] mb-3.5">
+            <div className="relative md:block flex flex-col justify-center px-4 md:pb-8 pb-5 pt-5 flex-1 text-center">
+              <h3 className="md:text-xl font-medium text-[#353535] md:mb-3.5 mb-2">
                 شعبه ونک
               </h3>
-              <p className="text-[#717171] mb-4">
+              <p className="text-[#717171] md:text-base text-sm md:mb-4">
                 میدان ونک، خیابان فردوسی، نبش کوچه نیلوفر، پلاک ۲۶
               </p>
 
               <button
-                className="absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
+                className="md:flex items-center flex-nowrap hidden absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
               >
                 صفحه شعبه <ChevronIcon className="rotate-90 inline stroke-[#315F41]" />
               </button>
