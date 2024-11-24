@@ -138,23 +138,23 @@ export default function Home() {
       {/*//? END Menu Type */}
 
       {/*//! START About Section */}
-      <section className="w-full bg-[url('/images/about-background-hero.jpg')] bg-cover bg-center py-20">
-        <div className="container grid grid-cols-2 gap-10">
+      <section className="w-full bg-[url('/images/about-background-hero.jpg')] bg-cover bg-center md:py-20 py-12">
+        <div className="container grid md:grid-cols-2 xl:gap-10 lg:gap-20 md:gap-10 gap-16">
 
           {/*//TODO Right Side */}
           <div>
 
-            <h2 className="text-2.5xl text-white font-semibold mb-5">
+            <h2 className="lg:text-2.5xl text-1.5xl text-white font-semibold mb-5">
               رستوران های زنجیره ای ترخینه
             </h2>
-            <p className="text-white text-justify leading-8 tracking-wide font-light">
+            <p className="text-white lg:text-base text-sm text-justify md:leading-8 leading-7 tracking-wide font-light">
               مهمان‌نوازی یکی از مهم‌ترین مشخصه‌های ایرانیان است و باعث افتخار
               ماست که بیش از 20 سال است خدمت‌گزار مردم شریف ایران هستیم. ما در رستوران‌های زنجیره‌ای ترخینه همواره تلاش کردیم که
               در محیطی اصیل بر پایه معماری و طراحی مدرن در کنار طبیعتی دلنواز، غذایی سالم و درخور شان شما عزیزان ارائه دهیم.
             </p>
 
             <button
-              className="flex items-center justify-between gap-2 border border-white rounded-md py-2 px-5 mt-7 float-left"
+              className="flex items-center justify-between gap-2 border border-white rounded-md py-2 px-5 md:mt-7 mt-4 float-left"
             >
               <ShoppingCardIcon className="stroke-white w-[22px] h-[22px]" />
               <span className="text-white text-super-sm">اطلاعات بیشتر</span>
@@ -164,36 +164,36 @@ export default function Home() {
           </div>
 
           {/*//TODO Left Side */}
-          <div className="flex flex-col gap-20">
+          <div className="flex flex-col justify-center lg:gap-20 gap-10">
 
-            <div className="flex items-center justify-center gap-20">
+            <div className="flex items-center justify-center lg:gap-20 gap-10">
 
               <div className="flex flex-col items-justify items-center">
-                <UserIcon className="w-10 h-10 stroke-white" />
-                <span className="text-white mt-3">
+                <UserIcon className="xl:w-10 xl:h-10 w-9 h-9 stroke-white" />
+                <span className="text-white xl:text-base lg:text-super-sm text-sm text-center mt-3">
                   پرسنلی مجرب و حرفه ای
                 </span>
               </div>
               <div className="flex flex-col items-justify items-center">
-                <DiagramIcon className="w-10 h-10 stroke-white" />
-                <span className="text-white mt-3">
+                <DiagramIcon className="xl:w-10 xl:h-10 w-9 h-9 stroke-white" />
+                <span className="text-white xl:text-base lg:text-super-sm text-sm text-center mt-3">
                   پرسنلی مجرب و حرفه ای
                 </span>
               </div>
 
             </div>
 
-            <div className="flex items-center justify-center gap-20">
+            <div className="flex items-center justify-center lg:gap-20 gap-10">
 
               <div className="flex flex-col items-justify items-center">
-                <HomeWifiIcon className="w-10 h-10 stroke-white" />
-                <span className="text-white mt-3">
+                <HomeWifiIcon className="xl:w-10 xl:h-10 w-9 h-9 stroke-white" />
+                <span className="text-white xl:text-base lg:text-super-sm text-sm text-center mt-3">
                   پرسنلی مجرب و حرفه ای
                 </span>
               </div>
               <div className="flex flex-col items-justify items-center">
-                <MenuIcon className="w-10 h-10 stroke-white" />
-                <span className="text-white mt-3">
+                <MenuIcon className="xl:w-10 xl:h-10 w-9 h-9 stroke-white" />
+                <span className="text-white xl:text-base lg:text-super-sm text-sm text-center mt-3">
                   پرسنلی مجرب و حرفه ای
                 </span>
               </div>
