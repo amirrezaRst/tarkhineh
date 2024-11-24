@@ -1,81 +1,43 @@
 import { ChevronIcon, DiagramIcon, GalleryIcon, HomeWifiIcon, InstagramIcon, MenuIcon, SearchIcon, ShoppingCardIcon, TelegramIcon, TwitterIcon, UserIcon } from "@/assets/Icons";
+import MainLayout from "@/components/layout/MainLayout";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <>
-
-      {/*//! START Navbar */}
-      <header className="sticky top-0 bg-white z-10">
-        <div className="w-full h-[4px] 3xl:bg-amber-400 2xl:bg-slate-600 xl:bg-stone-600 lg:bg-red-500 md:bg-yellow-400 sm:bg-violet-600 bg-teal-400" />
-        <div className="container lg:flex items-center justify-between grid grid-cols-3 md:py-3.5 py-4.5">
-
-          <button className="lg:hidden block">
-            <MenuIcon className="w-7 h-7" />
-          </button>
-
-          <Link href="/" className="max-lg:mx-auto">
-            <img src="/images/logo.png" alt="تریخینه لوگو" className="xl:w-[160px] md:w-[140px] w-32" />
-          </Link>
-
-          <nav className="lg:block hidden">
-            <ul className="flex items-center xl:text-base text-super-sm xl:gap-3 gap-1.5 text-[#717171]">
-              <li className="px-2 py-1 text-[#417F56] border-b border-b-[#417F56]">صفحه اصلی</li>
-              <li className="px-2 py-1">شعبه ها <ChevronIcon className="inline" /></li>
-              <li className="px-2 py-1">منو <ChevronIcon className="inline" /></li>
-              <li className="px-2 py-1">اعطای نمایندگی</li>
-              <li className="px-2 py-1">درباره ما</li>
-              <li className="px-2 py-1">تماس با ما</li>
-            </ul>
-          </nav>
-
-          <div className="flex gap-3 max-lg:justify-end max-lg:float-left">
-            <button className="bg-[#E5F2E9] rounded-md p-2 md:block hidden">
-              <SearchIcon className="max-xl:w-5 max-xl:h-5" />
-            </button>
-            <button className="bg-[#E5F2E9] rounded-md p-2">
-              <ShoppingCardIcon className="max-xl:w-5 max-xl:h-5" />
-            </button>
-            <button className="bg-[#E5F2E9] rounded-md p-2">
-              <UserIcon className="max-xl:w-5 max-xl:h-5" />
-            </button>
-          </div>
-
-        </div>
-      </header>
-      {/*//? END Navbar */}
-
+    <MainLayout>
 
       {/*//! START Header Slider */}
-      <section className="w-full h-[400px] bg-[url('/images/background-hero-1.png')] bg-center bg-cover">
+      <section className="w-full md:h-[400px] h-[350px] bg-[url('/images/background-hero-1.png')] bg-center bg-cover">
 
         <div className="relative w-full h-full flex flex-col items-end justify-center">
 
           <div className="w-full flex items-center justify-between px-6">
-            <button>
+            <button className="p-3 md:block hidden">
               <ChevronIcon className="-rotate-90 stroke-white w-7 h-7" />
             </button>
-            <h1 className="text-white text-4.5xl font-bold">
+            <h1 className="text-white xl:text-4.5xl lg:text-4xl text-3xl md:leading-normal leading-[45px] font-bold text-center">
               تجربه غذای سالم و گیاهی به سبک ترخینه
             </h1>
-            <button>
+            <button className="p-3 md:block hidden">
               <ChevronIcon className="rotate-90 stroke-white w-7 h-7" />
             </button>
           </div>
 
-          <div className="justify-items-end self-center mt-8">
-            <button className="bg-[#417F56] rounded-lg py-2 px-8 text-white">
+          <div className="justify-items-end self-center md:mt-8 mt-5">
+            <button className="bg-[#417F56] rounded-lg py-2 px-8 text-white lg:text-base text-super-sm">
               سفارش آنلاین غذا
             </button>
           </div>
 
-          <div className="bg-white flex items-center gap-2.5 py-3 px-9 rounded-t-2xl absolute bottom-0 left-[50%] translate-x-[-50%]">
+          <div
+            className="bg-white flex items-center gap-2.5 md:py-3 py-2.5 md:px-9 px-7 rounded-t-2xl absolute bottom-0 left-[50%] translate-x-[-50%]"
+          >
 
-            <div className="w-3 h-3 bg-[#417F56] rounded-full"></div>
-            <div className="w-2 h-2 bg-[#ADADAD] rounded-full"></div>
-            <div className="w-2 h-2 bg-[#ADADAD] rounded-full"></div>
-            <div className="w-2 h-2 bg-[#ADADAD] rounded-full"></div>
-            <div className="w-2 h-2 bg-[#ADADAD] rounded-full"></div>
+            <div className="md:w-3 md:h-3 w-2 h-2 bg-[#417F56] rounded-full"></div>
+            <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
+            <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
+            <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
+            <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
 
           </div>
 
@@ -513,6 +475,6 @@ export default function Home() {
       </footer>
       {/*//? END Footer */}
 
-    </>
+    </MainLayout>
   );
 }
