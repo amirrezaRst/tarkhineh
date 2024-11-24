@@ -48,17 +48,17 @@ export default function Home() {
 
 
       {/*//! START Menu Type */}
-      <section className="pt-16 pb-24 container">
-        <h4 className="text-3xl font-semibold text-center">
+      <section className="lg:pt-16 pt-12 lg:pb-24 md:pb-20 pb-24 container">
+        <h4 className="md:text-3xl text-2.5xl font-semibold text-center">
           منو رستوران
         </h4>
 
         {/*//! Food Menu List */}
-        <div className="grid grid-cols-4 gap-8 mt-44">
+        <div className="grid md:grid-cols-4 grid-cols-2 md:gap-5 gap-x-5 gap-y-36 3xl:mt-64 2xl:mt-44 xl:mt-28 md:mt-20 mt-28">
 
 
           {/*//! Single Item */}
-          <div className="relative w-full h-[170px] bg-[#417F56] rounded-lg">
+          <div className="relative w-full xl:h-[170px] lg:h-[140px] h-[110px] bg-[#417F56] rounded-lg">
 
             <img
               src="/images/food-image.png"
@@ -68,15 +68,15 @@ export default function Home() {
 
             {/*//TODO Title Label */}
             <div
-              className="absolute bottom-[-25px] right-[50%] translate-x-[50%] w-[65%] h-[50px] bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
+              className="absolute lg:bottom-[-25px] -bottom-5 right-[50%] translate-x-[50%] w-[65%] lg:h-[50px] h-10 bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
             >
-              <p className="text-lg text-[#353535] font-medium">غذای اصلی</p>
+              <p className="lg:text-lg text-super-sm text-[#353535] font-medium">غذای اصلی</p>
             </div>
 
           </div>
 
           {/*//! Single Item */}
-          <div className="relative w-full h-[170px] bg-[#417F56] rounded-lg">
+          <div className="relative w-full xl:h-[170px] lg:h-[140px] h-[110px] bg-[#417F56] rounded-lg">
 
             <img
               src="/images/appetizer-image.png"
@@ -86,15 +86,15 @@ export default function Home() {
 
             {/*//TODO Title Label */}
             <div
-              className="absolute bottom-[-25px] right-[50%] translate-x-[50%] w-[65%] h-[50px] bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
+              className="absolute lg:bottom-[-25px] -bottom-5 right-[50%] translate-x-[50%] w-[65%] lg:h-[50px] h-10 bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
             >
-              <p className="text-lg text-[#353535] font-medium">پیش غذا</p>
+              <p className="lg:text-lg text-super-sm text-[#353535] font-medium">پیش غذا</p>
             </div>
 
           </div>
 
           {/*//! Single Item */}
-          <div className="relative w-full h-[170px] bg-[#417F56] rounded-lg">
+          <div className="relative w-full xl:h-[170px] lg:h-[140px] h-[110px] bg-[#417F56] rounded-lg">
 
             <img
               src="/images/dessert-image.png"
@@ -104,27 +104,27 @@ export default function Home() {
 
             {/*//TODO Title Label */}
             <div
-              className="absolute bottom-[-25px] right-[50%] translate-x-[50%] w-[65%] h-[50px] bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
+              className="absolute lg:bottom-[-25px] -bottom-5 right-[50%] translate-x-[50%] w-[65%] lg:h-[50px] h-10 bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
             >
-              <p className="text-lg text-[#353535] font-medium">دسر</p>
+              <p className="lg:text-lg text-super-sm text-[#353535] font-medium">دسر</p>
             </div>
 
           </div>
 
           {/*//! Single Item */}
-          <div className="relative w-full h-[170px] bg-[#417F56] rounded-lg">
+          <div className="relative w-full xl:h-[170px] lg:h-[140px] h-[110px] bg-[#417F56] rounded-lg">
 
             <img
               src="/images/drink-image.png"
               alt=""
-              className="absolute bottom-[30px] right-[50%] translate-x-[50%] w-[85%]"
+              className="absolute bottom-[30px] right-[50%] translate-x-[50%] md:w-[80%] w-[80%]"
             />
 
             {/*//TODO Title Label */}
             <div
-              className="absolute bottom-[-25px] right-[50%] translate-x-[50%] w-[65%] h-[50px] bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
+              className="absolute lg:bottom-[-25px] -bottom-5 right-[50%] translate-x-[50%] w-[65%] lg:h-[50px] h-10 bg-[#F9F9F9] flex items-center justify-center rounded-md shadow-lg"
             >
-              <p className="text-lg text-[#353535] font-medium">نوشیدنی</p>
+              <p className="lg:text-lg text-super-sm text-[#353535] font-medium">نوشیدنی</p>
             </div>
 
           </div>
