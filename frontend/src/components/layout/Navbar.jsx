@@ -5,7 +5,7 @@ import { ChevronIcon, MenuIcon, SearchIcon, ShoppingCardIcon, UserIcon } from "@
 
 const Navbar = () => {
     return (
-        <header className="sticky top-0 bg-white z-10">
+        <header className="sticky top-0 bg-white z-10 border-b border-b-[#E5F2E9]">
             <div className="w-full h-[4px] 3xl:bg-amber-400 2xl:bg-slate-600 xl:bg-stone-600 lg:bg-red-500 md:bg-yellow-400 sm:bg-violet-600 bg-teal-400" />
             <div className="container lg:flex items-center justify-between grid grid-cols-3 md:py-3.5 py-4.5">
 
@@ -30,7 +30,7 @@ const Navbar = () => {
 
                 <div className="flex gap-3 max-lg:justify-end max-lg:float-left">
                     <button className="bg-[#E5F2E9] rounded-md p-2 md:block hidden">
-                        <SearchIcon className="max-xl:w-5 max-xl:h-5" />
+                        <SearchIcon className="fill-[#417F56] max-xl:w-5 max-xl:h-5" />
                     </button>
                     <button className="bg-[#E5F2E9] rounded-md p-2">
                         <ShoppingCardIcon className="max-xl:w-5 max-xl:h-5" />

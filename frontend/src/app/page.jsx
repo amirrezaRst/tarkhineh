@@ -1,51 +1,9 @@
-import { ChevronIcon, DiagramIcon, GalleryIcon, HomeWifiIcon, InstagramIcon, MenuIcon, SearchIcon, ShoppingCardIcon, TelegramIcon, TwitterIcon, UserIcon } from "@/assets/Icons";
+import { ChevronIcon, DiagramIcon, GalleryIcon, HomeWifiIcon, MenuIcon, SearchIcon, ShoppingCardIcon, UserIcon } from "@/assets/Icons";
 import MainLayout from "@/components/layout/MainLayout";
-import Link from "next/link";
 
 export default function Home() {
   return (
     <MainLayout>
-
-      {/*//! START Header Slider */}
-      <section className="w-full md:h-[400px] h-[350px] bg-[url('/images/background-hero-1.png')] bg-center bg-cover">
-
-        <div className="relative w-full h-full flex flex-col items-end justify-center">
-
-          <div className="w-full flex items-center justify-between px-6">
-            <button className="p-3 md:block hidden">
-              <ChevronIcon className="-rotate-90 stroke-white w-7 h-7" />
-            </button>
-            <h1 className="text-white xl:text-4.5xl lg:text-4xl text-3xl md:leading-normal leading-[45px] font-bold text-center">
-              تجربه غذای سالم و گیاهی به سبک ترخینه
-            </h1>
-            <button className="p-3 md:block hidden">
-              <ChevronIcon className="rotate-90 stroke-white w-7 h-7" />
-            </button>
-          </div>
-
-          <div className="justify-items-end self-center md:mt-8 mt-5">
-            <button className="bg-[#417F56] rounded-lg py-2 px-8 text-white lg:text-base text-super-sm">
-              سفارش آنلاین غذا
-            </button>
-          </div>
-
-          <div
-            className="bg-white flex items-center gap-2.5 md:py-3 py-2.5 md:px-9 px-7 rounded-t-2xl absolute bottom-0 left-[50%] translate-x-[-50%]"
-          >
-
-            <div className="md:w-3 md:h-3 w-2 h-2 bg-[#417F56] rounded-full"></div>
-            <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
-            <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
-            <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
-            <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
-
-          </div>
-
-        </div>
-
-      </section>
-      {/*//? Header Slider */}
-
 
       {/*//! START Menu Type */}
       <section className="lg:pt-16 pt-12 lg:pb-24 md:pb-20 pb-24 container">
@@ -392,96 +350,6 @@ export default function Home() {
 
       </section>
       {/*//? END Branch Section */}
-
-
-
-      {/*//! START Footer */}
-      <footer className="w-full py-20 bg-[url('/images/footer-background-hero.jpg')] bg-cover bg-center">
-        <div className="container grid xl:grid-cols-2 xl:gap-4 gap-14">
-
-          {/*//TODO Right Side */}
-          <div className="flex items-center xl:justify-around xl:gap-4 md:gap-40 gap-12">
-
-            {/*//TODO Links */}
-            <div>
-              <h6 className="text-white md:text-lg font-semibold mb-6">
-                دسترسی آسان
-              </h6>
-              <ul className="space-y-4 text-[#EDEDED] md:text-super-sm text-sm font-light">
-                <li><Link href="">پرسش های متداول</Link></li>
-                <li><Link href="">قوانین ترخینه</Link></li>
-                <li><Link href="">حریم خصوصی</Link></li>
-                <div className="flex items-center gap-5">
-                  <a href=""><TwitterIcon /></a>
-                  <a href=""><InstagramIcon /></a>
-                  <a href=""><TelegramIcon /></a>
-                </div>
-              </ul>
-            </div>
-
-            {/*//TODO Links */}
-            <div>
-              <h6 className="text-white md:text-lg font-semibold mb-6">
-                شعبه های ترخینه
-              </h6>
-              <ul className="space-y-4 text-[#EDEDED] md:text-super-sm text-sm font-light">
-                <li><Link href="">شهبه تهرانپارس</Link></li>
-                <li><Link href="">شعبه چالوس</Link></li>
-                <li><Link href="">شعبه اقدسیه</Link></li>
-                <li><Link href="">شعبه ونک</Link></li>
-              </ul>
-            </div>
-
-          </div>
-
-          {/*//TODO Left Side */}
-          <div className="">
-            <h6 className="text-white lg:text-2.5xl text-1.5xl font-semibold mb-7">
-              پیام به ترخینه
-            </h6>
-
-            <form action="" className="">
-              <div className="grid md:grid-cols-2 gap-4">
-
-                <div className="space-y-3">
-                  <input
-                    type="text"
-                    placeholder="نام و نام خانوادگی"
-                    className="bg-transparent w-full backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
-                  />
-                  <input
-                    type="text"
-                    placeholder="شماره تماس"
-                    className="bg-transparent w-full backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
-                  />
-                  <input
-                    type="text"
-                    placeholder="آدرس ایمیل (اختیاری)"
-                    className="bg-transparent w-full backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
-                  />
-                </div>
-
-                <textarea
-                  name=""
-                  id=""
-                  placeholder="پیام شما"
-                  className="bg-transparent w-full md:h-full h-40 backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
-                />
-
-              </div>
-
-              <p className="text-sm text-[#CBCBCB] mt-2 text-left">۰/۲۰۰</p>
-              <button className="text-[#F9F9F9] text-super-sm border border-[#717171] rounded-lg float-left mt-2 py-2.5 px-16">
-                ارسال پیام
-              </button>
-            </form>
-
-          </div>
-
-
-        </div>
-      </footer>
-      {/*//? END Footer */}
 
     </MainLayout>
   );
