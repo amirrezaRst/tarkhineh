@@ -1,6 +1,17 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
 import { ChevronIcon } from "@/assets/Icons";
 
+
 const Slider = () => {
+
+    const pathname = usePathname();
+
+       
+    if (pathname != "/" || pathname != "/menu") return (null)
+
     return (
         <section className="w-full md:h-[400px] h-[350px] bg-[url('/images/background-hero-1.png')] bg-center bg-cover">
 

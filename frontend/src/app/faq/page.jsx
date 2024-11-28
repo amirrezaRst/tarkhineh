@@ -1,13 +1,15 @@
 import TopNavigation from "@/components/TopNavigation";
 import AccordionList from "./AccordionList";
+import HeaderBanner from "./HeaderBanner";
 
 const RulesPage = () => {
     return (
         <>
+            {/*//! Header Banner */}
+            <HeaderBanner />
 
-            {/*//! START Top Navigation */}
+            {/*//! TopNavigation */}
             <TopNavigation />
-            {/*//? END Top Navigation */}
 
 
             {/*//! Items List */}
