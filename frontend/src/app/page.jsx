@@ -3,7 +3,7 @@ import MainLayout from "@/components/layout/MainLayout";
 
 export default function Home() {
   return (
-    <MainLayout>
+    <>
 
       {/*//! START Menu Type */}
       <section className="lg:pt-16 pt-12 lg:pb-24 md:pb-20 pb-24 container">
@@ -345,12 +345,11 @@ export default function Home() {
           </div>
 
 
-
         </div>
 
       </section>
       {/*//? END Branch Section */}
 
-    </MainLayout>
+    </>
   );
 }

@@ -25,7 +25,7 @@ const Slider = () => {
                 </div>
 
                 <div
-                    className="bg-white flex items-center gap-2.5 md:py-3 py-2.5 md:px-9 px-7 rounded-t-2xl absolute -bottom-1 left-[50%] translate-x-[-50%]"
+                    className="bg-white flex items-center gap-2.5 md:py-3 py-2.5 md:px-9 px-7 rounded-t-2xl absolute bottom-[0px] left-[50%] translate-x-[-50%]"
                 >
 
                     <div className="md:w-3 md:h-3 w-2 h-2 bg-[#417F56] rounded-full"></div>

@@ -1,5 +1,6 @@
 import { Vazirmatn } from "next/font/google";
 import "./globals.css";
+import MainLayout from "@/components/layout/MainLayout";
 
 export const metadata = {
   title: "Create Next App",
@@ -15,7 +16,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${vazir.className} antialiased`} dir="rtl"
       >
+        <MainLayout>
         {children}
+        </MainLayout>
       </body>
     </html>
   );
