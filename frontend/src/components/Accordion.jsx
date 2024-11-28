@@ -20,9 +20,9 @@ const Accordion = ({ title, description, index, isOpen, setIsOpen }) => {
     };
 
     return (
-        <div className="py-4 px-6 text-[#353535] text-super-base">
+        <div className="py-4 px-6 text-[#353535] lg:text-super-base md:text-base text-super-sm md:font-normal font-medium">
             <div
-                className="flex items-center justify-between gap-4 cursor-pointer"
+                className="flex items-center justify-between md:gap-4 gap-2 cursor-pointer"
                 onClick={() => {
                     handleAccordion();
                     updateHeight();
@@ -31,7 +31,7 @@ const Accordion = ({ title, description, index, isOpen, setIsOpen }) => {
                 <h6 className={`${isOpen === index ? "text-[#417F56]" : ""} duration-300`}>{title}</h6>
                 <button>
                     <ChevronIcon
-                        className={`w-[22px] h-[22px] ${isOpen === index ? "stroke-[#417F56]" : "stroke-[#353535]"} transform transition-transform duration-300 ${isOpen === index ? "rotate-180" : "rotate-0"}`}
+                        className={`md:w-[22px] md:h-[22px] w-[18px] h-[18px] ${isOpen === index ? "stroke-[#417F56]" : "stroke-[#353535]"} transform transition-transform duration-300 ${isOpen === index ? "rotate-180" : "rotate-0"}`}
                     />
                 </button>
             </div>
@@ -42,7 +42,7 @@ const Accordion = ({ title, description, index, isOpen, setIsOpen }) => {
                     maxHeight: isOpen === index ? `${height}px` : "0px",
                 }}
             >
-                <div ref={contentRef} className="text-super-sm text-[#717171] pt-3.5 pb-1">
+                <div ref={contentRef} className="md:text-super-sm text-sm text-[#717171] pt-3.5 pb-1">
                     {description}
                 </div>
             </div>
