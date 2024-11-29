@@ -2,6 +2,7 @@ import { BankIcon, BookIcon, ChartIcon, FolderAdd, WalletIcon } from "@/assets/I
 import HeaderBanner from "@/components/HeaderBanner";
 import OptionsSection from "./OptionsSection";
 import BenefitsSection from "./BenefitsSection";
+import ConsultationSection from "./CunsultationSection";
 
 const FranchisePage = () => {
     return (
@@ -16,46 +17,8 @@ const FranchisePage = () => {
             {/*//! Benefits Section */}
             <BenefitsSection />
 
-
-
-            {/*//! START Consultation Section */}
-            <section className="container py-20 border-b-2 border-[#CBCBCB]/30">
-
-                <h2 className="text-2.5xl text-[#353535] text-center font-semibold mb-12">
-                    دریافت مشاوره
-                </h2>
-
-                {/*//! Consultation Form */}
-                <form action="">
-
-                    <div className="grid grid-cols-3 gap-6">
-
-                        <input
-                            type="text"
-                            className="py-2.5 px-4 border border-[#CBCBCB] rounded-md text-[#717171] placeholder:text-[#717171]"
-                            placeholder="نام و نام خانوادگی"
-                        />
-                        <input
-                            type="text"
-                            className="py-2.5 px-4 border border-[#CBCBCB] rounded-md text-[#717171] placeholder:text-[#717171]"
-                            placeholder="شماره تماس"
-                        />
-                        <input
-                            type="text"
-                            className="py-2.5 px-4 border border-[#CBCBCB] rounded-md text-[#717171] placeholder:text-[#717171]"
-                            placeholder="ایمیل"
-                        />
-
-                    </div>
-
-                    <button className="bg-[#417F56] text-white text-super-sm block mx-auto rounded-md py-3 px-6 mt-7">
-                        درخواست مشاوره
-                    </button>
-
-                </form>
-
-            </section>
-            {/*//? END Consultation Section */}
+            {/*//! Consultation Section */}
+            <ConsultationSection />
 
 
 
