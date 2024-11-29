@@ -10,7 +10,7 @@ const Navbar = () => {
             <div className="container lg:flex items-center justify-between grid grid-cols-3 md:py-3.5 py-4.5">
 
                 <button className="lg:hidden block">
-                    <MenuIcon className="w-7 h-7" />
+                    <MenuIcon className="fill-[#417F56] w-7 h-7" />
                 </button>
 
                 <Link href="/" className="max-lg:mx-auto">
@@ -36,7 +36,7 @@ const Navbar = () => {
                         <ShoppingCardIcon className="max-xl:w-5 max-xl:h-5" />
                     </button>
                     <button className="bg-[#E5F2E9] rounded-md p-2">
-                        <UserIcon className="max-xl:w-5 max-xl:h-5" />
+                        <UserIcon className="fill-[#417F56] max-xl:w-5 max-xl:h-5" />
                     </button>
                 </div>
 

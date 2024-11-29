@@ -1,4 +1,4 @@
-import { ChevronIcon, DiagramIcon, GalleryIcon, HomeWifiIcon, MenuIcon, SearchIcon, ShoppingCardIcon, UserIcon } from "@/assets/Icons";
+import { ChevronIcon, DiagramIcon, GalleryIcon, HomeWifiIcon, MenuBoardIcon, MenuIcon, SearchIcon, ShoppingCardIcon, UserIcon } from "@/assets/Icons";
 import MainLayout from "@/components/layout/MainLayout";
 
 export default function Home() {
@@ -127,13 +127,13 @@ export default function Home() {
             <div className="flex items-center justify-center lg:gap-20 gap-10">
 
               <div className="flex flex-col items-justify items-center">
-                <UserIcon className="xl:w-10 xl:h-10 w-9 h-9 stroke-white" />
+                <UserIcon className="xl:w-10 xl:h-10 w-9 h-9 fill-white" />
                 <span className="text-white xl:text-base lg:text-super-sm text-sm text-center mt-3">
                   پرسنلی مجرب و حرفه ای
                 </span>
               </div>
               <div className="flex flex-col items-justify items-center">
-                <DiagramIcon className="xl:w-10 xl:h-10 w-9 h-9 stroke-white" />
+                <DiagramIcon className="xl:w-10 xl:h-10 w-9 h-9 fill-white" />
                 <span className="text-white xl:text-base lg:text-super-sm text-sm text-center mt-3">
                   پرسنلی مجرب و حرفه ای
                 </span>
@@ -144,13 +144,13 @@ export default function Home() {
             <div className="flex items-center justify-center lg:gap-20 gap-10">
 
               <div className="flex flex-col items-justify items-center">
-                <HomeWifiIcon className="xl:w-10 xl:h-10 w-9 h-9 stroke-white" />
+                <HomeWifiIcon className="xl:w-10 xl:h-10 w-9 h-9 fill-white" />
                 <span className="text-white xl:text-base lg:text-super-sm text-sm text-center mt-3">
                   پرسنلی مجرب و حرفه ای
                 </span>
               </div>
               <div className="flex flex-col items-justify items-center">
-                <MenuIcon className="xl:w-10 xl:h-10 w-9 h-9 stroke-white" />
+                <MenuBoardIcon className="xl:w-10 xl:h-10 w-9 h-9 fill-white" />
                 <span className="text-white xl:text-base lg:text-super-sm text-sm text-center mt-3">
                   پرسنلی مجرب و حرفه ای
                 </span>
