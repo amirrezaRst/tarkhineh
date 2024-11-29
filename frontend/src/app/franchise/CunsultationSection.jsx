@@ -1,6 +1,6 @@
 const ConsultationSection = () => {
     return (
-        <section className="container py-20 border-b-2 border-[#CBCBCB]/30">
+        <section className="container md:py-20 py-16 xl:border-b-2 border-[#CBCBCB]/30">
 
             <h2 className="xl:text-2.5xl md:text-2xl text-1.5xl text-[#353535] text-center md:font-semibold font-bold md:mb-12 mb-9">
                 دریافت مشاوره
