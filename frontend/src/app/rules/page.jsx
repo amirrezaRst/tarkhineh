@@ -1,19 +1,21 @@
 import TopNavigation from "@/components/TopNavigation";
-import AccordionList from "./AccordionList";
-import HeaderBanner from "./HeaderBanner";
+import HeaderBanner from "@/components/HeaderBanner";
+import AccordionList from "@/components/AccordionList";
+import { RulesList } from "@/constant/rulesList";
+
 
 const RulesPage = () => {
     return (
         <>
 
             {/*//! Header Banner */}
-            <HeaderBanner />
+            <HeaderBanner title={"قوانین ترخینه"} imageSrc={"/images/rules-background-hero.jpg"} />
 
             {/*//! TopNavigation */}
             <TopNavigation />
 
             {/*//! Items List */}
-            <AccordionList />
+            <AccordionList lists={RulesList} />
 
         </>
     );

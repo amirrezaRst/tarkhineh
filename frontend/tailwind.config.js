@@ -22,9 +22,11 @@ module.exports = {
         "3xl": "2000px"
       },
       width: {
+        4.5:"18px",
         "8.5": "2.13rem"
       },
       height: {
+        4.5:"18px",
         "8.5": "2.13rem"
       },
       fontSize: {

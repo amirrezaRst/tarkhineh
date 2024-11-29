@@ -1,19 +1,20 @@
 import TopNavigation from "@/components/TopNavigation";
-import AccordionList from "./AccordionList";
-import HeaderBanner from "./HeaderBanner";
+import HeaderBanner from "@/components/HeaderBanner";
+import AccordionList from "@/components/AccordionList";
+import { PrivacyList } from "@/constant/privacyList";
 
 const RulesPage = () => {
     return (
         <>
 
             {/*//! Header Banner */}
-            <HeaderBanner />
+            <HeaderBanner title={"حریم شخصی کاربران"} imageSrc={"/images/privacy-background-hero.jpg"} />
 
             {/*//! TopNavigation */}
             <TopNavigation />
 
             {/*//! Items List */}
-            <AccordionList />
+            <AccordionList lists={PrivacyList} />
 
         </>
     );

@@ -1,21 +1,21 @@
 import TopNavigation from "@/components/TopNavigation";
-import AccordionList from "./AccordionList";
-import HeaderBanner from "./HeaderBanner";
+import HeaderBanner from "@/components/HeaderBanner";
+import AccordionList from "@/components/AccordionList";
+import { FaqList } from "@/constant/faqList";
 
 const RulesPage = () => {
     return (
         <>
+
             {/*//! Header Banner */}
-            <HeaderBanner />
+            <HeaderBanner title={"سوالات متداول از ترخینه"} imageSrc={"/images/faq-background-hero.jpg"} />
 
             {/*//! TopNavigation */}
             <TopNavigation />
 
 
             {/*//! Items List */}
-            <AccordionList />
-
-
+            <AccordionList lists={FaqList} />
 
         </>
     );
