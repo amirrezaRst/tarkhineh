@@ -1,5 +1,7 @@
 import { BankIcon, BookIcon, ChartIcon, FolderAdd, WalletIcon } from "@/assets/Icons";
 import HeaderBanner from "@/components/HeaderBanner";
+import OptionsSection from "./OptionsSection";
+import BenefitsSection from "./BenefitsSection";
 
 const FranchisePage = () => {
     return (
@@ -7,143 +9,12 @@ const FranchisePage = () => {
 
             <HeaderBanner title="همین الان به خانواده بزرگ ترخینه بپیوندید!" imageSrc="/images/franchise-background-hero.jpg" />
 
-
-            {/*//! START Options Section */}
-            <section className="container py-20 border-b-2 border-[#CBCBCB]/30 grid grid-cols-4 gap-6">
-
-                {/*//Todo Option */}
-                <div className="flex flex-col items-center gap-6">
-
-                    <div className="w-36 h-36 flex items-center justify-center border-2 border-[#417F56] rounded-full p-4">
-                        <BankIcon />
-                    </div>
-
-                    <h6 className="text-lg text-[#353535] leading-7">
-                        بیش از 20 شعبه فعال در سراسر کشور
-                    </h6>
-
-                </div>
-
-                {/*//Todo Option */}
-                <div className="flex flex-col items-center gap-6">
-
-                    <div className="w-36 h-36 flex items-center justify-center border-2 border-[#417F56] rounded-full p-4">
-                        <WalletIcon />
-                    </div>
-
-                    <h6 className="text-lg text-[#353535] leading-7">
-                        تسهیلات راه‌اندازی رستوران و تجهیز آن
-                    </h6>
-
-                </div>
-
-                {/*//Todo Option */}
-                <div className="flex flex-col items-center gap-6">
-
-                    <div className="w-36 h-36 flex items-center justify-center border-2 border-[#417F56] rounded-full p-4">
-                        <ChartIcon />
-                    </div>
-
-                    <h6 className="text-lg text-[#353535] leading-7">
-                        طرح‌های تشویقی ارتقای فروش
-                    </h6>
-
-                </div>
-
-                {/*//Todo Option */}
-                <div className="flex flex-col items-center gap-6">
-
-                    <div className="w-36 h-36 flex items-center justify-center border-2 border-[#417F56] rounded-full p-4">
-                        <BookIcon />
-                    </div>
-
-                    <h6 className="text-lg text-[#353535] leading-7">
-                        اعطای دستورالعمل پخت غذاها
-                    </h6>
-
-                </div>
-
-            </section>
-            {/*//? END Options Section */}
+            {/*//! Options Section */}
+            <OptionsSection />
 
 
-            {/*//! START Benefits Section */}
-            <section className="container py-20 border-b-2 border-[#CBCBCB]/30">
-                <h2 className="text-2.5xl text-[#353535] text-center font-semibold mb-10">
-                    مزیت دریافت نمایندگی
-                </h2>
-
-                {/*//! Benefits List */}
-                <div className="grid grid-cols-2 gap-x-3 gap-y-8 px-52">
-
-                    {/*//TODO Benefit */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-4.5 h-4.5 rounded-md rotate-45 border-2 border-[#417F56]" />
-                        <p className="text-[19px] leading-7 text-[#353535]">
-                            استفاده از برند شناخته شده ترخینه
-                        </p>
-                    </div>
-
-                    {/*//TODO Benefit */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-4.5 h-4.5 rounded-md rotate-45 border-2 border-[#417F56]" />
-                        <p className="text-[19px] leading-7 text-[#353535]">
-                            مشاوره در امور حقوقی، مالی و مالیاتی
-                        </p>
-                    </div>
-
-                    {/*//TODO Benefit */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-4.5 h-4.5 rounded-md rotate-45 border-2 border-[#417F56]" />
-                        <p className="text-[19px] leading-7 text-[#353535]">
-                            به حداقل رساندن ریسک سرمایه گذاری
-                        </p>
-                    </div>
-
-                    {/*//TODO Benefit */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-4.5 h-4.5 rounded-md rotate-45 border-2 border-[#417F56]" />
-                        <p className="text-[19px] leading-7 text-[#353535]">
-                            پشتیبانی بازاریابی و منابع انسانی
-                        </p>
-                    </div>
-
-                    {/*//TODO Benefit */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-4.5 h-4.5 rounded-md rotate-45 border-2 border-[#417F56]" />
-                        <p className="text-[19px] leading-7 text-[#353535]">
-                            تسریع روند بازگشت سرمایه
-                        </p>
-                    </div>
-
-                    {/*//TODO Benefit */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-4.5 h-4.5 rounded-md rotate-45 border-2 border-[#417F56]" />
-                        <p className="text-[19px] leading-7 text-[#353535]">
-                            دریافت مشاوره جهت تامین مواد اولیه و تجهیزات
-                        </p>
-                    </div>
-
-                    {/*//TODO Benefit */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-4.5 h-4.5 rounded-md rotate-45 border-2 border-[#417F56]" />
-                        <p className="text-[19px] leading-7 text-[#353535]">
-                            مشاوره های تخصصی جهت مدیریت رستوران
-                        </p>
-                    </div>
-
-                    {/*//TODO Benefit */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-4.5 h-4.5 rounded-md rotate-45 border-2 border-[#417F56]" />
-                        <p className="text-[19px] leading-7 text-[#353535]">
-                            طرح های تشویقی برای ارتقا فروش
-                        </p>
-                    </div>
-
-                </div>
-
-            </section>
-            {/*//? END Benefits Section */}
+            {/*//! Benefits Section */}
+            <BenefitsSection />
 
 
 
