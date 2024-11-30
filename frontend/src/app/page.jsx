@@ -209,7 +209,8 @@ export default function Home() {
               </p>
 
               <button
-                className="md:flex items-center flex-nowrap hidden absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
+                className="md:flex items-center flex-nowrap hidden absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] 
+                border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600"
               >
                 صفحه شعبه <ChevronIcon className="rotate-90 inline stroke-[#315F41]" />
               </button>
