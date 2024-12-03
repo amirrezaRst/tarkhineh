@@ -8,7 +8,7 @@ const MainLayout = ({ children }) => {
         <>
             <Navbar />
             <Slider />
-            {/* <Searchbox /> */}
+            <Searchbox />
 
             {children}
 

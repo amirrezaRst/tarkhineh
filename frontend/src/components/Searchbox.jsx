@@ -1,7 +1,12 @@
+"use client";
+
 import { SearchIcon } from "@/assets/Icons";
+import { usePathname } from "next/navigation";
 
 const Searchbox = () => {
-    return (
+
+    const pathname = usePathname();
+    if (pathname === "/" || pathname === "/branch" || pathname === "/menu") return (
         <div className="container mt-6">
             <form
                 className="relative w-full h-11 md:hidden block rounded-lg border border-[#CBCBCB] overflow-hidden"
@@ -17,6 +22,7 @@ const Searchbox = () => {
             </form>
         </div>
     );
+    return (null)
 }
 
 export default Searchbox;

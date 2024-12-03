@@ -9,8 +9,8 @@ const Slider = () => {
 
     const pathname = usePathname();
 
-       
-    if (pathname != "/" || pathname != "/menu") return (null)
+    console.log(pathname != "/")
+    if (pathname != "/" && pathname != "/menu" && pathname != "/branch") return (null);
 
     return (
         <section className="w-full md:h-[400px] h-[350px] bg-[url('/images/background-hero-1.png')] bg-center bg-cover">
