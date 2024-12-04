@@ -16,7 +16,7 @@ const ProfileLayout = ({ children }) => {
                 <Sidebar />
 
                 <section
-                    className="min-h-[70vh] lg:col-span-9 md:col-span-10 col-span-full md:-order-1 -order-2 border border-[#CBCBCB] rounded-lg p-6"
+                    className="min-h-[70vh] lg:col-span-9 md:col-span-10 col-span-full md:-order-1 -order-2 border border-[#CBCBCB] rounded-lg md:p-6 px-4 py-5"
                 >
 
                     <h2 className="md:text-1.5xl text-xl text-[#353535] font-medium pb-3 border-b border-b-[#CBCBCB]/60">
@@ -32,7 +32,7 @@ const ProfileLayout = ({ children }) => {
 
                     </h2>
 
-                    <div className="pt-10 md:pb-16 pb-10">
+                    <div className="pt-10 md:pb-16 pb-14">
 
                         {children}
 
