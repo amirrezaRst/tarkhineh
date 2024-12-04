@@ -1,16 +1,16 @@
 const UserInfo = () => {
     return (
-        <div className="flex items-center gap-5 pb-3.5 border-b border-[#757575]">
+        <div className="hidden md:flex items-center lg:justify-start justify-center xl:gap-5 gap-3 pb-3.5 border-b border-b-[#757575]/50">
 
             {/*//TODO Profile Image */}
-            <div className="w-[4.5rem] h-[4.5rem] border border-[#CBCBCB]/80 rounded-full">
+            <div className="xl:w-[4.5rem] xl:h-[4.5rem] w-16 h-16 border border-[#CBCBCB]/80 rounded-full">
                 <img src="/images/profile-image.png" alt="" className="w-full h-full object-center object-cover" />
             </div>
-            <div className="flex flex-col justify-center gap-2">
-                <h5 className="text-lg text-[#353535]">
+            <div className="lg:flex hidden flex-col justify-center gap-2">
+                <h5 className="xl:text-lg text-[#353535]">
                     کاربر ترخینه
                 </h5>
-                <p dir="ltr" className="text-super-sm text-[#717171]">
+                <p dir="ltr" className="xl:text-super-sm text-sm text-[#717171]">
                     ۰۹۱۴ ۸۶۴ ۳۳۵۰
                 </p>
             </div>

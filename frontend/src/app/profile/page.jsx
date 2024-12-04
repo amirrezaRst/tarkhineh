@@ -1,9 +1,10 @@
-import {  PenIcon } from "@/assets/Icons";
+import { PenIcon } from "@/assets/Icons";
 import FormField from "@/components/FormField";
 
 const ProfilePage = () => {
+
     return (
-        <>
+        <div className="xl:px-12 md:px-8 px-2">
 
             <form action="" className="grid grid-cols-2 gap-x-4 gap-y-5">
                 <FormField placeholder="نام" disabled />
@@ -20,7 +21,7 @@ const ProfilePage = () => {
                 ویرایش اطلاعات شخصی
             </button>
 
-        </>
+        </div>
     );
 }
 

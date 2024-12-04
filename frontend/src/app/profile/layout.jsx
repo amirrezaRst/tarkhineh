@@ -10,17 +10,16 @@ const ProfileLayout = ({ children }) => {
     return (
         <>
             <div
-                className="container md:py-20 py-16 grid grid-cols-12 gap-8"
+                className="relative container xl:py-20 md:py-16 py-10 grid grid-cols-12 2xl:gap-8 gap-5"
             >
 
-                {/*//! Sidebar */}
                 <Sidebar />
 
                 <section
-                    className="min-h-[70vh] col-span-9 border border-[#CBCBCB] rounded-lg p-6"
+                    className="min-h-[70vh] lg:col-span-9 md:col-span-10 col-span-full md:-order-1 -order-2 border border-[#CBCBCB] rounded-lg p-6"
                 >
 
-                    <h2 className="text-1.5xl text-[#353535] font-medium pb-3 border-b border-b-[#CBCBCB]">
+                    <h2 className="md:text-1.5xl text-xl text-[#353535] font-medium pb-3 border-b border-b-[#CBCBCB]/60">
                         {pathname === "/profile" ?
                             "پروفایل من" :
                             pathname === "/profile/orders" ?
@@ -33,7 +32,7 @@ const ProfileLayout = ({ children }) => {
 
                     </h2>
 
-                    <div className="px-12 pt-10 pb-16">
+                    <div className="pt-10 md:pb-16 pb-10">
 
                         {children}
 

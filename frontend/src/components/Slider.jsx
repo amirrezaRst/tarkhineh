@@ -9,7 +9,6 @@ const Slider = () => {
 
     const pathname = usePathname();
 
-    console.log(pathname != "/")
     if (pathname != "/" && pathname != "/menu" && pathname != "/branch") return (null);
 
     return (
