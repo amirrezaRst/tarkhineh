@@ -32,11 +32,11 @@ const ProfileLayout = ({ children }) => {
 
                     </h2>
 
-                    <div className="pt-10 md:pb-16 pb-14">
+                    <main className="pt-6 md:pb-16 pb-14">
 
                         {children}
 
-                    </div>
+                    </main>
 
                 </section>
 

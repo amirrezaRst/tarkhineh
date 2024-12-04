@@ -33,7 +33,7 @@ const Navbar = () => {
                         <SearchIcon className="fill-[#417F56] max-xl:w-5 max-xl:h-5" />
                     </button>
                     <button className="bg-[#E5F2E9] rounded-md p-2">
-                        <ShoppingCardIcon className="max-xl:w-5 max-xl:h-5" />
+                        <ShoppingCardIcon className="fill-[#417F56] max-xl:w-5 max-xl:h-5" />
                     </button>
                     <button className="bg-[#E5F2E9] rounded-md p-2">
                         <UserIcon className="fill-[#417F56] max-xl:w-5 max-xl:h-5" />

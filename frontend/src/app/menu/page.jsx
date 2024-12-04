@@ -117,7 +117,7 @@ const MenuPage = () => {
                                         میرزا قاسمی
                                     </h3>
                                     <button className="hover:scale-110 duration-200">
-                                        <HeartIcon />
+                                        <HeartIcon className="stroke-[#717171]" />
                                     </button>
                                 </div>
 
@@ -179,7 +179,7 @@ const MenuPage = () => {
                                         دلمه برگ مو
                                     </h3>
                                     <button className="hover:scale-110 duration-200">
-                                        <HeartIcon />
+                                        <HeartIcon className="stroke-[#717171]" />
                                     </button>
                                 </div>
 

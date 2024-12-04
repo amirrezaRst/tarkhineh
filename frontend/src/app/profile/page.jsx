@@ -4,7 +4,7 @@ import FormField from "@/components/FormField";
 const ProfilePage = () => {
 
     return (
-        <div className="xl:px-12 lg:px-8 px-2">
+        <div className="md:pt-3 pt-0 xl:px-12 lg:px-8 px-2">
 
             <form action="" className="grid md:grid-cols-2 gap-x-4 md:gap-y-5 gap-y-4">
                 <FormField placeholder="نام" />

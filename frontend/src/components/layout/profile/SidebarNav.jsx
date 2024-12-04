@@ -1,6 +1,6 @@
 "use client";
 
-import { HeartIcon, LocationIcon, LogoutIcon, PersonalWalletIcon, SolidLocationIcon, SolidPersonalWalletIcon, SolidUserIcon, UserIcon } from "@/assets/Icons";
+import { HeartIcon, LocationIcon, LogoutIcon, PersonalWalletIcon, SolidHeartIcon, SolidLocationIcon, SolidPersonalWalletIcon, SolidUserIcon, UserIcon } from "@/assets/Icons";
 import NavItem from "./NavItem";
 
 const links = [
@@ -11,20 +11,20 @@ const links = [
         path: "/profile"
     },
     {
-        outlineIcon: <PersonalWalletIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#417F56]" />,
-        solidIcon: <SolidPersonalWalletIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#353535]" />,
+        outlineIcon: <PersonalWalletIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#353535]" />,
+        solidIcon: <SolidPersonalWalletIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#417F56]" />,
         text: "پیگیری سفارشات",
         path: "/profile/orders"
     },
     {
-        outlineIcon: <HeartIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#417F56]" />,
-        solidIcon: <HeartIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#417F56]" />,
+        outlineIcon: <HeartIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 stroke-[#353535]" />,
+        solidIcon: <SolidHeartIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#417F56]" />,
         text: "علاقمندی‌ها",
         path: "/profile/interests"
     },
     {
-        outlineIcon: <LocationIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#417F56]" />,
-        solidIcon: <SolidLocationIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#353535]" />,
+        outlineIcon: <LocationIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#353535]" />,
+        solidIcon: <SolidLocationIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#417F56]" />,
         text: "آدرس های من",
         path: "/profile/address"
     },
