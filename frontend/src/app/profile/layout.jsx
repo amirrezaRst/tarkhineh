@@ -10,7 +10,7 @@ const ProfileLayout = ({ children }) => {
     return (
         <>
             <div
-                className="relative container xl:py-14 md:py-12 py-8 grid grid-cols-12 2xl:gap-8 gap-5"
+                className="relative container xl:py-14 md:py-12 py-8 grid grid-cols-12 2xl:gap-8 lg:gap-5 gap-3"
             >
 
                 <Sidebar />
