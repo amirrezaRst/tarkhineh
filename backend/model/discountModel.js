@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const discountSchema = new mongoose.Schema({
+const DiscountSchema = new mongoose.Schema({
     menuItem: { type: mongoose.Schema.Types.ObjectId, ref: 'Menu', required: true }, // آیتم منو که تخفیف دارد
     discountType: { type: String, enum: ['percentage', 'flat'], required: true }, // نوع تخفیف
     discountValue: { type: Number, required: true }, // مقدار تخفیف
@@ -9,7 +9,7 @@ const discountSchema = new mongoose.Schema({
     active: { type: Boolean, default: true } // وضعیت فعال بودن
 }); 
 
-module.exports = mongoose.model('MenuDiscount', discountSchema);
+module.exports = mongoose.model('Discount', DiscountSchema);
 
 
 // const getMenuWithDiscount = async (menuId) => {
