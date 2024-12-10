@@ -19,7 +19,7 @@ const ReviewModel = new mongoose.Schema({
     },
     menuItem: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'MenuItem'
+        ref: 'Menu'
     },
     branch: {
         type: mongoose.Schema.Types.ObjectId,

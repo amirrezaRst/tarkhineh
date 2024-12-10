@@ -7,14 +7,16 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true, lowercase: true },
     phoneNumber: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    roles: {
-        type: [String],
+    role: {
+        type: String,
         enum: ['user', 'admin', 'branch_manager'],
-        default: ['user']
+        default: 'user'
     },
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Menu" }],
     coupons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' }],
     orderHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
     addresses: [AddressSchema],
+    refreshToken: { type: String }
 }, { timestamps: true });
 
 

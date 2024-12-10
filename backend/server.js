@@ -28,6 +28,11 @@ const app = express().use(express.json())
 //! Static Folder
 
 //! Routes
+app.use("/api/user", require('./routes/userRoutes'));
+
+app.get("/hello", (req, res) => {
+    res.send("hello world")
+})
 
 
 app.listen(process.env.PORT, err => {
