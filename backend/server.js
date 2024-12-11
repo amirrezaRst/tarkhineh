@@ -30,6 +30,7 @@ const app = express().use(express.json())
 //! Routes
 app.use("/api/user", require('./routes/userRoutes'));
 app.use("/api/review", require('./routes/reviewRoutes'));
+app.use("/api/branch", require('./routes/branchRoutes'));
 
 app.get("/hello", (req, res) => {
     res.send("hello world")

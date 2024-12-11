@@ -59,7 +59,7 @@ exports.singleUser = async (req, res) => {
 
 
 
-// //! Post Request
+//! Post Request
 exports.registerUser = async (req, res) => {
     const { fullName, email, password, phoneNumber, remember } = req.body;
 
@@ -109,7 +109,7 @@ exports.registerUser = async (req, res) => {
 };
 
 
-// //? Login
+//? Login
 exports.login = async (req, res) => {
     const { email, password, remember } = req.body;
     try {
@@ -198,10 +198,10 @@ exports.logout = (req, res) => {
 
 
 
-// //! must add edit user controller here
+//! must add edit user controller here
 
 
-// //! Delete Request
+//! Delete Request
 exports.deleteUser = async (req, res) => {
     const userId = req.params.id;
 

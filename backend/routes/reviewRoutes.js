@@ -1,6 +1,6 @@
 const express = require('express');
 const ValidateObjectId = require('../middleware/ValidateObjectId');
-const { createReview, getReview, getAllReviews, updateReview, deleteReview } = require('../controller/reviewController');
+const { createReview, getReview, getAllReviews, updateReview, deleteReview } = require('../controllers/reviewController');
 const { createReviewValidation, updateReviewValidation } = require('../validation/reviewValidation');
 
 const router = express.Router();
