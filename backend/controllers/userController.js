@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const userModel = require("../model/UserModel");
+const userModel = require("../models/UserModel");
 const { generateAccessToken, generateRefreshToken } = require("../utils/tokenUtils");
 const { setRefreshTokenCookie, setTokenCookie } = require("../utils/cookieUtils");
 

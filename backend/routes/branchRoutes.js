@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { createBranch, getAllBranches, getBranchById, updateBranch, deleteBranch } = require('../controllers/branchController');
-const { createBranchValidation, updateBranchValidation } = require('../validation/BranchValidation');
+const { createBranchValidation, updateBranchValidation } = require('../validation/branchValidation');
 
 
 router.route("/")

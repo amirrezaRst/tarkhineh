@@ -1,5 +1,5 @@
-const Branch = require('../model/BranchModel');
-const UserModel = require('../model/UserModel');
+const Branch = require('../models/BranchModel');
+const UserModel = require('../models/UserModel');
 
 
 //! Get Request
