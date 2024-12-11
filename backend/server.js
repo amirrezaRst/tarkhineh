@@ -32,6 +32,7 @@ app.use("/api/user", require('./routes/userRoutes'));
 app.use("/api/review", require('./routes/reviewRoutes'));
 app.use("/api/branch", require('./routes/branchRoutes'));
 app.use("/api/coupon", require('./routes/couponRoutes'));
+app.use("/api/menu", require('./routes/menuRoutes'));
 
 app.get("/hello", (req, res) => {
     res.send("hello world")

@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 const DiscountSchema = new mongoose.Schema({
     menuItem: { type: mongoose.Schema.Types.ObjectId, ref: 'Menu', required: true }, // آیتم منو که تخفیف دارد
     discountType: { type: String, enum: ['percentage', 'flat'], required: true }, // نوع تخفیف
-    discountValue: { type: Number, required: true }, // مقدار تخفیف
-    startDate: { type: Date, required: true }, // زمان شروع تخفیف
-    endDate: { type: Date, required: true }, // زمان پایان تخفیف
-    active: { type: Boolean, default: true } // وضعیت فعال بودن
+    discountValue: { type: Number, required: true },
+    startDate: { type: Date, required: true },
+    endDate: { type: Date, required: true },
+    active: { type: Boolean, default: true }
 }); 
 
 module.exports = mongoose.model('Discount', DiscountSchema);
