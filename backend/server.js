@@ -34,10 +34,8 @@ app.use("/api/branch", require('./routes/branchRoutes'));
 app.use("/api/coupon", require('./routes/couponRoutes'));
 app.use("/api/menu", require('./routes/menuRoutes'));
 app.use("/api/discount", require('./routes/discountRoutes'));
+app.use("/api/cart", require('./routes/cartRoutes'));
 
-app.get("/hello", (req, res) => {
-    res.send("hello world")
-})
 
 
 app.listen(process.env.PORT, err => {

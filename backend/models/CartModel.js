@@ -1,3 +1,4 @@
+const { required } = require("joi");
 const mongoose = require("mongoose");
 
 const CartSchema = new mongoose.Schema({
@@ -5,15 +6,9 @@ const CartSchema = new mongoose.Schema({
     items: [
         {
             menuItem: { type: mongoose.Schema.Types.ObjectId, ref: 'Menu', required: true },
-            quantity: { type: Number, required: true, min: 1 } // تعداد
+            quantity: { type: Number, min: 1, default: 1, required: true }
         }
     ],
-    status: {
-        type: String,
-        enum: ['active', 'checked_out'],
-        default: 'active'
-    },
-    coupon: { type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' }
 }, { timestamps: true });
 
 
