@@ -36,6 +36,7 @@ app.use("/api/menu", require('./routes/menuRoutes'));
 app.use("/api/discount", require('./routes/discountRoutes'));
 app.use("/api/cart", require('./routes/cartRoutes'));
 app.use("/api/order", require('./routes/orderRoutes'));
+app.use("/api/payment", require('./routes/paymentRoutes'));
 
 
 

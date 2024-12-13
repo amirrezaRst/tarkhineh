@@ -14,7 +14,7 @@ router.get('/:id', getOrderById);
 router.get('/user/:userId', getOrdersByUser);
 
 // Update order status
-router.put('/:id/status', updateOrderStatusValidation, updateOrderStatus);
+router.patch('/:id/status', updateOrderStatusValidation, updateOrderStatus);
 
 // Delete an order
 router.delete('/:id', deleteOrder);

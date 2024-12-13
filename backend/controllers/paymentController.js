@@ -1,0 +1,87 @@
+const Payment = require('../models/PaymentModel');
+const Order = require('../models/OrderModel');
+
+
+//! Get Request
+//? Get all payments
+exports.getAllPayments = async (req, res) => {
+    try {
+        const payments = await Payment.find().populate('order');
+        res.status(200).json({ status: 200, payments });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 500, message: "Error retrieving payments.", error: error.message });
+    }
+};
+
+
+//? Get payment by ID
+exports.getPaymentById = async (req, res) => {
+    try {
+        const { paymentId } = req.params;
+
+        const payment = await Payment.findById(paymentId).populate('order');
+        if (!payment) {
+            return res.status(404).json({ status: 404, message: "Payment not found." });
+        }
+
+        res.status(200).json({ status: 200, payment });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 500, message: "Error retrieving payment.", error: error.message });
+    }
+};
+
+
+//! Post Request
+//? Create a payment
+exports.createPayment = async (req, res) => {
+    try {
+        const { order, paymentMethod, transactionId } = req.body;
+
+        // Validate order
+        const existingOrder = await Order.findById(order).select("totalPrice");
+        if (!existingOrder) {
+            return res.status(404).json({ status: 404, message: "Order not found." });
+        }
+
+        // Create payment
+        const payment = new Payment({
+            order,
+            paymentMethod,
+            amount: existingOrder.totalPrice,
+            transactionId,
+        });
+
+        await payment.save();
+
+        res.status(201).json({ status: 201, message: "Payment created successfully.", payment });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 500, message: "Error creating payment.", error: error.message });
+    }
+};
+
+//! Put Request
+//? Update payment status
+exports.updatePaymentStatus = async (req, res) => {
+    try {
+        const { paymentId } = req.params;
+        const { status } = req.body;
+
+        const payment = await Payment.findById(paymentId);
+        if (!payment) {
+            return res.status(404).json({ status: 404, message: "Payment not found." });
+        }
+
+        // Update status
+        payment.status = status;
+        await payment.save();
+
+        res.status(200).json({ status: 200, message: "Payment status updated successfully.", payment });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 500, message: "Error updating payment status.", error: error.message });
+    }
+};
+

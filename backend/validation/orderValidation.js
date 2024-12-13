@@ -81,8 +81,6 @@ exports.createOrderValidation = (req, res, next) => {
     next();
 }
 
-
-
 exports.updateOrderStatusValidation = (req, res, next) => {
     const schema = joi.object({
         status: joi.string().trim().required().messages({
