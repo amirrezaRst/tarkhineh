@@ -6,6 +6,7 @@ const ReportSchema = new mongoose.Schema({
     totalOrders: { type: Number, required: true },
     totalDiscount: { type: Number, default: 0 },
     date: { type: Date, default: Date.now },
+    reportType: { type: String, enum: ['daily', 'weekly', 'monthly'], required: true },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 });

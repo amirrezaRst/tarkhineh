@@ -6,8 +6,23 @@ const Order = require('../models/OrderModel');
 //? Get all payments
 exports.getAllPayments = async (req, res) => {
     try {
-        const payments = await Payment.find().populate('order');
-        res.status(200).json({ status: 200, payments });
+        const { user } = req.query;
+
+        if (!user) {
+            const payments = await Payment.find().populate('order');
+            return res.status(200).json({ status: 200, message: "payments fetched successfully", payments });
+        }
+        else {
+            const payments = await Payment.find()
+                .populate({
+                    path: 'order',
+                    match: { user }
+                });
+
+            const userPayments = payments.filter(payment => payment.order !== null);
+
+            return res.status(200).json({ status: 200, message: `The payments with ID ${user} were successfully completed.`, payments: userPayments });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: 500, message: "Error retrieving payments.", error: error.message });
@@ -25,7 +40,7 @@ exports.getPaymentById = async (req, res) => {
             return res.status(404).json({ status: 404, message: "Payment not found." });
         }
 
-        res.status(200).json({ status: 200, payment });
+        res.status(200).json({ status: 200, message: "Payment fetched successfully", payment });
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: 500, message: "Error retrieving payment.", error: error.message });

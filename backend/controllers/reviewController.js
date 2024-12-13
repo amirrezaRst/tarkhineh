@@ -1,25 +1,6 @@
 const Review = require('../models/ReviewModel');
 const User = require('../models/UserModel');
 
-// exports.getAllReviews = async (req, res) => {
-//     try {
-//         const reviews = await Review.find();
-//         res.status(200).json({
-//             status: 200,
-//             message: "fetch data successfully",
-//             total: reviews.length,
-//             data: {
-//                 reviews
-//             }
-//         });
-//     } catch (err) {
-//         res.status(404).json({
-//             status: 404,
-//             message: err
-//         });
-//     }
-// };
-
 exports.getAllReviews = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 4; // Default to 4 reviews per page
