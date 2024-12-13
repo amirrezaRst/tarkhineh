@@ -37,6 +37,7 @@ app.use("/api/discount", require('./routes/discountRoutes'));
 app.use("/api/cart", require('./routes/cartRoutes'));
 app.use("/api/order", require('./routes/orderRoutes'));
 app.use("/api/payment", require('./routes/paymentRoutes'));
+app.use("/api/like", require('./routes/likeRoutes'));
 
 //! Report Scheduler
 require('./utils/reportScheduler');

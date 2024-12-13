@@ -1,4 +1,3 @@
-console.log("reportScheduler.js Run!")
 const cron = require('node-cron');
 const moment = require('moment');
 const { generateDailyReport, generateWeeklyReport, generateMonthlyReport } = require('../controllers/reportController');

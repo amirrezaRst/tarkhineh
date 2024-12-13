@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const Searchbox = () => {
 
     const pathname = usePathname();
-    if (pathname === "/" || pathname === "/branch" || pathname === "/menu") return (
+    if (pathname === "/" || pathname === "/branch" ) return (
         <div className="container mt-6">
             <form
                 className="relative w-full h-11 md:hidden block rounded-lg border border-[#CBCBCB] overflow-hidden"
