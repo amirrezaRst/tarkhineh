@@ -35,6 +35,7 @@ app.use("/api/coupon", require('./routes/couponRoutes'));
 app.use("/api/menu", require('./routes/menuRoutes'));
 app.use("/api/discount", require('./routes/discountRoutes'));
 app.use("/api/cart", require('./routes/cartRoutes'));
+app.use("/api/order", require('./routes/orderRoutes'));
 
 
 

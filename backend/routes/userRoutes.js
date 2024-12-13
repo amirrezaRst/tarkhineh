@@ -5,7 +5,6 @@ const Authenticate = require('../middleware/Authenticate');
 const Authorize = require('../middleware/Authorize');
 const { allUser, singleUser, deleteUser, registerUser, login, logout, refreshToken } = require('../controllers/userController');
 const { registerValidation, loginValidation } = require('../validation/userValidation');
-// const { registerValidation, loginValidation, addSubscriptionValidation } = require('../validation/userValidation');
 
 const router = Router();
 
