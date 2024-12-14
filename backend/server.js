@@ -26,6 +26,7 @@ const app = express().use(express.json())
 
 
 //! Static Folder
+app.use("/public", express.static(path.join(__dirname, "public", "menu-images")));
 
 //! Routes
 app.use("/api/user", require('./routes/userRoutes'));

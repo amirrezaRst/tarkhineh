@@ -6,11 +6,11 @@ const { createMenuValidation } = require('../validation/menuValidation');
 
 router.route("/")
     .get(getMenuItems)
-    .post(createMenuValidation, createMenuItem);
+    .post( createMenuItem);
 
 router.route("/:id")
     .get(getMenuItemById)
-    .put(createMenuValidation, updateMenuItem)
+    .put(updateMenuItem)
     .delete(deleteMenuItem);
 
 // // ایجاد آیتم جدید در منو

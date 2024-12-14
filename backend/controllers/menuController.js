@@ -1,5 +1,18 @@
 const Menu = require('../models/MenuModel');
 const Discount = require('../models/DiscountModel');
+const uploadImage = require('../utils/upload');
+const { createMenuValidation } = require('../validation/menuValidation');
+
+const upload = uploadImage({
+    fieldName: "images", // نام فیلد فایل‌ها در درخواست
+    fileSize: "4000000", // حداکثر حجم 4 مگابایت
+    destination: '../public/menu-images/',
+    width: 474, // عرض تصویر
+    height: 474, // ارتفاع تصویر
+    quality: 70, // کیفیت تصویر
+    maxCount: 10 // حداکثر تعداد تصاویر
+});
+
 
 
 //! Get Request
@@ -33,19 +46,9 @@ exports.getMenuItemById = async (req, res) => {
 
 //! Post Request
 //? Create new Menu Item
-exports.createMenuItem = async (req, res) => {
+exports.createMenuItem = [upload, createMenuValidation, async (req, res) => {
     try {
-        const { name, description, price, category, images, ingredients, discount } = req.body;
-
-        const newMenuItem = new Menu({
-            name,
-            description,
-            price,
-            category,
-            images,
-            ingredients,
-            discount
-        });
+        const newMenuItem = new Menu(req.body);
 
         await newMenuItem.save();
         res.status(201).json({ status: 201, message: "Menu item created successfully.", menuItem: newMenuItem });
@@ -53,12 +56,12 @@ exports.createMenuItem = async (req, res) => {
         console.error(error);
         res.status(500).json({ status: 500, message: "An error occurred while creating the menu item." });
     }
-};
+}];
 
 
 //! Update Request
 //? Update Menu Item
-exports.updateMenuItem = async (req, res) => {
+exports.updateMenuItem = [upload, createMenuValidation, async (req, res) => {
     try {
         const { name, description, price, category, images, ingredients, discount, available } = req.body;
 
@@ -77,7 +80,7 @@ exports.updateMenuItem = async (req, res) => {
         console.error(error);
         res.status(500).json({ status: 500, message: "An error occurred while updating the menu item." });
     }
-};
+}];
 
 //! Delete Request
 //? Delete Menu Item

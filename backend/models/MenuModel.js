@@ -16,6 +16,13 @@ const MenuSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Discount'
     },
+    foodType: {
+        type: String,
+        enum: ["iranian", "non-iranian", "pizza", "sandwich"]
+    },
+    isPersian: {
+        type: Boolean
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Menu', MenuSchema);
