@@ -35,7 +35,6 @@ exports.getBranchById = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // پیدا کردن شعبه و پاپیولیت اولیه
         const branch = await Branch.findById(id)
             .populate('manager', 'fullName email')
             .populate({
