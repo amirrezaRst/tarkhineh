@@ -33,7 +33,7 @@ const BranchesPage = () => {
             fetChBranchMenuItems(branch);
         }
     }, [branch])
-    
+
 
     return (
         <main>

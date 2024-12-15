@@ -92,6 +92,74 @@ exports.getBranchById = async (req, res) => {
 };
 
 
+exports.getBranchItems = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { limit = 10, category, sortBy } = req.query;
+
+        const branch = await Branch.findById(id)
+            .populate('manager', 'fullName email')
+            .populate({
+                path: 'menus',
+                match: category ? { category } : {}, // فیلتر بر اساس دسته‌بندی
+                select: 'name price category images available foodType isPersian'
+            });
+
+        if (!branch) {
+            return res.status(404).json({ status: 404, message: "Branch not found." });
+        }
+
+        const menusWithDetails = await Promise.all(
+            branch.menus.map(async (menu) => {
+                //! finding the discount for each menu item
+                const discount = await Discount.findOne({
+                    menuItem: menu._id,
+                    active: true,
+                    startDate: { $lte: new Date() },
+                    endDate: { $gte: new Date() }
+                }).select("discountType discountValue");
+
+                //! Finding the number of reviews and the average rating for each menu item
+                const reviews = await Review.find({ menuItem: menu._id });
+                const totalReviews = reviews.length;
+                const averageRating = totalReviews
+                    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews).toFixed(1)
+                    : null;
+
+                return {
+                    ...menu._doc,   //! Copy Menu info
+                    discount: discount || null, //! adding discount to the response
+                    reviews: {
+                        total: totalReviews,    //! number of reviews
+                        averageRating: averageRating    //! average rating
+                    }
+                };
+            })
+        );
+
+        let sortedMenus = menusWithDetails;
+
+        if (sortBy === "rating") {
+            sortedMenus = menusWithDetails.sort((a, b) => b.reviews.averageRating - a.reviews.averageRating);
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: "Fetch items successfully.",
+            branch: {
+                _id: branch._id,
+                name: branch.name,
+                manager: branch.manager,
+                menus: sortedMenus.slice(0, parseInt(limit))
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ status: 500, message: "Error fetching items.", error: error.message });
+    }
+};
+
+
+
 
 
 //! Post Request
