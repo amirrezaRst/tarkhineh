@@ -1,4 +1,3 @@
-import { GalleryIcon } from "@/assets/Icons";
 import Image from "next/image";
 import Link from "next/link";
 

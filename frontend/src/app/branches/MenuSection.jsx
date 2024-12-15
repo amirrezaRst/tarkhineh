@@ -2,7 +2,7 @@ import MenuCard from "@/components/branchesPage/MenuCard";
 
 const MenuSection = ({ title, items, bgColor = 'white' }) => {
     return (
-        <section className={`md:py-[4.5rem] py-10 ${bgColor === 'green' ? 'bg-[#417F56]' : ''}`}>
+        <section className={`md:py-[4.5rem] py-10 transition-all duration-700 ${bgColor === 'green' ? 'bg-[#417F56]' : ''}`}>
             <div className="container">
                 <h2 className={`md:text-2.5xl text-2xl ${bgColor === 'green' ? 'text-white' : 'text-[#353535]'} font-semibold`}>
                     {title}

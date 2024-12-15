@@ -1,69 +1,82 @@
-import { ClockIcon, HeartIcon, LocationIcon, PhoneIcon, StarIcon } from "@/assets/Icons";
+"use client";
+
 import SelectBranchSection from "./SelectBranchSection";
-import MenuCard from "@/components/branchesPage/MenuCard";
 import MenuSection from "./MenuSection";
 import AboutBranchSection from "./AboutBranchSection";
-import CommentCard from "@/components/branchesPage/CommentCard";
+import { useSearchParams } from "next/navigation";
+import CommentSection from "./CommentSection";
+import { useEffect, useState } from "react";
+
+
 
 const BranchesPage = () => {
+    const branch = useSearchParams().get("branch");
+    const [menusItem, setMenusItem] = useState();
+
+    const fetChBranchMenuItems = async (branchName) => {
+        let branchId;
+        if (branchName == "aghdasiyeh") branchId = "675de19cf836156025ee8575";
+        else if (branchName == "tehranpars") branchId = "675de19cf836156025ee8575";
+        else if (branchName == "tehranpars") branchId = "675de19cf836156025ee8575";
+        else if (branchName == "tehranpars") branchId = "675de19cf836156025ee8575";
+        else {
+            return alert("this branch does not exist")
+        }
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/branch/${branchId}`)
+        const data = await res.json();
+        console.log(data?.branch?.menus)
+        setMenusItem(data?.branch?.menus);
+    }
+
+    useEffect(() => {
+        if (branch) {
+            fetChBranchMenuItems(branch);
+        }
+    }, [branch])
+    
 
     return (
         <main>
 
             {/*//! Select Branch Section */}
-            <SelectBranchSection />
+            <SelectBranchSection branch={branch} />
 
+            {branch ?
+                <>
+                    {/*//! Branch Foods Section */}
+                    <MenuSection title="غذاهای شعبه اقدسیه" items={["1", "2", "3"]} />
 
-            {/*//! Branch Foods Section */}
-            <MenuSection title="غذاهای شعبه اقدسیه" items={["1", "2", "3"]} />
-
-            {/*//! Popular Foods Section */}
-            <MenuSection title="غذاهای محبوب شعبه اقدسیه" items={["1", "2", "3"]} bgColor="green" />
-
-
-
-            {/*//! Branch Appetizers Section */}
-            <MenuSection title="پیش غذاهای شعبه اقدسیه" items={["1", "2", "3"]} />
-
-            {/*//! Popular Appetizers Section */}
-            <MenuSection title="پیش غذاهای محبوب شعبه اقدسیه" items={["1", "2", "3"]} bgColor="green" />
+                    {/*//! Popular Foods Section */}
+                    <MenuSection title="غذاهای محبوب شعبه اقدسیه" items={["1", "2", "3"]} bgColor="green" />
 
 
 
-            {/*//! Branch Appetizers Section */}
-            <MenuSection title="دسرهای شعبه اقدسیه" items={["1", "2", "3"]} />
+                    {/*//! Branch Appetizers Section */}
+                    <MenuSection title="پیش غذاهای شعبه اقدسیه" items={["1", "2", "3"]} />
 
-            {/*//! Popular Appetizers Section */}
-            <MenuSection title="دسرهای محبوب شعبه اقدسیه" items={["1", "2", "3"]} bgColor="green" />
-
-
-
-            {/*//! About Branch Section */}
-            <AboutBranchSection />
+                    {/*//! Popular Appetizers Section */}
+                    <MenuSection title="پیش غذاهای محبوب شعبه اقدسیه" items={["1", "2", "3"]} bgColor="green" />
 
 
-            {/*//! START User Comments Section */}
-            <section
-                className={`container md:py-20 py-12 mt-10 mb-5`}
-            >
-                <h2 className="md:text-3xl text-2.5xl font-semibold text-center mb-8">نظرات کاربران</h2>
 
-                {/*//! Comments List */}
-                <div className="flex gap-8 overflow-x-auto pb-2">
+                    {/*//! Branch Appetizers Section */}
+                    <MenuSection title="دسرهای شعبه اقدسیه" items={["1", "2", "3"]} />
 
-                    {
-                        [{ fullName: "آرزو محمدعلیزاده", profile: "/images/profile-1.jpg" },
-                        { fullName: "سردار وظیفه", profile: "/images/profile-2.jpg" },
-                        { fullName: "علی عسگری", profile: "/images/profile-3.jpg" }].map((item, index) =>
-                            <CommentCard key={index} {...item} />
-                        )
-                    }
+                    {/*//! Popular Appetizers Section */}
+                    <MenuSection title="دسرهای محبوب شعبه اقدسیه" items={["1", "2", "3"]} bgColor="green" />
 
-                </div>
 
-            </section>
-            {/*//? END User Comments Section */}
 
+                    {/*//! About Branch Section */}
+                    <AboutBranchSection />
+
+
+                    {/*//! User Comments Section */}
+                    <CommentSection />
+                </>
+                :
+                null
+            }
 
 
         </main >

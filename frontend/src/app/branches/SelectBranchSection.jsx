@@ -4,13 +4,13 @@ import BranchCard from "@/components/branchesPage/BranchCard";
 import { branchList } from "@/constant/branchList";
 import { useSearchParams } from "next/navigation";
 
-const SelectBranchSection = () => {
-    const branch = useSearchParams().get("branch");
+const SelectBranchSection = ({branch}) => {
+    // const branch = useSearchParams().get("branch");
 
     
     return (
         <section
-            className={`md:py-20 py-12 container duration-200 ${branch ? "opacity-0 invisible scale-95" : "opacity-100 visible scale-100"}`}
+            className={`container duration-200 ${branch ? "opacity-0 invisible scale-95 max-h-0" : "md:py-20 py-12 opacity-100 visible scale-100 max-h-full"}`}
         >
 
             <h2 className="md:text-3xl text-2.5xl font-semibold text-center">انتخاب شعبه</h2>
