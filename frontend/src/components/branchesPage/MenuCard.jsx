@@ -1,6 +1,8 @@
 import { HeartIcon, StarIcon } from "@/assets/Icons";
-import PersianNumber from "@/utils/ConvertToPersianNumber";
 import FormatPrice from "@/utils/FormatPrice";
+import MenuCardDiscount from "./MenuCardDiscount";
+import MenuCardLike from "./MenuCardLike";
+import MenuCardRate from "./MenuCardRate";
 
 const MenuCard = ({ _id, name, price, images, discount, reviews, available }) => {
 
@@ -29,33 +31,14 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, available }) =>
 
                 <div className="flex items-center justify-between gap-2">
 
-                    <div className="text-[#adadad] text-xs flex items-center gap-2">
-                        <HeartIcon className="stroke-[#adadad]" />
-                        {/* <span>افزودن به علاقمندی ها</span> */}
-                    </div>
-
-                    <div className={`${discount ? "flex" : "hidden"} items-center justify-center gap-2`}>
-                        <span
-                            className="text-[#ADADAD] 3xl:text-lg text-base line-through"
-                        >{FormatPrice(price)}</span>
-                        <span
-                            className="bg-[#FFF2F2] 3xl:text-base text-sm text-[#C30000] rounded-full pt-0.5 px-2"
-                        >
-                            {discount?.discountType === "percentage" ?
-                                `%${PersianNumber(discount?.discountValue || 0)}` :
-                                `$${PersianNumber(discount?.discountValue || 0)}`}
-                        </span>
-                    </div>
+                    <MenuCardLike />
+                    <MenuCardDiscount discount={discount} price={price} />
 
                 </div>
 
                 <div className="flex items-center justify-between gap-2 mt-2">
 
-                    <div className="font-medium text-super-base flex items-center gap-0.5">
-                        <StarIcon className="w-[22px] h-[22px]" />
-                        <p>{PersianNumber(reviews?.averageRating || 0)} <span className="text-[#adadad] font-light text-xs mr-0.5">({PersianNumber(reviews?.total)} امتیاز)</span></p>
-                    </div>
-
+                    <MenuCardRate reviews={reviews} />
                     <p className="text-[#353535] ">{FormatPrice(finalPrice)} تومان</p>
 
                 </div>
