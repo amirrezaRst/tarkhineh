@@ -14,7 +14,7 @@ const AboutSectionInfo = () => {
                 <button className="flex items-center justify-between gap-2 border border-white rounded-md py-2 px-5 md:mt-7 mt-4 float-left">
                     <ShoppingCardIcon className="fill-white w-[22px] h-[22px]" />
                     <span className="text-white text-super-sm">اطلاعات بیشتر</span>
-                    <ChevronIcon className="stroke-white rotate-90" />
+                    <ChevronIcon className="fill-white rotate-90" />
                 </button>
             </Link>
         </div>

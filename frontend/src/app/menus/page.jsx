@@ -35,21 +35,21 @@ const MenuPage = () => {
                     <div
                         className="bg-[#EDEDED] flex items-center flex-none gap-1.5 py-1 md:px-4 px-2.5 md:leading-7 leading-6 text-[#353535] md:text-base text-sm cursor-pointer rounded-full"
                     >
-                        <span>پاستا سبزیجات</span> <ChevronIcon className="inline rotate-90" />
+                        <span>پاستا سبزیجات</span> <ChevronIcon className="fill-[#717171] inline rotate-90" />
                     </div>
 
                     {/*//TODO Single Item */}
                     <div
                         className="bg-[#EDEDED] flex items-center flex-none gap-1.5 py-1 md:px-4 px-2.5 md:leading-7 leading-6 text-[#353535] md:text-base text-sm cursor-pointer rounded-full"
                     >
-                        <span>پیتزا سیر و استیک</span> <ChevronIcon className="inline rotate-90" />
+                        <span>پیتزا سیر و استیک</span> <ChevronIcon className="fill-[#717171] inline rotate-90" />
                     </div>
 
                     {/*//TODO Single Item */}
                     <div
                         className="bg-[#EDEDED] flex items-center flex-none gap-1.5 py-1 md:px-4 px-2.5 md:leading-7 leading-6 text-[#353535] md:text-base text-sm cursor-pointer rounded-full"
                     >
-                        <span>سالاد سزار</span> <ChevronIcon className="inline rotate-90" />
+                        <span>سالاد سزار</span> <ChevronIcon className="fill-[#717171] inline rotate-90" />
                     </div>
 
 

@@ -31,7 +31,7 @@ const Accordion = ({ title, description, index, isOpen, setIsOpen }) => {
                 <h6 className={`${isOpen === index ? "text-[#417F56]" : ""} duration-300`}>{title}</h6>
                 <button>
                     <ChevronIcon
-                        className={`md:w-[22px] md:h-[22px] w-[18px] h-[18px] ${isOpen === index ? "stroke-[#417F56]" : "stroke-[#353535]"} transform transition-transform duration-300 ${isOpen === index ? "rotate-180" : "rotate-0"}`}
+                        className={`md:w-[22px] md:h-[22px] w-[18px] h-[18px] ${isOpen === index ? "fill-[#417F56]" : "fill-[#353535]"} transform transition-transform duration-300 ${isOpen === index ? "rotate-180" : "rotate-0"}`}
                     />
                 </button>
             </div>

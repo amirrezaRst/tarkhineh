@@ -23,28 +23,28 @@ const InterestsPage = () => {
                     <div
                         className="bg-[#EDEDED] flex items-center flex-none gap-1.5 py-0.5 md:px-4 px-2.5 md:leading-7 leading-6 text-[#353535] md:text-super-sm text-sm cursor-pointer rounded-full"
                     >
-                        <span>غذای اصلی</span> <ChevronIcon className="rotate-90" />
+                        <span>غذای اصلی</span> <ChevronIcon className="fill-[#717171]rotate-90" />
                     </div>
 
                     {/*//TODO Single Item */}
                     <div
                         className="bg-[#EDEDED] flex items-center flex-none gap-1.5 py-0.5 md:px-4 px-2.5 md:leading-7 leading-6 text-[#353535] md:text-super-sm text-sm cursor-pointer rounded-full"
                     >
-                        <span>پیش غذا</span> <ChevronIcon className="rotate-90" />
+                        <span>پیش غذا</span> <ChevronIcon className="fill-[#717171]rotate-90" />
                     </div>
 
                     {/*//TODO Single Item */}
                     <div
                         className="bg-[#EDEDED] flex items-center flex-none gap-1.5 py-0.5 md:px-4 px-2.5 md:leading-7 leading-6 text-[#353535] md:text-super-sm text-sm cursor-pointer rounded-full"
                     >
-                        <span>دسر</span> <ChevronIcon className="rotate-90" />
+                        <span>دسر</span> <ChevronIcon className="fill-[#717171]rotate-90" />
                     </div>
 
                     {/*//TODO Single Item */}
                     <div
                         className="bg-[#EDEDED] flex items-center flex-none gap-1.5 py-0.5 md:px-4 px-2.5 md:leading-7 leading-6 text-[#353535] md:text-super-sm text-sm cursor-pointer rounded-full"
                     >
-                        <span>نوشیدنی</span> <ChevronIcon className="rotate-90" />
+                        <span>نوشیدنی</span> <ChevronIcon className="fill-[#717171]rotate-90" />
                     </div>
 
 

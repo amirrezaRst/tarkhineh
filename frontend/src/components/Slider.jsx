@@ -18,13 +18,13 @@ const Slider = () => {
 
                 <div className="w-full flex items-center justify-between px-6">
                     <button className="p-3 md:block hidden">
-                        <ChevronIcon className="-rotate-90 stroke-white w-7 h-7" />
+                        <ChevronIcon className="-rotate-90 fill-white w-7 h-7" />
                     </button>
                     <h1 className="text-white xl:text-4.5xl lg:text-4xl text-3xl md:leading-normal leading-[45px] font-bold text-center">
                         تجربه غذای سالم و گیاهی به سبک ترخینه
                     </h1>
                     <button className="p-3 md:block hidden">
-                        <ChevronIcon className="rotate-90 stroke-white w-7 h-7" />
+                        <ChevronIcon className="rotate-90 fill-white w-7 h-7" />
                     </button>
                 </div>
 

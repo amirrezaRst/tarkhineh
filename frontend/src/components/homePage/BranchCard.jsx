@@ -21,7 +21,7 @@ const BranchCard = ({ imageSrc, name, address }) => (
             <h3 className="md:text-xl font-medium text-[#353535] md:mb-3.5 mb-2">{name}</h3>
             <p className="text-[#717171] md:text-base text-sm md:mb-4">{address}</p>
             <button className="md:flex items-center flex-nowrap hidden absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600">
-                صفحه شعبه <ChevronIcon className="rotate-90 inline stroke-[#315F41]" />
+                صفحه شعبه <ChevronIcon className="fill-[#315F41] rotate-90 inline" />
             </button>
         </div>
     </div>

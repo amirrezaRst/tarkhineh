@@ -1,21 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { ChevronIcon } from "@/assets/Icons";
+import { useSearchParams } from "next/navigation";
+import PreserveQueryLink from "@/hooks/PreserveQueryLink";
 
 
-const DropdownMenu = ({ children, handleActive, text, path }) => {
+const DropdownMenu = ({ children, handleActive, text, pathname, path }) => {
     const [isDropOpen, setIsDropOpen] = useState(false);
+    const [branchName, setBranchName] = useState(null);
+
+    const branch = useSearchParams().get("branch");
+
+    useEffect(() => {
+        if (branch) {
+            if (branch == "aghdasiyeh") setBranchName("اقدسیه");
+            else if (branch == "tehranpars") setBranchName("تهرانپارس");
+            else if (branch == "vanak") setBranchName("ونک");
+            else if (branch == "chalous") setBranchName("چالوس");
+        }
+    }, [branch]);
+
 
     return (
         <div className="relative">
             <li className={handleActive(path)} onClick={() => isDropOpen && setIsDropOpen(false)}>
-                <Link href={path}>{text}</Link>
+                {path == "/branches" ? branch ?
+                    <span className="cursor-pointer" onClick={() => setIsDropOpen(!isDropOpen)}>شعبه {branchName}</span> :
+                    <Link href={path}>{text}</Link> :
+                    <PreserveQueryLink href={path}>{text}</PreserveQueryLink>
+                }
                 <span
                     className="cursor-pointer p-1"
                     onClick={() => setIsDropOpen(!isDropOpen)}
                 >
-                    <ChevronIcon className={`inline ${isDropOpen ? "rotate-180" : "rotate-0"} duration-300`} />
+                    <ChevronIcon className={`inline ${pathname === path ? "fill-[#417F56]" : "fill-[#717171]"} ${isDropOpen ? "rotate-180" : "rotate-0"} duration-300`} />
                 </span>
             </li>
 
