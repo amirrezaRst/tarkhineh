@@ -1,16 +1,13 @@
 "use client";
 
-import { ChevronIcon } from "@/assets/Icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import DropdownMenu from "../DropdownMenu";
 import PreserveQueryLink from "@/hooks/PreserveQueryLink";
 
 
 const NavbarLinks = () => {
     const pathname = usePathname();
-    const [isDropOpen, setIsDropOpen] = useState(false);
 
     const handleActive = (path) => {
         if (pathname === path) return "px-2 py-1 text-[#417F56] border-b-2 border-b-[#499b64]"
