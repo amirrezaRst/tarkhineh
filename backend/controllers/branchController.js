@@ -95,17 +95,21 @@ exports.getBranchById = async (req, res) => {
 exports.getBranchItems = async (req, res) => {
     try {
         const { id } = req.params;
-        const { limit, category, sortBy } = req.query;
+        const { limit, category, sortBy, foodType, isPersian } = req.query;
 
         const branch = await Branch.findById(id)
             .populate('manager', 'fullName email')
             .populate({
                 path: 'menus',
-                match: category ? { category } : {},
+                match: {
+                    ...(category && { category }), // فیلتر بر اساس دسته‌بندی
+                    ...(foodType && { foodType }), // فیلتر بر اساس نوع غذا
+                    ...(isPersian && { isPersian: isPersian === 'true' }) // فیلتر بر اساس ایرانی بودن
+                },
                 select: 'name price category images ingredients available foodType isPersian createdAt'
             });
 
-        if (!branch) {
+            if (!branch) {
             return res.status(404).json({ status: 404, message: "Branch not found." });
         }
 
@@ -138,15 +142,15 @@ exports.getBranchItems = async (req, res) => {
         );
 
         let sortedMenus = menusWithDetails;
-        
+
         if (sortBy === "rating") {
             sortedMenus = menusWithDetails.sort((a, b) => b.reviews.averageRating - a.reviews.averageRating);
         }
         else if (sortBy === "asc") {
-            sortedMenus = menusWithDetails.sort((a, b) => b.createdAt - a.createdAt)
+            sortedMenus = menusWithDetails.sort((a, b) => b.createdAt - a.createdAt);
         }
         else if (sortBy === "desc") {
-            sortedMenus = menusWithDetails.sort((a, b) => a.createdAt - b.createdAt)
+            sortedMenus = menusWithDetails.sort((a, b) => a.createdAt - b.createdAt);
         }
 
         res.status(200).json({
@@ -163,6 +167,7 @@ exports.getBranchItems = async (req, res) => {
         res.status(500).json({ status: 500, message: "Error fetching items.", error: error.message });
     }
 };
+
 
 
 

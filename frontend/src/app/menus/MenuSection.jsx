@@ -1,19 +1,16 @@
-"use client";
-
 import MenuCard from "@/components/menusPage/MenuCard";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const MenuSection = ({ title }) => {
+const MenuSection = ({ title, category,  foodType, isPersian }) => {
     const [items, setItems] = useState();
     const [branchId, setBranchId] = useState(null)
     const branch = useSearchParams().get("branch");
-    const category = useSearchParams().get("category") || "main";
 
 
     const fetchMenuItems = async () => {
         console.log("fetch menu items")
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/branch/get-branch-items/${branchId}?sortBy=asc&category=${category}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/branch/get-branch-items/${branchId}?sortBy=asc&category=${category}&foodType=${foodType || ""}&isPersian=${isPersian || ""}`);
         const data = await res.json();
 
         setItems(data?.branch?.menus);
@@ -49,6 +46,11 @@ const MenuSection = ({ title }) => {
                 {items?.length > 0 && items?.map((item, index) => (
                     <MenuCard key={index} {...item} />
                 ))}
+                {items?.length === 0 &&
+                    <p className="mt-0 text-[#353535] font-light">
+                        اینجا خالی است، اما ترخینه همیشه در حال آماده کردن بهترین‌هاست.
+                    </p>
+                }
 
             </article>
         </section>
