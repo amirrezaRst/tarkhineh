@@ -95,14 +95,14 @@ exports.getBranchById = async (req, res) => {
 exports.getBranchItems = async (req, res) => {
     try {
         const { id } = req.params;
-        const { limit = 10, category, sortBy } = req.query;
+        const { limit, category, sortBy } = req.query;
 
         const branch = await Branch.findById(id)
             .populate('manager', 'fullName email')
             .populate({
                 path: 'menus',
-                match: category ? { category } : {}, // فیلتر بر اساس دسته‌بندی
-                select: 'name price category images available foodType isPersian'
+                match: category ? { category } : {},
+                select: 'name price category images ingredients available foodType isPersian createdAt'
             });
 
         if (!branch) {
@@ -138,9 +138,15 @@ exports.getBranchItems = async (req, res) => {
         );
 
         let sortedMenus = menusWithDetails;
-
+        
         if (sortBy === "rating") {
             sortedMenus = menusWithDetails.sort((a, b) => b.reviews.averageRating - a.reviews.averageRating);
+        }
+        else if (sortBy === "asc") {
+            sortedMenus = menusWithDetails.sort((a, b) => b.createdAt - a.createdAt)
+        }
+        else if (sortBy === "desc") {
+            sortedMenus = menusWithDetails.sort((a, b) => a.createdAt - b.createdAt)
         }
 
         res.status(200).json({
@@ -150,7 +156,7 @@ exports.getBranchItems = async (req, res) => {
                 _id: branch._id,
                 name: branch.name,
                 manager: branch.manager,
-                menus: sortedMenus.slice(0, parseInt(limit))
+                menus: limit ? sortedMenus.slice(0, parseInt(limit)) : sortedMenus
             }
         });
     } catch (error) {

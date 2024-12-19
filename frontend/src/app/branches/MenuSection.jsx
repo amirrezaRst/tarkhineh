@@ -6,13 +6,8 @@ const MenuSection = ({ title, branchId, category, ratingSort, bgColor = 'white' 
     const [branchName, setBranchName] = useState(null);
 
     const fetchMenuItems = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/branch/get-branch-items/${branchId}?category=${category}&sortBy=${ratingSort && 'rating'}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/branch/get-branch-items/${branchId}?limit=10&category=${category}&sortBy=${ratingSort && 'rating'}`);
         const data = await res.json();
-
-        // console.log(branchId)
-        // console.log(category)
-        // console.log(data);
-        // console.log("__________________________");
 
         setItems(data?.branch?.menus);
     }

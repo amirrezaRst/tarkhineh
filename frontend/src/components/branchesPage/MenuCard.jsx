@@ -1,4 +1,3 @@
-import { HeartIcon, StarIcon } from "@/assets/Icons";
 import FormatPrice from "@/utils/FormatPrice";
 import MenuCardDiscount from "./MenuCardDiscount";
 import MenuCardLike from "./MenuCardLike";
@@ -19,11 +18,11 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, available }) =>
 
             <img
                 src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[0]}`}
-                alt={name}
+                alt={`ترخینه ${name}`}
                 className="w-full h-[220px] object-center object-cover"
             />
 
-            {/*// Card Content */}
+            {/*//TODO Card Content */}
             <div className="pt-2 pb-3.5 px-3">
                 <h3 className="text-[#353535] text-lg text-center font-semibold mb-2.5">
                     {name}
