@@ -12,25 +12,6 @@ import { useEffect, useState } from "react";
 const BranchesPage = () => {
     const branch = useSearchParams().get("branch");
     const [branchId, setBranchId] = useState(null);
-    const [menusItem, setMenusItem] = useState();
-
-    const fetChBranchMenuItems = async (branchName) => {
-        // let branchId;
-        // if (branchName == "aghdasiyeh") branchId = "675de19cf836156025ee8575";
-        // else if (branchName == "tehranpars") branchId = "675f4c1655060567771c7884";
-        // else if (branchName == "vanak") branchId = "675f4bfe55060567771c7881";
-        // else if (branchName == "chalous") branchId = "675f4c3155060567771c7887";
-        // else {
-        //     return alert("this branch does not exist")
-        // }
-        console.log(branchId)
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/branch/${branchId}`)
-        const data = await res.json();
-        console.log(data?.branch?.menus)
-        setMenusItem(data?.branch?.menus);
-    }
-
-
 
     useEffect(() => {
         if (branch) {
@@ -38,7 +19,6 @@ const BranchesPage = () => {
             else if (branch == "tehranpars") setBranchId("675f4c1655060567771c7884");
             else if (branch == "vanak") setBranchId("675f4bfe55060567771c7881");
             else if (branch == "chalous") setBranchId("675f4c3155060567771c7887");
-            fetChBranchMenuItems()
         }
     }, [branch])
 
@@ -47,7 +27,7 @@ const BranchesPage = () => {
         <main>
 
             {/*//! Select Branch Section */}
-            <SelectBranchSection branch={branch} />
+            <SelectBranchSection branch={branch} href={"branches"} />
 
             {branch ?
                 <>

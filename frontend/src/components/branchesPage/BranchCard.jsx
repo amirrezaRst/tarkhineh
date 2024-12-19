@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const BranchCard = ({ imageSrc, name, address, path }) => {
+const BranchCard = ({ imageSrc, name, address, href, path }) => {
     return (
-        <Link href={`/branches?branch=${path}`} scroll={true}>
+        <Link href={`/${href}?branch=${path}`}>
             <div className="bg-white md:h-[410px] h-[140px] md:block flex group border border-[#CBCBCB] hover:border-[#417F56] hover:shadow-lg hover:-translate-y-0.5 rounded-lg transition-all duration-300 overflow-hidden">
                 <div className="relative md:w-full w-[45%] md:h-[280px] transition-all duration-500">
                     <Image
