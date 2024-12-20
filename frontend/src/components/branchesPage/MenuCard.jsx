@@ -1,9 +1,15 @@
+"use client";
+
 import FormatPrice from "@/utils/FormatPrice";
 import MenuCardDiscount from "./MenuCardDiscount";
 import MenuCardLike from "./MenuCardLike";
 import MenuCardRate from "./MenuCardRate";
+import { useState } from "react";
+import ModalContainer from "../modal/ModalContainer";
+import MenuModal from "../modal/MenuModal";
 
-const MenuCard = ({ _id, name, price, images, discount, reviews, available }) => {
+const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available }) => {
+    const [isOpen, setIsOpen] = useState(false);
 
     const finalPrice = discount
         ? discount.discountType === "percentage"
@@ -19,12 +25,16 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, available }) =>
             <img
                 src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[0]}`}
                 alt={`ترخینه ${name}`}
-                className="w-full h-[220px] object-center object-cover"
+                className="w-full h-[220px] object-center object-cover cursor-pointer"
+                onClick={() => setIsOpen(true)}
             />
 
             {/*//TODO Card Content */}
             <div className="pt-2 pb-3.5 px-3">
-                <h3 className="text-[#353535] text-lg text-center font-semibold mb-2.5">
+                <h3
+                    className="text-[#353535] text-lg text-center font-semibold mb-2.5 cursor-pointer"
+                    onClick={() => setIsOpen(true)}
+                >
                     {name}
                 </h3>
 
@@ -48,6 +58,11 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, available }) =>
                     افزودن به سبد خرید
                 </button>
             </div>
+
+            {/*//! Menu Item Details Menu */}
+            <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen}>
+                <MenuModal name={name} description={description} images={images} ingredients={ingredients} reviews={reviews} setIsOpen={setIsOpen} />
+            </ModalContainer>
 
         </div>
     );

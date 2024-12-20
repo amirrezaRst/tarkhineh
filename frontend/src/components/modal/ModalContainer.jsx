@@ -28,7 +28,9 @@ const ModalContainer = ({ children, isOpen, setIsOpen, title }) => {
             {/* <ModalContent user={user} title={title} isOpen={isOpen} setIsOpen={setIsOpen}>
                 {children}
             </ModalContent> */}
-            {children}
+            <div onClick={(e) => e.stopPropagation()}>
+                {children}
+            </div>
         </Overlay>
     );
 }

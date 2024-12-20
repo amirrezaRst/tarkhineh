@@ -102,14 +102,14 @@ exports.getBranchItems = async (req, res) => {
             .populate({
                 path: 'menus',
                 match: {
-                    ...(category && { category }), // فیلتر بر اساس دسته‌بندی
-                    ...(foodType && { foodType }), // فیلتر بر اساس نوع غذا
-                    ...(isPersian && { isPersian: isPersian === 'true' }) // فیلتر بر اساس ایرانی بودن
+                    ...(category && { category }),
+                    ...(foodType && { foodType }),
+                    ...(isPersian && { isPersian: isPersian === 'true' })
                 },
-                select: 'name price category images ingredients available foodType isPersian createdAt'
+                select: 'name price category images ingredients description available foodType isPersian createdAt'
             });
 
-            if (!branch) {
+        if (!branch) {
             return res.status(404).json({ status: 404, message: "Branch not found." });
         }
 

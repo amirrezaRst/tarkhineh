@@ -4,10 +4,12 @@ import StarRating from "./StarRating";
 import MenuCardDiscount from "./MenuCardDiscount";
 import MenuCardLike from "./MenuCardLike";
 import FormatPrice from "@/utils/FormatPrice";
-import DialogModal from "../modal/ModalContainer";
+import ModalContainer from "../modal/ModalContainer";
 import { useState } from "react";
+import { XmarkIcon } from "@/assets/Icons";
+import MenuModal from "../modal/MenuModal";
 
-const MenuCard = ({ _id, name, price, images, discount, reviews, ingredients, available }) => {
+const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available }) => {
 
     const [isOpen, setIsOpen] = useState(false);
 
@@ -27,7 +29,8 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, ingredients, av
                 <img
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[0]}`}
                     alt={`ترخینه ${name}`}
-                    className="h-full 3xl:w-[230px] 2xl:w-[210px] xl:w-[190px] lg:w-[170px] md:w-[240px] w-[140px] object-cover"
+                    className="h-full 3xl:w-[230px] 2xl:w-[210px] xl:w-[190px] lg:w-[170px] md:w-[240px] w-[140px] object-cover cursor-pointer"
+                    onClick={() => setIsOpen(true)}
                 />
 
                 {/*//TODO Card Content */}
@@ -71,9 +74,9 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, ingredients, av
 
             </div>
 
-            <DialogModal isOpen={isOpen} setIsOpen={setIsOpen}>
-
-            </DialogModal>
+            <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen}>
+                <MenuModal name={name} description={description} images={images} ingredients={ingredients} reviews={reviews} setIsOpen={setIsOpen} />
+            </ModalContainer>
 
         </>
     );
