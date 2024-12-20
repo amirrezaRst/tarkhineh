@@ -64,7 +64,7 @@ const BranchesPage = () => {
 
 
                     {/*//! About Branch Section */}
-                    <AboutBranchSection />
+                    <AboutBranchSection branch={branch} />
 
 
                     {/*//! User Comments Section */}
