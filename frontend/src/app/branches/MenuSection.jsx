@@ -25,19 +25,22 @@ const MenuSection = ({ title, branchId, category, ratingSort, bgColor = 'white' 
     return (
         <section className={`md:py-[4.5rem] py-10 transition-all duration-700 ${bgColor === 'green' ? 'bg-[#417F56]' : ''}`}>
             <div className="container">
+
                 <h2
-                    className={`md:text-2.5xl text-2xl ${!branchName && "bg-[#ededed] inline-block px-14 animate-pulse"} rounded
+                    className={`md:text-2.5xl text-xl ${!branchName && "bg-[#ededed] inline-block px-14 animate-pulse"} rounded
                         ${bgColor === 'green' ? 'text-white' : 'text-[#353535]'} font-semibold`}
                 >
                     <span className={`${branchName ? "opacity-100" : "opacity-0"} duration-200`}>
                         {title} شعبه {branchName}
                     </span>
                 </h2>
+
                 <div className="flex flex-nowrap gap-7 overflow-x-auto md:mt-11 mt-5 pb-1.5">
                     {items?.length > 0 && items?.map((item, index) => (
                         <MenuCard key={index} {...item} />
                     ))}
                 </div>
+
             </div>
         </section>
     );
