@@ -2,7 +2,7 @@ import MenuCard from "@/components/menusPage/MenuCard";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const MenuSection = ({ title, category,  foodType, isPersian }) => {
+const MenuSection = ({ title, category, foodType, isPersian }) => {
     const [items, setItems] = useState();
     const [branchId, setBranchId] = useState(null)
     const branch = useSearchParams().get("branch");
@@ -36,7 +36,7 @@ const MenuSection = ({ title, category,  foodType, isPersian }) => {
     return (
         <section>
             <h2
-                className={`lg:text-2.5xl text-1.5xl text-[#353535] font-semibold`}
+                className={`lg:text-2.5xl text-xl text-[#353535] md:font-semibold font-bold`}
             >
                 {title}
             </h2>

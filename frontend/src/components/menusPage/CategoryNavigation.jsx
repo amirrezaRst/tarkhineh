@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 const NavigationItem = ({ title, query, handleActive }) => {
     return (
-        <PreserveQueryLink href="/menus" query={{ category: query }}>
+        <PreserveQueryLink href="/menus" query={{ category: query }} className="flex-auto">
             <li className={handleActive(query)}>{title}</li>
         </PreserveQueryLink>
     )
@@ -36,7 +36,7 @@ const CategoryNavigation = () => {
                 <div className="relative inline-block md:w-auto w-full">
 
                     <ul
-                        className="flex items-center md:text-super-base text-[#717171] md:w-auto w-full"
+                        className="flex items-center md:text-super-base text-[#717171] md:w-auto"
                     >
                         {links.map((item, index) =>
                             <NavigationItem key={index} {...item} handleActive={handleActive} />
