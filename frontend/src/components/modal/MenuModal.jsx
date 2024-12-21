@@ -1,8 +1,8 @@
 import { XmarkIcon } from "@/assets/Icons";
 import StarRating from "../menusPage/StarRating";
 import ConvertToPersianNumbers from "@/utils/ConvertToPersianNumber";
-import MenuModalGallery from "./MenuModalGallery";
 import { useState } from "react";
+import Gallery from "../Gallery";
 
 const MenuModal = ({ name, images, ingredients, description, reviews, setIsOpen }) => {
     const [selectedImage, setSelectedImage] = useState(0);
@@ -17,23 +17,14 @@ const MenuModal = ({ name, images, ingredients, description, reviews, setIsOpen 
                     className="text-[#353535] text-xl font-semibold text-center"
                 >اطلاعات محصول</h4>
                 <XmarkIcon
-                    className="w-8 h-8 absolute left-0 top-0 cursor-pointer"
+                    className="fill-[#717171] w-8 h-8 absolute left-0 top-0 cursor-pointer"
                     onClick={() => setIsOpen(false)}
                 />
             </div>
 
             {/* Gallery */}
-            <div className="relative w-full h-[370px] bg-blue-400/15">
-
-                <img
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[selectedImage]}`}
-                    alt={`${name} ترخینه`}
-                    className="w-full h-full object-center object-cover"
-                />
-
-                {/* Images List */}
-                <MenuModalGallery name={name} images={images} selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
-
+            <div className="h-[370px]">
+                <Gallery name={name} images={images} selectedImage={selectedImage} setSelectedImage={setSelectedImage} setIsOpen={setIsOpen} />
             </div>
 
 

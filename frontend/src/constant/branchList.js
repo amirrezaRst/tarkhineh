@@ -20,7 +20,7 @@ export const branchList = [
     {
         name: "ونک",
         address: "میدان ونک، خیابان فردوسی، نبش کوچه نیلوفر، پلاک ۲۶",
-        images: ["restaurant-image-4.jpg"],
+        images: ["restaurant-image-4.jpg", "restaurant-image-1.1.jpg"],
         path: "vanak"
     },
 ]

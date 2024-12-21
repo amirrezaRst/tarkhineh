@@ -1,4 +1,4 @@
-const GalleryItem = ({ index, name, image, selectedImage, setSelectedImage }) => {
+const GalleryItem = ({ index, name, image, selectedImage, setSelectedImage, isBranchGallery }) => {
     return (
         <div
             className={`w-[4.5rem] h-[4.5rem] border-2 rounded-md overflow-hidden transition-all cursor-pointer
@@ -7,7 +7,7 @@ const GalleryItem = ({ index, name, image, selectedImage, setSelectedImage }) =>
             onClick={() => setSelectedImage(index)}
         >
             <img
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${image}`}
+                src={isBranchGallery?`/images/${image}`:`${process.env.NEXT_PUBLIC_IMAGE_URL}/${image}`}
                 alt={`${name} ترخینه`}
                 className="w-full h-full object-center object-cover"
             />
@@ -15,16 +15,16 @@ const GalleryItem = ({ index, name, image, selectedImage, setSelectedImage }) =>
     );
 }
 
-const MenuModalGallery = ({ name, images, selectedImage, setSelectedImage }) => {
+const GalleryImagesList = ({ name, images, selectedImage, setSelectedImage, isBranchGallery }) => {
     return (
         <div className="w-full absolute bottom-4 flex items-center justify-center gap-7">
 
             {images.map((image, index) => (
-                <GalleryItem key={index} index={index} name={name} image={image} selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
+                <GalleryItem key={index} index={index} name={name} image={image} selectedImage={selectedImage} setSelectedImage={setSelectedImage} isBranchGallery />
             ))}
 
         </div>
     );
 }
 
-export default MenuModalGallery;
+export default GalleryImagesList;

@@ -6,7 +6,6 @@ import MenuCardLike from "./MenuCardLike";
 import FormatPrice from "@/utils/FormatPrice";
 import ModalContainer from "../modal/ModalContainer";
 import { useState } from "react";
-import { XmarkIcon } from "@/assets/Icons";
 import MenuModal from "../modal/MenuModal";
 
 const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available }) => {

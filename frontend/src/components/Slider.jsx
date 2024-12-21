@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 
 import { ChevronIcon } from "@/assets/Icons";
+import PreserveQueryLink from "@/hooks/PreserveQueryLink";
 
 
 const Slider = () => {
@@ -29,9 +30,11 @@ const Slider = () => {
                 </div>
 
                 <div className="justify-items-end self-center md:mt-8 mt-5">
-                    <button className="bg-[#417F56] rounded-lg py-2 px-8 text-white lg:text-base text-super-sm">
-                        سفارش آنلاین غذا
-                    </button>
+                    <PreserveQueryLink href="/menus">
+                        <button className="bg-[#417F56] rounded-lg py-2 px-8 text-white lg:text-base text-super-sm">
+                            سفارش آنلاین غذا
+                        </button>
+                    </PreserveQueryLink>
                 </div>
 
                 <div
