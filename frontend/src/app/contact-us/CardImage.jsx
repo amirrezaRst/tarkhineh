@@ -1,16 +1,18 @@
 import { GalleryIcon } from "@/assets/Icons";
+import ModalContainer from "@/components/modal/ModalContainer";
 
-const CardImage = ({ imageSrc, brach }) => {
+const CardImage = ({ imageSrc, branch, setIsOpen }) => {
     return (
         <div className="relative w-full xl:col-span-1 md:col-span-5 md:h-auto h-[200px] md:rounded-l-lg rounded-b-lg overflow-hidden">
 
             <img
-                src={imageSrc}
-                alt={`شعبه ${brach}`}
+                src={`/images/${imageSrc}`}
+                alt={`شعبه ${branch}`}
                 className="w-full xl:h-[330px] md:h-[300px] h-[200px] object-cover object-center"
             />
             <div
-                className="w-full h-full absolute top-0 right-0 md:bg-black/50 flex md:items-center md:justify-center items-end justify-start md:p-0 p-3.5"
+                className="w-full h-full absolute top-0 right-0 md:bg-black/50 flex md:items-center md:justify-center items-end justify-start md:p-0 p-3.5 cursor-pointer"
+                onClick={() => setIsOpen(true)}
             >
 
                 <button

@@ -2,7 +2,7 @@ import { XmarkIcon } from "@/assets/Icons";
 import GalleryImagesList from "./GalleryImagesList";
 
 const Gallery = ({ name, images, selectedImage, setSelectedImage, setIsOpen, isBranchGallery }) => {
-  console.log(images[selectedImage])
+    console.log(images[selectedImage])
     return (
         <div className="relative w-full h-full">
             {isBranchGallery &&

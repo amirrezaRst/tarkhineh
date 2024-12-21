@@ -6,7 +6,7 @@ const BranchCardModal = ({ name, images, setIsOpen }) => {
 
     return (
         <div
-            className="w-[800px] h-[550px] bg-white rounded-lg overflow-hidden"
+            className="w-[800px] h-[550px] bg-white rounded-2xl overflow-hidden"
         >
 
             <Gallery name={name} images={images} selectedImage={selectedImage} setSelectedImage={setSelectedImage} setIsOpen={setIsOpen} isBranchGallery />
