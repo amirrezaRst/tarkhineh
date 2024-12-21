@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import PreserveQueryLink from "@/hooks/PreserveQueryLink";
 import { usePathname } from "next/navigation";
 
 
@@ -20,15 +20,15 @@ const TopNavigation = () => {
                     <ul
                         className="flex items-center xl:text-super-base md:text-base text-super-sm text-[#717171] md:w-auto w-full"
                     >
-                        <Link href="/faq" className="md:w-auto w-full">
+                        <PreserveQueryLink href="/faq" className="md:w-auto w-full">
                             <li className={handleClass("/faq")}>سوالات متداول</li>
-                        </Link>
-                        <Link href="/rules" className="md:w-auto w-full">
+                        </PreserveQueryLink>
+                        <PreserveQueryLink href="/rules" className="md:w-auto w-full">
                             <li className={handleClass("/rules")}>قوانین ترخینه</li>
-                        </Link>
-                        <Link href="/privacy" className="md:w-auto w-full">
+                        </PreserveQueryLink>
+                        <PreserveQueryLink href="/privacy" className="md:w-auto w-full">
                             <li className={handleClass("/privacy")}>حریم خصوصی</li>
-                        </Link>
+                        </PreserveQueryLink>
                     </ul>
 
                 </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { InstagramIcon, TelegramIcon, TwitterIcon } from "@/assets/Icons";
+import PreserveQueryLink from "@/hooks/PreserveQueryLink";
 
 
 const Footer = () => {
@@ -17,9 +18,9 @@ const Footer = () => {
                             دسترسی آسان
                         </h6>
                         <ul className="space-y-4 text-[#EDEDED] md:text-super-sm text-sm font-light">
-                            <li><Link href="">پرسش های متداول</Link></li>
-                            <li><Link href="">قوانین ترخینه</Link></li>
-                            <li><Link href="">حریم خصوصی</Link></li>
+                            <li><PreserveQueryLink href="/faq">پرسش های متداول</PreserveQueryLink></li>
+                            <li><PreserveQueryLink href="/rules">قوانین ترخینه</PreserveQueryLink></li>
+                            <li><PreserveQueryLink href="/privacy">حریم خصوصی</PreserveQueryLink></li>
                             <div className="flex items-center gap-5">
                                 <a href=""><TwitterIcon /></a>
                                 <a href=""><InstagramIcon /></a>
@@ -34,10 +35,10 @@ const Footer = () => {
                             شعبه های ترخینه
                         </h6>
                         <ul className="space-y-4 text-[#EDEDED] md:text-super-sm text-sm font-light">
-                            <li><Link href="">شهبه تهرانپارس</Link></li>
-                            <li><Link href="">شعبه چالوس</Link></li>
-                            <li><Link href="">شعبه اقدسیه</Link></li>
-                            <li><Link href="">شعبه ونک</Link></li>
+                            <li><Link href={{ pathname: "/branches", query: { branch: "tehranpars" } }}>شهبه تهرانپارس</Link></li>
+                            <li><Link href={{ pathname: "/branches", query: { branch: "chalous" } }}>شعبه چالوس</Link></li>
+                            <li><Link href={{ pathname: "/branches", query: { branch: "aghdasiyeh" } }}>شعبه اقدسیه</Link></li>
+                            <li><Link href={{ pathname: "/branches", query: { branch: "vanak" } }}>شعبه ونک</Link></li>
                         </ul>
                     </div>
 

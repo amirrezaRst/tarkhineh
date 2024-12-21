@@ -17,9 +17,9 @@ const NavbarLinks = () => {
     return (
         <nav className="lg:block hidden">
             <ul className="flex items-center xl:text-base text-super-sm xl:gap-3 gap-1.5 text-[#717171]">
-                <Link href="/">
+                <PreserveQueryLink href="/">
                     <li className={handleActive("/")}>صفحه اصلی</li>
-                </Link>
+                </PreserveQueryLink>
 
                 <DropdownMenu handleActive={handleActive} text="شعبه ها" pathname={pathname} path="/branches">
                     <ul className="flex flex-col items-center text-[#353535] xl:text-base text-super-sm">
@@ -88,15 +88,15 @@ const NavbarLinks = () => {
 
 
 
-                <Link href="/franchise">
+                <PreserveQueryLink href="/franchise">
                     <li className={handleActive("/franchise")}>اعطای نمایندگی</li>
-                </Link>
-                <Link href="/about-us">
+                </PreserveQueryLink>
+                <PreserveQueryLink href="/about-us">
                     <li className={handleActive("/about-us")}>درباره ما</li>
-                </Link>
-                <Link href="/contact-us">
+                </PreserveQueryLink>
+                <PreserveQueryLink href="/contact-us">
                     <li className={handleActive("/contact-us")}>تماس با ما</li>
-                </Link>
+                </PreserveQueryLink>
             </ul>
         </nav >
     );
