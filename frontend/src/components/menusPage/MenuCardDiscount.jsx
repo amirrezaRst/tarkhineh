@@ -8,7 +8,7 @@ const MenuCardDiscount = ({ discount, price }) => {
                 className="text-[ 3xl:text-lg text-base#ADADAD] line-through"
             >{FormatPrice(price)}</span>
             <span
-                className="bg-[#FFF 3xl:text-base2F2] text-sm text-[#C30000] rounded-full pt-0.5 px-2"
+                className="bg-[#FFF2F2] 3xl:text-base md:text-sm text-xs text-[#C30000] rounded-full pt-0.5 px-2"
             >
                 {discount?.discountType === "percentage" ?
                     `%${PersianNumber(discount?.discountValue || 0)}` :

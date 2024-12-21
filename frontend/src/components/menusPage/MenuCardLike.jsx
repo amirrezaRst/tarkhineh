@@ -3,7 +3,7 @@ import { HeartIcon } from "@/assets/Icons";
 const MenuCardLike = () => {
     return (
         <button className="hover:scale-110 duration-200">
-            <HeartIcon className="stroke-[#717171]" />
+            <HeartIcon className="stroke-[#717171] md:w-6 md:h-6 w-5 h-5" />
         </button>
     );
 }
