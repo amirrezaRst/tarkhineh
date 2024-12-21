@@ -33,7 +33,7 @@ const MenuSection = ({ title, branchId, category, ratingSort, bgColor = 'white' 
                         {title} شعبه {branchName}
                     </span>
                 </h2>
-                <div className="flex flex-nowrap gap-7 overflow-x-auto md:mt-11 mt-7 pb-1.5">
+                <div className="flex flex-nowrap gap-7 overflow-x-auto md:mt-11 mt-5 pb-1.5">
                     {items?.length > 0 && items?.map((item, index) => (
                         <MenuCard key={index} {...item} />
                     ))}

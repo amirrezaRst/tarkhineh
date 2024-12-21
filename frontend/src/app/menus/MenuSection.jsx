@@ -41,7 +41,7 @@ const MenuSection = ({ title, category,  foodType, isPersian }) => {
                 {title}
             </h2>
 
-            <article className="grid lg:grid-cols-2 xl:gap-8 lg:gap-3.5 gap-6 mt-10">
+            <article className="grid lg:grid-cols-2 xl:gap-8 lg:gap-3.5 gap-6 md:mt-10 mt-3.5">
 
                 {items?.length > 0 && items?.map((item, index) => (
                     <MenuCard key={index} {...item} />

@@ -7,7 +7,7 @@ const Gallery = ({ name, images, selectedImage, setSelectedImage, setIsOpen, isB
         <div className="relative w-full h-full">
             {isBranchGallery &&
                 <XmarkIcon
-                    className="fill-white w-8 h-8 absolute left-4 top-3 cursor-pointer"
+                    className="fill-white md:w-8 md:h-8 w-7 h-7 absolute left-4 top-3 cursor-pointer"
                     onClick={() => setIsOpen(false)}
                 />
             }

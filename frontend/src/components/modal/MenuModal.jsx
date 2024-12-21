@@ -9,42 +9,42 @@ const MenuModal = ({ name, images, ingredients, description, reviews, setIsOpen 
 
     return (
         <div
-            className="max-w-[700px] bg-white rounded-lg pb-4 pt-5"
+            className="md:max-w-[700px] max-w-[90%] mx-auto bg-white rounded-lg pb-4 md:pt-5 pt-3"
         >
 
-            <div className="relative mx-6 mb-4">
+            <div className="relative md:mx-6 mx-3 md:mb-4 mb-3">
                 <h4
-                    className="text-[#353535] text-xl font-semibold text-center"
+                    className="text-[#353535] md:text-xl text-super-base font-semibold text-center"
                 >اطلاعات محصول</h4>
                 <XmarkIcon
-                    className="fill-[#717171] w-8 h-8 absolute left-0 top-0 cursor-pointer"
+                    className="fill-[#717171] md:w-8 md:h-8 w-6 h-6 absolute left-0 top-0 cursor-pointer"
                     onClick={() => setIsOpen(false)}
                 />
             </div>
 
             {/* Gallery */}
-            <div className="h-[370px]">
+            <div className="md:h-[370px] h-[255px]">
                 <Gallery name={name} images={images} selectedImage={selectedImage} setSelectedImage={setSelectedImage} setIsOpen={setIsOpen} />
             </div>
 
 
             {/* Item Info */}
-            <div className="px-6">
+            <div className="md:px-6 px-3">
                 <div className="flex items-center justify-between gap-4 py-3">
                     <h3
-                        className="text-[#353535] text-xl font-bold"
+                        className="text-[#353535] md:text-xl text-super-base font-bold"
                     >{name}</h3>
                     <StarRating rate={reviews?.averageRating} />
                 </div>
-                <div className="flex items-center justify-between gap-8 flex-wrap">
-                    <p className="text-[#353535] text-super-sm flex-1 text-wrap">
+                <div className="flex items-start justify-between gap-8 flex-wrap">
+                    <p className="text-[#353535] md:text-super-sm text-super-xs flex-1 text-wrap leading-5">
                         {ingredients?.map(item => `${item}، `)}
                     </p>
-                    <span className="text-[#cbcbcb] text-super-sm">
+                    <span className="text-[#cbcbcb] md:text-super-sm text-super-xs">
                         ({ConvertToPersianNumbers(reviews?.total)} نظر)
                     </span>
                 </div>
-                <p className="mt-4 text-[#565656] text-sm">{description}</p>
+                <p className="mt-4 text-[#565656] md:text-sm text-xs">{description}</p>
             </div>
 
         </div>
