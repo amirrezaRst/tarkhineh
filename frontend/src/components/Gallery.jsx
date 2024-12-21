@@ -18,7 +18,7 @@ const Gallery = ({ name, images, selectedImage, setSelectedImage, setIsOpen, isB
             />
 
             {/* Images List */}
-            <GalleryImagesList name={name} images={images} selectedImage={selectedImage} setSelectedImage={setSelectedImage} isBranchGallery />
+            <GalleryImagesList name={name} images={images} selectedImage={selectedImage} setSelectedImage={setSelectedImage} isBranchGallery={isBranchGallery} />
 
         </div>
     );
