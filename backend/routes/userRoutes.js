@@ -11,8 +11,8 @@ const router = Router();
 
 
 router.get("/users", allUser); //[Authenticate, Aut horize(["admin"])],
-
 router.get("/userData", singleUser);
+
 router.route("/user/:id")
     .delete(ValidateObjectId, deleteUser); //[Authenticate, Authorize(["admin"])],
 //! must add edit user route here

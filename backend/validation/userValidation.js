@@ -34,9 +34,9 @@ exports.verifyOtpValidation = (req, res, next) => {
             .min(11)
             .max(11)
             .required(),
-            otpCode: joi.string()
-            .min(5)
-            .max(5)
+        otpCode: joi.number()
+            // .min(5)
+            // .max(5)
             .required()
     });
 

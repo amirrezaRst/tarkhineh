@@ -21,6 +21,14 @@ const UserSchema = new mongoose.Schema({
     otpExpires: { type: Date, select: false },
 }, { timestamps: true });
 
+UserSchema.set('toJSON', {
+    transform: (doc, ret) => {
+        delete ret.createdAt;
+        delete ret.updatedAt;
+        delete ret.__v;
+        return ret;
+    },
+});
 
 UserSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();

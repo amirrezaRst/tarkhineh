@@ -20,8 +20,8 @@ exports.singleUser = async (req, res) => {
         const { refreshToken, token } = req.cookies;
 
         if (token) {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            const user = await userModel.findById(decoded.id).select("-refreshToken");
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await userModel.findById(decoded.id).select("-refreshToken -createdAt -updatedAt ");
             if (!user) {
                 return res.status(404).json({ status: 404, message: "User not found" });
             }
@@ -64,26 +64,32 @@ exports.registerUser = async (req, res) => {
     const { phoneNumber } = req.body;
 
     try {
-        const user = await userModel.findOne({ phoneNumber });
-        if (user) {
-            return res.status(409).json({ status: 409, message: "User already exists" });
-        }
+        const user = await userModel.findOne({ phoneNumber }).select("phoneNumber");
 
         const otpCode = Math.floor(10000 + Math.random() * 90000);
-        console.log(typeof otpCode.toString());
-
         //! it is necessary to add the SMS sending module here
 
-        const newUser = new userModel({
-            phoneNumber,
-            email: null,
-            otpCode: otpCode.toString(),
-            otpExpires: Date.now() + 10 * 60 * 1000, //! 10 minutes
-        });
+        if (user) {
+            user.otpCode = otpCode.toString();
+            user.otpExpires = Date.now() + 10 * 60 * 1000; //! 10 minutes
 
-        await newUser.save();
+            await user.save();
+            return res.status(200).json({
+                status: 200,
+                message: "OTP sent",
+                user: { _id: user._id, phoneNumber: user.phoneNumber }
+            });
+        } else {
+            const newUser = new userModel({
+                phoneNumber,
+                email: null,
+                otpCode: otpCode.toString(),
+                otpExpires: Date.now() + 10 * 60 * 1000, //! 10 minutes
+            });
 
-        res.status(201).json({ status: 201, message: "User created", user: newUser });
+            await newUser.save();
+            return res.status(201).json({ status: 201, message: "User created and OTP sent", user: newUser });
+        }
     }
     catch (error) {
         res.status(500).json({ status: 500, message: error.message });
@@ -101,7 +107,7 @@ exports.verifyOtp = async (req, res) => {
         }
 
         if (user.otpCode !== otpCode || user.otpExpires < Date.now()) {
-            return res.status(400).json({ status: 400, message: "Invalid or expired OTP" });
+            return res.status(403).json({ status: 403, message: "Invalid or expired OTP" });
         }
 
         //! remove the OTP code and expiry date from the user

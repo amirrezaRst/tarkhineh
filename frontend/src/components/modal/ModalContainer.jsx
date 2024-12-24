@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import ModalContent from "./ModalContent";
 import Overlay from "./Overlay";
 
-const ModalContainer = ({ children, isOpen, setIsOpen, title }) => {
+const ModalContainer = ({ children, isOpen, setIsOpen }) => {
     const [show, setShow] = useState(isOpen);
 
     useEffect(() => {
