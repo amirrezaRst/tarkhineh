@@ -3,10 +3,10 @@ const bcrypt = require('bcrypt');
 const { AddressSchema } = require('./AddressSchema');
 
 const UserSchema = new mongoose.Schema({
-    fullName: { type: String, required: true },
-    email: { type: String, required: true, unique: true, lowercase: true },
+    fullName: { type: String, default: null },
+    email: { type: String, lowercase: true, default: null },
     phoneNumber: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    // password: { type: String, required: true, select: false },
     role: {
         type: String,
         enum: ['user', 'admin', 'branch_manager'],
@@ -16,7 +16,9 @@ const UserSchema = new mongoose.Schema({
     coupons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' }],
     orderHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
     addresses: [AddressSchema],
-    refreshToken: { type: String }
+    refreshToken: { type: String },
+    otpCode: { type: String, select: false },
+    otpExpires: { type: Date, select: false },
 }, { timestamps: true });
 
 

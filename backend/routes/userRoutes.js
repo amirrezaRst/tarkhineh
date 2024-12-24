@@ -3,8 +3,8 @@ const { Router } = require('express');
 const ValidateObjectId = require('../middleware/ValidateObjectId');
 const Authenticate = require('../middleware/Authenticate');
 const Authorize = require('../middleware/Authorize');
-const { allUser, singleUser, deleteUser, registerUser, login, logout, refreshToken } = require('../controllers/userController');
-const { registerValidation, loginValidation } = require('../validation/userValidation');
+const { allUser, singleUser, deleteUser, registerUser, login, logout, refreshToken, verifyOtp } = require('../controllers/userController');
+const { registerValidation, loginValidation, verifyOtpValidation } = require('../validation/userValidation');
 
 const router = Router();
 
@@ -18,6 +18,7 @@ router.route("/user/:id")
 //! must add edit user route here
 
 router.post("/register", registerValidation, registerUser);
+router.post("/verifyOtp", verifyOtpValidation, verifyOtp);
 router.post("/login", loginValidation, login);
 router.post('/logout', logout);
 router.get("/refreshToken", refreshToken);

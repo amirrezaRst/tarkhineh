@@ -58,52 +58,78 @@ exports.singleUser = async (req, res) => {
 };
 
 
-
+// 67588061e2d7717059d7aacd
 //! Post Request
 exports.registerUser = async (req, res) => {
-    const { fullName, email, password, phoneNumber, remember } = req.body;
+    const { phoneNumber } = req.body;
 
     try {
-        const user = await userModel.findOne({ email });
+        const user = await userModel.findOne({ phoneNumber });
         if (user) {
             return res.status(409).json({ status: 409, message: "User already exists" });
         }
 
-        const phoneExist = await userModel.findOne({ phoneNumber }).select("phoneNumber");
-        if (phoneExist) {
-            return res.status(409).json({ status: 409, message: "This phone number has already been registered." });
-        };
+        const otpCode = Math.floor(10000 + Math.random() * 90000);
+        console.log(typeof otpCode.toString());
+
+        //! it is necessary to add the SMS sending module here
 
         const newUser = new userModel({
-            fullName,
-            email,
             phoneNumber,
-            password
+            email: null,
+            otpCode: otpCode.toString(),
+            otpExpires: Date.now() + 10 * 60 * 1000, //! 10 minutes
         });
 
-        const tokenData = {
-            id: newUser._id,
-            email: newUser.email,
-            role: newUser.role,
-        }
-
-        const token = generateAccessToken(tokenData);
-
-
-        if (remember) {
-            const refreshToken = generateRefreshToken(tokenData);
-
-            newUser.refreshToken = refreshToken; //! Save refresh token to user database
-
-            setRefreshTokenCookie(res, refreshToken);
-        };
         await newUser.save();
-
-        setTokenCookie(res, token);
 
         res.status(201).json({ status: 201, message: "User created", user: newUser });
     }
     catch (error) {
+        res.status(500).json({ status: 500, message: error.message });
+    }
+};
+
+//? Verify OTP
+exports.verifyOtp = async (req, res) => {
+    try {
+        const { phoneNumber, otpCode } = req.body;
+        const user = await userModel.findOne({ phoneNumber }).select("phoneNumber role otpCode otpExpires");
+
+        if (!user) {
+            return res.status(404).json({ status: 404, message: "User not found" });
+        }
+
+        if (user.otpCode !== otpCode || user.otpExpires < Date.now()) {
+            return res.status(400).json({ status: 400, message: "Invalid or expired OTP" });
+        }
+
+        //! remove the OTP code and expiry date from the user
+        user.otpCode = undefined;
+        user.otpExpires = undefined;
+
+        const tokenData = {
+            id: user._id,
+            phoneNumber: user.phoneNumber,
+            role: user.role,
+        }
+
+        const token = generateAccessToken(tokenData);
+        const refreshToken = generateRefreshToken(tokenData);
+
+        user.refreshToken = refreshToken; //! Save refresh token to user database
+
+        setRefreshTokenCookie(res, refreshToken);
+        setTokenCookie(res, token);
+
+        await user.save();
+
+        res.status(200).json({
+            status: 200,
+            message: "User registered successfully",
+            user,
+        });
+    } catch (error) {
         res.status(500).json({ status: 500, message: error.message });
     }
 };
