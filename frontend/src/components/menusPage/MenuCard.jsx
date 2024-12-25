@@ -7,10 +7,15 @@ import FormatPrice from "@/utils/FormatPrice";
 import ModalContainer from "../modal/ModalContainer";
 import { useState } from "react";
 import MenuModal from "../modal/MenuModal";
+import RegisterModal from "../register/RegisterModal";
+import useUserStore from "@/stores/useUserStore";
 
 const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available }) => {
-
     const [isOpen, setIsOpen] = useState(false);
+    const [registerModal, setRegisterModal] = useState();
+
+    const user = useUserStore(state => state.user)
+
 
     const finalPrice = discount
         ? discount.discountType === "percentage"
@@ -18,6 +23,17 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
             : price - discount.discountValue
         : price;
 
+
+    const handleAddToCart = () => {
+        if (!user) return setRegisterModal(true);
+        alert("menu item has been added to cart");
+    };
+
+    const handleLikeMenuItem = (id) => {
+        console.log(id)
+        if (!user) return setRegisterModal(true);
+        alert("menu item has been liked");
+    }
 
     return (
         <>
@@ -42,7 +58,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
                         >
                             {name}
                         </h3>
-                        <MenuCardLike />
+                        <MenuCardLike handler={() => handleLikeMenuItem(_id)} />
                     </div>
 
                     <div className="flex xl:flex-row flex-col xl:items-center justify-between gap-2 md:mb-3.5 mb-1.5">
@@ -64,6 +80,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
                         <StarRating rate={reviews?.averageRating} />
                         <button
                             className="bg-[#417F56] w-full rounded-md 3xl:leading-10 md:leading-9 leading-7 md:text-super-sm text-sm px-4 text-white"
+                            onClick={handleAddToCart}
                         >
                             افزودن به سبد خرید
                         </button>
@@ -75,6 +92,10 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
             <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen}>
                 <MenuModal name={name} description={description} images={images} ingredients={ingredients} reviews={reviews} setIsOpen={setIsOpen} />
+            </ModalContainer>
+
+            <ModalContainer isOpen={registerModal} setIsOpen={setRegisterModal}>
+                <RegisterModal setIsOpen={setRegisterModal} />
             </ModalContainer>
 
         </>

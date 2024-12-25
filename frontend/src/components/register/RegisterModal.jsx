@@ -2,11 +2,9 @@
 
 import { ChevronIcon, XmarkIcon } from "@/assets/Icons";
 import { useState } from "react";
-import OtpField from "../OtpField";
 import RegisterForm from "./RegisterForm";
 import ConvertToPersianNumbers from "@/utils/ConvertToPersianNumber";
 import OtpForm from "./OtpForm";
-import { useForm } from "react-hook-form";
 
 const RegisterModal = ({ setIsOpen }) => {
 
