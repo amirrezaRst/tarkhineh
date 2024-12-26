@@ -28,8 +28,8 @@ exports.getCartByUserId = async (req, res) => {
 //? Add Item to Cart
 exports.addItemToCart = async (req, res) => {
     try {
-        const { user, menuItem, quantity } = req.body;
-        console.log(req.body)
+        const { user, menuItem, quantity, branch } = req.body;
+
         const userExists = await User.findById(user);
         if (!userExists) {
             return res.status(404).json({ status: 404, message: 'User not found.' });
@@ -40,10 +40,10 @@ exports.addItemToCart = async (req, res) => {
             return res.status(404).json({ status: 404, message: 'Menu item not found.' });
         }
 
-
         let cart = await Cart.findOne({ user });
 
         if (cart) {
+            if (branch != cart.branch) return res.status(400).json({ status: 400, message: "The branch of the selected item does not match the branch of the items already in your cart. Please choose items from the same branch" });
             const itemIndex = cart.items.findIndex(item => item.menuItem.toString() === menuItem);
             if (itemIndex > -1) {
                 console.log(cart.items[itemIndex].quantity)
@@ -54,7 +54,7 @@ exports.addItemToCart = async (req, res) => {
             await cart.save();
             res.status(200).json({ message: 'Item added to cart successfully.', cart });
         } else {
-            cart = new Cart({ user, items: [{ menuItem, quantity }] });
+            cart = new Cart({ user, items: [{ menuItem, quantity }], branch });
             await cart.save();
             res.status(201).json({ status: 201, message: 'Cart created and item added.', cart });
         }

@@ -1,4 +1,3 @@
-const { required } = require("joi");
 const mongoose = require("mongoose");
 
 const CartSchema = new mongoose.Schema({
@@ -9,6 +8,7 @@ const CartSchema = new mongoose.Schema({
             quantity: { type: Number, min: 1, default: 1, required: true }
         }
     ],
+    branch: { type: mongoose.Schema.Types.ObjectId, ref: "Branch", required: true },
 }, { timestamps: true });
 
 
