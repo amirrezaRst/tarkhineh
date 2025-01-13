@@ -44,7 +44,7 @@ const MenuSection = ({ title, category, foodType, isPersian }) => {
             <article className="grid lg:grid-cols-2 xl:gap-8 lg:gap-3.5 gap-6 md:mt-10 mt-3.5">
 
                 {items?.length > 0 && items?.map((item, index) => (
-                    <MenuCard key={index} {...item} />
+                    <MenuCard key={index} {...item} branch={branchId && branchId} />
                 ))}
                 {items?.length === 0 &&
                     <p className="mt-0 text-[#353535] font-light">

@@ -4,7 +4,7 @@ exports.addNewItemCart = (req, res, next) => {
     const schema = joi.object({
         user: joi.string().required(),
         menuItem: joi.string().required(),
-        quantity: joi.number().min(1),
+        quantity: joi.number().min(1).default(1),
         branch: joi.string().required(),
     });
 

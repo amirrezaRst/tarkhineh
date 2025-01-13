@@ -7,15 +7,28 @@ import MenuCardRate from "./MenuCardRate";
 import { useState } from "react";
 import ModalContainer from "../modal/ModalContainer";
 import MenuModal from "../modal/MenuModal";
+import useUserStore from "@/stores/useUserStore";
+import RegisterModal from "../register/RegisterModal";
 
 const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [registerModal, setRegisterModal] = useState(false);
+
+    const user = useUserStore(state => state.user)
+
 
     const finalPrice = discount
         ? discount.discountType === "percentage"
             ? price - (price * (discount.discountValue / 100))
             : price - discount.discountValue
         : price;
+
+    const handleAddToCart = () => {
+        if (!user) return setRegisterModal(true);
+        alert("menu item has been added to cart");
+    };
+
+
 
     return (
         <div
@@ -40,7 +53,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
                 <div className="flex items-center justify-between gap-2">
 
-                    <MenuCardLike />
+                    <MenuCardLike id={_id} user={user?._id} setRegisterModal={setRegisterModal} />
                     <MenuCardDiscount discount={discount} price={price} />
 
                 </div>
@@ -54,6 +67,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
                 <button
                     className="w-full bg-[#417F56] text-white rounded-md py-1.5 text-super-sm leading-6 mt-4"
+                    onClick={handleAddToCart}
                 >
                     افزودن به سبد خرید
                 </button>
@@ -62,6 +76,10 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
             {/*//! Menu Item Details Menu */}
             <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen}>
                 <MenuModal name={name} description={description} images={images} ingredients={ingredients} reviews={reviews} setIsOpen={setIsOpen} />
+            </ModalContainer>
+
+            <ModalContainer isOpen={registerModal} setIsOpen={setRegisterModal}>
+                <RegisterModal setIsOpen={setRegisterModal} />
             </ModalContainer>
 
         </div>

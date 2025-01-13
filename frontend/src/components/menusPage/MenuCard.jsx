@@ -9,13 +9,14 @@ import { useState } from "react";
 import MenuModal from "../modal/MenuModal";
 import RegisterModal from "../register/RegisterModal";
 import useUserStore from "@/stores/useUserStore";
+import { toast } from "react-toastify";
 
-const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available }) => {
+const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available, branch }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [registerModal, setRegisterModal] = useState();
+    const [registerModal, setRegisterModal] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const user = useUserStore(state => state.user)
-
 
     const finalPrice = discount
         ? discount.discountType === "percentage"
@@ -24,16 +25,37 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
         : price;
 
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         if (!user) return setRegisterModal(true);
-        alert("menu item has been added to cart");
+        setLoading(true);
+
+        // alert("menu item has been added to cart");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/add`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user: user._id,
+                menuItem: _id,
+                branch
+            }),
+        }).then(res => res.json());
+
+        const { status, message } = response;
+
+        if (status == 400) {
+            return toast.error("شعبه آیتم انتخابی با شعبه آیتم‌های موجود در سبد خرید مطابقت ندارد. لطفاً از همان شعبه انتخاب کنید.");
+        }
+        if (status == 500) {
+            return toast.error("مشکلی از سمت سرور رخ داده است. لطفا دوباره تلاش کنید.")
+        }
+
+        toast.success("آیتم با موفقیت به سبد خرید اضافه شد.");
+
+        setLoading(false);
     };
 
-    const handleLikeMenuItem = (id) => {
-        console.log(id)
-        if (!user) return setRegisterModal(true);
-        alert("menu item has been liked");
-    }
 
     return (
         <>
@@ -58,7 +80,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
                         >
                             {name}
                         </h3>
-                        <MenuCardLike handler={() => handleLikeMenuItem(_id)} />
+                        <MenuCardLike id={_id} user={user?._id} setRegisterModal={setRegisterModal} />
                     </div>
 
                     <div className="flex xl:flex-row flex-col xl:items-center justify-between gap-2 md:mb-3.5 mb-1.5">

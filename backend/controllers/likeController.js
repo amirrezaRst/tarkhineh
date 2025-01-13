@@ -37,7 +37,9 @@ exports.like = async (req, res) => {
     try {
         const existingLike = await Like.findOne({ user, menuItem }).select("_id");
         if (existingLike) {
-            return res.status(400).json({ status: 400, message: 'You have already liked this menuItem' });
+            // return res.status(400).json({ status: 400, message: 'You have already liked this menuItem' });
+            const like = await Like.findOneAndDelete({ user, menuItem });
+            return res.status(200).json({ status: 200, message: "unliked successfully" })
         }
 
         const menu = await Menu.findById(menuItem).select("_id");

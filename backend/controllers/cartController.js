@@ -2,26 +2,73 @@ const mongoose = require('mongoose');
 const Cart = require('../models/CartModel');
 const Menu = require('../models/MenuModel');
 const User = require('../models/UserModel');
+const Discount = require('../models/DiscountModel');
 
 
 //! Get Request
 //? Get User Cart by userID
+// exports.getCartByUserId = async (req, res) => {
+//     try {
+//         const { userId } = req.params;
+
+//         const cart = await Cart.findOne({ user: userId }).populate('items.menuItem',"_id name price images");
+
+//         if (!cart) {
+//             return res.status(404).json({ status: 404, message: 'Cart not found for this user.' });
+//         }
+
+//         res.status(200).json({ status: 200, message: "new item added to the cart", cart });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ status: 500, message: 'An error occurred while fetching the cart.' });
+//     }
+// };
+
 exports.getCartByUserId = async (req, res) => {
     try {
         const { userId } = req.params;
 
-        const cart = await Cart.findOne({ user: userId }).populate('items.menuItem');
+        const cart = await Cart.findOne({ user: userId })
+            .populate('items.menuItem', "_id name price images");
 
         if (!cart) {
             return res.status(404).json({ status: 404, message: 'Cart not found for this user.' });
         }
 
-        res.status(200).json({ status: 200, message: "new item added to the cart", cart });
+        //! adding discounts to each menu item in the cart
+        const itemsWithDiscounts = await Promise.all(
+            cart.items.map(async (item) => {
+                const discount = await Discount.findOne({
+                    menuItem: item.menuItem._id,
+                    active: true,
+                    startDate: { $lte: new Date() },
+                    endDate: { $gte: new Date() }
+                }).select("discountType discountValue");
+
+                return {
+                    ...item._doc, //! copy menu info
+                    menuItem: {
+                        ...item.menuItem._doc, //! we copy the menu item info
+                        discount: discount || null //! discount
+                    }
+                };
+            })
+        );
+
+        res.status(200).json({
+            status: 200,
+            message: "Cart fetched successfully.",
+            cart: {
+                user: cart.user,
+                items: itemsWithDiscounts //! sending the items with their respective discounts
+            }
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: 500, message: 'An error occurred while fetching the cart.' });
     }
 };
+
 
 
 //! Post Request
