@@ -1,4 +1,4 @@
-import { CheckmarkIcon, ChevronIcon, HeartIcon, OutlineStarIcon, SearchIcon, ShoppingCardIcon, StarIcon } from "@/assets/Icons";
+import { CheckmarkIcon, ChevronIcon, HeartIcon, OutlineStarIcon, SearchIcon, ShoppingCartIcon, StarIcon } from "@/assets/Icons";
 
 const InterestsPage = () => {
     return (
@@ -115,7 +115,7 @@ const InterestsPage = () => {
                         <button
                             className="w-full bg-[#417F56] flex items-center justify-center gap-1.5 text-white py-2 px-3 rounded-md"
                         >
-                            افزودن به سبد خرید <ShoppingCardIcon className="w-[21px] h-[21px] fill-white" />
+                            افزودن به سبد خرید <ShoppingCartIcon className="w-[21px] h-[21px] fill-white" />
                         </button>
 
                     </div>
@@ -164,7 +164,7 @@ const InterestsPage = () => {
                         <button
                             className="w-full bg-[#417F56] flex items-center justify-center gap-1.5 text-white py-2 px-3 rounded-md"
                         >
-                            افزودن به سبد خرید <ShoppingCardIcon className="w-[21px] h-[21px] fill-white" />
+                            افزودن به سبد خرید <ShoppingCartIcon className="w-[21px] h-[21px] fill-white" />
                         </button>
 
                     </div>
@@ -213,7 +213,7 @@ const InterestsPage = () => {
                         <button
                             className="w-full bg-[#417F56] flex items-center justify-center gap-1.5 text-white py-2 px-3 rounded-md"
                         >
-                            افزودن به سبد خرید <ShoppingCardIcon className="w-[21px] h-[21px] fill-white" />
+                            افزودن به سبد خرید <ShoppingCartIcon className="w-[21px] h-[21px] fill-white" />
                         </button>
 
                     </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { MenuIcon, SearchIcon, ShoppingCardIcon, UserIcon } from "@/assets/Icons";
+import { MenuIcon, SearchIcon, ShoppingCartIcon, UserIcon } from "@/assets/Icons";
 import NavbarLinks from "./profile/NavbarLinks";
 import useUserStore from "@/stores/useUserStore";
 import ModalContainer from "../modal/ModalContainer";
@@ -49,7 +49,7 @@ const Navbar = () => {
                     <div onClick={!user ? () => setIsModalOpen(true) : null}>
                         <PreserveQueryLink href={user ? "/cart" : ""}>
                             <button className="bg-[#E5F2E9] rounded-md p-2">
-                                <ShoppingCardIcon className="fill-[#417F56] max-xl:w-5 max-xl:h-5" />
+                                <ShoppingCartIcon className="fill-[#417F56] max-xl:w-5 max-xl:h-5" />
                             </button>
                         </PreserveQueryLink>
                     </div>

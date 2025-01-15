@@ -19,7 +19,7 @@ export const SearchIcon = props => {
     )
 }
 
-export const ShoppingCardIcon = props => {
+export const ShoppingCartIcon = props => {
     return (
         <svg
             {...props}
@@ -32,7 +32,7 @@ export const ShoppingCardIcon = props => {
     )
 }
 
-export const SolidShoppingCardIcon = props => {
+export const SolidShoppingCartIcon = props => {
     return (
         <svg
             {...props}
@@ -369,7 +369,7 @@ export const CheckmarkIcon = props => {
             <path d="M10.5814 15.58C10.3814 15.58 10.1914 15.5 10.0514 15.36L7.22141 12.53C6.93141 12.24 6.93141 11.76 7.22141 11.47C7.51141 11.18 7.99141 11.18 8.28141 11.47L10.5814 13.77L15.7214 8.62998C16.0114 8.33998 16.4914 8.33998 16.7814 8.62998C17.0714 8.91998 17.0714 9.39998 16.7814 9.68998L11.1114 15.36C10.9714 15.5 10.7814 15.58 10.5814 15.58Z" />
         </svg>
     )
-}
+};
 
 export const CircleCheckmarkIcon = props => {
     return (
@@ -380,7 +380,18 @@ export const CircleCheckmarkIcon = props => {
             <path d="M10.5814 15.5801C10.3814 15.5801 10.1914 15.5001 10.0514 15.3601L7.22141 12.5301C6.93141 12.2401 6.93141 11.7601 7.22141 11.4701C7.51141 11.1801 7.99141 11.1801 8.28141 11.4701L10.5814 13.7701L15.7214 8.6301C16.0114 8.3401 16.4914 8.3401 16.7814 8.6301C17.0714 8.9201 17.0714 9.4001 16.7814 9.6901L11.1114 15.3601C10.9714 15.5001 10.7814 15.5801 10.5814 15.5801Z" />
         </svg>
     )
-}
+};
+
+export const SquareCheckmarkIcon = props => {
+    return (
+        <svg
+            {...props}
+            width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 22.75H9C3.57 22.75 1.25 20.43 1.25 15V9C1.25 3.57 3.57 1.25 9 1.25H15C20.43 1.25 22.75 3.57 22.75 9V15C22.75 20.43 20.43 22.75 15 22.75ZM9 2.75C4.39 2.75 2.75 4.39 2.75 9V15C2.75 19.61 4.39 21.25 9 21.25H15C19.61 21.25 21.25 19.61 21.25 15V9C21.25 4.39 19.61 2.75 15 2.75H9Z" fill="#CBCBCB" />
+            <path d="M10.5799 15.58C10.3799 15.58 10.1899 15.5 10.0499 15.36L7.21994 12.53C6.92994 12.24 6.92994 11.76 7.21994 11.47C7.50994 11.18 7.98994 11.18 8.27994 11.47L10.5799 13.77L15.7199 8.62998C16.0099 8.33998 16.4899 8.33998 16.7799 8.62998C17.0699 8.91998 17.0699 9.39998 16.7799 9.68998L11.1099 15.36C10.9699 15.5 10.7799 15.58 10.5799 15.58Z" fill="#CBCBCB" />
+        </svg>
+    )
+};
 
 
 export const XmarkIcon = props => {
@@ -392,7 +403,7 @@ export const XmarkIcon = props => {
             <rect x="16.3135" y="6" width="2" height="16" rx="1" transform="rotate(45 16.3135 6)" />
         </svg>
     )
-}
+};
 
 
 export const HomeIcon = props => {
