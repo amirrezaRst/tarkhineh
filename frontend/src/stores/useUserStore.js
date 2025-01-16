@@ -23,6 +23,7 @@ const useUserStore = create(
             }
         },
         clearUser: () => set({ user: null }),
+        setUser: newUser => set({ user: newUser })
     }
     ));
 

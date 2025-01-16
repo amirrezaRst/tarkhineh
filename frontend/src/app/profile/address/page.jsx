@@ -1,76 +1,50 @@
-import { PenIcon, TrashIcon } from "@/assets/Icons";
+"use client";
+
+import { useState } from "react";
+import useUserStore from "@/stores/useUserStore";
+import AddressCardSkeleton from "./AddressCardSkeleton";
+import EmptyAddressesList from "./EmptyAddressesList";
+import AddressCard from "./AddressCard";
+import NewAddressModal from "./NewAddressModal";
+
 
 const AddressPage = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const user = useUserStore(state => state.user);
+
     return (
         <>
 
-            {/*//! START Items List */}
-            <div
-                className="grid lg:grid-cols-2 xl:gap-7 lg:gap-3.5 gap-5 mt-4"
-            >
-
-
-                {/*//TODO Single Address Card */}
-                <div
-                    className="bg-[#F9F9F9] border border-[#CBCBCB] rounded-lg py-5 px-4"
-                >
-
-                    <div className="flex items-start justify-between gap-2.5">
-                        <p className="text-[#353535] xl:text-base text-super-sm">
-                            تهران: اقدسیه، بزرگراه ارتش، مجتمع شمیران سنتر، طبقه ۱۰
-                        </p>
-                        <div className="flex gap-1.5">
-                            <button className="p-0.5">
-                                <PenIcon className="w-[21px] h-[21px] fill-[#353535]" />
-                            </button>
-                            <button className="p-0.5">
-                                <TrashIcon className="w-[21px] h-[21px] fill-[#353535]" />
-                            </button>
-                        </div>
+            {user?.addresses === null || user?.addresses === undefined ?
+                (
+                    <div
+                        className="grid lg:grid-cols-2 xl:gap-7 lg:gap-3.5 gap-5 mt-4"
+                    >
+                        <AddressCardSkeleton />
                     </div>
-
-                    <div className="flex items-center justify-between gap-3 text-[#717171] xl:text-base md:text-super-sm text-sm mt-4">
-
-                        <p>محل کار</p>
-                        <p>سردار وظیفه</p>
-                        <p dir="ltr">۰۹۱۴ ۸۶۴ ۳۳۵۰</p>
-
-                    </div>
-
-                </div>
-
-                {/*//TODO Single Address Card */}
-                <div
-                    className="bg-[#F9F9F9] border border-[#CBCBCB] rounded-lg py-5 px-4"
-                >
-
-                    <div className="flex items-start justify-between gap-2.5">
-                        <p className="text-[#353535] xl:text-base text-super-sm">
-                            تهران: اقدسیه، بزرگراه ارتش، مجتمع شمیران سنتر، طبقه ۱۰
-                        </p>
-                        <div className="flex gap-1.5">
-                            <button className="p-0.5">
-                                <PenIcon className="w-[21px] h-[21px] fill-[#353535]" />
+                ) :
+                user?.addresses?.length === 0 ?
+                    <EmptyAddressesList /> :
+                    (
+                        <>
+                            <div
+                                className="grid lg:grid-cols-2 xl:gap-7 lg:gap-3.5 gap-5 mt-4"
+                            >
+                                {user?.addresses.map((item, index) =>
+                                    <AddressCard index={index} key={index} {...item} userId={user?._id} />
+                                )}
+                            </div>
+                            <button
+                                className="border border-[#417F56] rounded-md text-[#417F56] text-super-sm px-12 py-2 mx-auto block mt-7"
+                                onClick={() => setIsOpen(true)}
+                            >
+                                افزودن آدرس جدید
                             </button>
-                            <button className="p-0.5">
-                                <TrashIcon className="w-[21px] h-[21px] fill-[#353535]" />
-                            </button>
-                        </div>
-                    </div>
+                        </>
+                    )
+            }
 
-                    <div className="flex items-center justify-between gap-3 text-[#717171] xl:text-base md:text-super-sm text-sm mt-4">
-
-                        <p>محل کار</p>
-                        <p>سردار وظیفه</p>
-                        <p dir="ltr">۰۹۱۴ ۸۶۴ ۳۳۵۰</p>
-
-                    </div>
-
-                </div>
-
-
-            </div>
-            {/*//? END Items List */}
+            <NewAddressModal isOpen={isOpen} setIsOpen={setIsOpen} userId={user?._id} />
 
         </>
     );

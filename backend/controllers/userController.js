@@ -276,7 +276,7 @@ exports.editAddress = async (req, res) => {
 
         user.addresses[addressIndex].title = title;
         user.addresses[addressIndex].addressLine = addressLine;
-        user.addresses[addressIndex].recipientPhoneNumber = recipientPhoneNumber;
+        user.addresses[addressIndex].recipientFullName = recipientFullName;
         user.addresses[addressIndex].recipientPhoneNumber = recipientPhoneNumber;
         if (coordinates) {
             user.addresses[addressIndex].coordinates = coordinates;
@@ -289,10 +289,10 @@ exports.editAddress = async (req, res) => {
             message: 'address has been successfully updated',
             user
         });
-    } catch (err) {
-        res.status(404).json({
-            status: 404,
-            message: err
+    } catch (error) {
+        res.status(500).json({
+            status: 500,
+            message: error.message
         });
     }
 };
