@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
         enum: ['user', 'admin', 'branch_manager'],
         default: 'user'
     },
-    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Menu" }],
+    // wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Menu" }],
     coupons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' }],
     orderHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
     addresses: [AddressSchema],

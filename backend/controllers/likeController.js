@@ -1,6 +1,8 @@
 const Like = require("../models/LikeModel");
 const Menu = require('../models/MenuModel');
-
+const Discount = require("../models/DiscountModel");
+const Review = require("../models/ReviewModel");
+// const User = require('../models/UserModel');
 
 //! Get Request
 //? Get MenuItem Like Status
@@ -27,6 +29,56 @@ exports.getLikes = async (req, res) => {
         res.status(500).json({ status: 500, error, message: 'Failed to get likes' });
     }
 };
+
+exports.getUserLikes = async (req, res) => {
+    const userId = req.params.id;
+    const { limit, category, sortBy, foodType, isPersian } = req.query;
+
+    try {
+        const userLikes = await Like.find({ user: userId })
+            .select("menuItem")
+            .populate({
+                path: 'menuItem',
+                match: {
+                    ...(category && { category })
+                },
+                select: 'name price category images'
+            });
+
+        const menusWithDetails = await Promise.all(
+            userLikes.map(async (menu) => {
+                // //! finding the discount for each menu item
+                const discount = await Discount.findOne({
+                    menuItem: menu._id,
+                    active: true,
+                    startDate: { $lte: new Date() },
+                    endDate: { $gte: new Date() }
+                }).select("discountType discountValue");
+
+                // //! Finding the number of reviews and the average rating for each menu item
+                const reviews = await Review.find({ menuItem: menu._id });
+                const totalReviews = reviews.length;
+                const averageRating = totalReviews
+                    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews).toFixed(1)
+                    : null;
+
+                return {
+                    ...menu._doc, //! Copy Menu info
+                    discount: discount || null, //! adding discount to the response
+                    reviews: {
+                        total: totalReviews, //! number of reviews
+                        averageRating: averageRating //! average rating
+                    }
+                };
+            })
+        );
+
+        res.status(200).json({ status: 200, message: "liked items have been successfully fetched", likes: menusWithDetails });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ status: 500, error, message: 'Failed to get likes' });
+    };
+}
 
 
 
