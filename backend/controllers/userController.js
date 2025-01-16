@@ -20,7 +20,7 @@ exports.singleUser = async (req, res) => {
         const { refreshToken, token } = req.cookies;
 
         if (token) {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
             const user = await userModel.findById(decoded.id).select("-refreshToken -createdAt -updatedAt ");
             if (!user) {
                 return res.status(404).json({ status: 404, message: "User not found" });
@@ -229,9 +229,73 @@ exports.logout = (req, res) => {
 };
 
 
+//? Add new Address
+exports.newAddress = async (req, res) => {
+    const { title, addressLine, recipientPhoneNumber, recipientFullName, coordinates } = req.body;
+
+    try {
+        const user = await userModel.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ status: 404, message: "User not found" });
+        }
+
+        const address = {
+            title,
+            addressLine,
+            recipientPhoneNumber,
+            recipientFullName,
+            coordinates
+        }
+
+        const addresses = [...user.addresses, address];
+        user.addresses = addresses;
+
+        await user.save();
+
+        res.status(200).json({ status: 200, message: "a new address has been added", user });
+    }
+    catch (error) {
+        res.status(500).json({ status: 500, message: error.message });
+    }
+}
+
 
 //! must add edit user controller here
+exports.editAddress = async (req, res) => {
+    const userId = req.params.id;
+    const addressIndex = parseInt(req.params.address, 10);
 
+    const { title, addressLine, recipientPhoneNumber, recipientFullName, coordinates } = req.body;
+
+    try {
+        const user = await userModel.findById(userId);
+        if (!user) return res.status(404).json({ status: 404, message: "User not found" });
+
+        const address = user.addresses.findIndex((_, index) => index === addressIndex)
+        if (address === -1) return res.status(400).json({ status: 400, message: "the requested address was not found" });
+
+        user.addresses[addressIndex].title = title;
+        user.addresses[addressIndex].addressLine = addressLine;
+        user.addresses[addressIndex].recipientPhoneNumber = recipientPhoneNumber;
+        user.addresses[addressIndex].recipientPhoneNumber = recipientPhoneNumber;
+        if (coordinates) {
+            user.addresses[addressIndex].coordinates = coordinates;
+        }
+
+        await user.save();
+
+        res.status(200).json({
+            status: 200,
+            message: 'address has been successfully updated',
+            user
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 404,
+            message: err
+        });
+    }
+};
 
 //! Delete Request
 exports.deleteUser = async (req, res) => {
@@ -243,6 +307,28 @@ exports.deleteUser = async (req, res) => {
             return res.status(404).json({ status: 404, message: "User not found" });
         }
         res.status(200).json({ status: 200, message: "User deleted" });
+    }
+    catch (error) {
+        res.status(500).json({ status: 500, message: error.message });
+    }
+}
+
+exports.deleteAddress = async (req, res) => {
+    const userId = req.params.id;
+    const addressIndex = req.params.address;
+
+    try {
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ status: 404, message: "User not found" });
+        }
+
+        const address = await user.addresses.filter((_, index) => index != addressIndex);
+        user.addresses = address
+
+        await user.save();
+
+        res.status(200).json({ status: 200, message: "Address has been successfully removed", user });
     }
     catch (error) {
         res.status(500).json({ status: 500, message: error.message });
