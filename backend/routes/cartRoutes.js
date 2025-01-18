@@ -6,7 +6,7 @@ const Authenticate = require('../middleware/Authenticate');
 
 router.post('/add', [addNewItemCart, Authenticate], addItemToCart);
 
-router.get('/:userId', getCartByUserId);
+router.get('/', getCartByUserId);
 
 router.delete('/remove/:userId', removeItemFromCart);
 

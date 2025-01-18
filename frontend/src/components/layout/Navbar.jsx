@@ -12,20 +12,26 @@ import PreserveQueryLink from "@/hooks/PreserveQueryLink";
 
 const Navbar = () => {
     const fetchUser = useUserStore((state) => state.fetchUser);
+    const fetchCart = useUserStore(state => state.fetchCart);
 
     const user = useUserStore((state) => state.user);
+    const cart = useUserStore(state => state.cart);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         if (!user) {
             fetchUser();
         }
+        if (!cart) {
+            fetchCart();
+        }
         fetchUser();
+        fetchCart();
     }, [])
 
     useEffect(() => {
-        console.log(user)
-    }, [user])
+        console.log(cart)
+    }, [cart])
 
     return (
         <header className="sticky top-0 lg:bg-white bg-[#417F56] z-10 lg:border-b border-b-[#E5F2E9]">
@@ -48,8 +54,11 @@ const Navbar = () => {
                     </button>
                     <div onClick={!user ? () => setIsModalOpen(true) : null}>
                         <PreserveQueryLink href={user ? "/cart" : ""}>
-                            <button className="bg-[#E5F2E9] rounded-md p-2">
+                            <button className="relative bg-[#E5F2E9] rounded-md p-2">
                                 <ShoppingCartIcon className="fill-[#417F56] max-xl:w-5 max-xl:h-5" />
+                                <span className="w-5 h-5 rounded-full bg-[#417F56] absolute -top-1.5 -right-1.5 text-white text-super-xs">
+                                    {cart?.length}
+                                </span>
                             </button>
                         </PreserveQueryLink>
                     </div>

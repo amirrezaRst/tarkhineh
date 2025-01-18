@@ -7,10 +7,13 @@ import { useSearchParams } from "next/navigation";
 import SelectBranchSection from "../branches/SelectBranchSection";
 import { ShoppingCartIcon } from "@/assets/Icons";
 import CartButtonFlow from "./CartButtonFlow";
+import useUserStore from "@/stores/useUserStore";
 
 const MenuPage = () => {
     const branch = useSearchParams().get("branch");
     const category = useSearchParams().get("category") || "main";
+    const cart = useUserStore(state => state.cart);
+
 
     return (
         <>
@@ -49,7 +52,7 @@ const MenuPage = () => {
                         }
                     </main>
 
-                    <CartButtonFlow />
+                    <CartButtonFlow cart={cart} />
 
                 </> : null
             }

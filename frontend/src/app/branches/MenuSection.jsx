@@ -1,16 +1,10 @@
 import MenuCard from "@/components/branchesPage/MenuCard";
+import { fetchBranchPageItems } from "@/services/MenuService";
 import { useEffect, useState } from "react";
 
 const MenuSection = ({ title, branchId, category, ratingSort, bgColor = 'white' }) => {
     const [items, setItems] = useState([]);
     const [branchName, setBranchName] = useState(null);
-
-    const fetchMenuItems = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/branch/get-branch-items/${branchId}?limit=10&category=${category}&sortBy=${ratingSort && 'rating'}`);
-        const data = await res.json();
-
-        setItems(data?.branch?.menus);
-    }
 
     useEffect(() => {
         if (branchId) {
@@ -18,7 +12,7 @@ const MenuSection = ({ title, branchId, category, ratingSort, bgColor = 'white' 
             else if (branchId == "675f4c1655060567771c7884") setBranchName("تهرانپارس");
             else if (branchId == "675f4bfe55060567771c7881") setBranchName("ونک");
             else if (branchId == "675f4c3155060567771c7887") setBranchName("چالوس");
-            fetchMenuItems();
+            fetchBranchPageItems(branchId, category, ratingSort, setItems);
         }
     }, [branchId])
 

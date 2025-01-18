@@ -3,6 +3,7 @@ const Cart = require('../models/CartModel');
 const Menu = require('../models/MenuModel');
 const User = require('../models/UserModel');
 const Discount = require('../models/DiscountModel');
+const jwt = require('jsonwebtoken');
 
 
 //! Get Request
@@ -26,7 +27,20 @@ const Discount = require('../models/DiscountModel');
 
 exports.getCartByUserId = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { refreshToken, token } = req.cookies;
+        var userId = null;
+
+        if (refreshToken) {
+            const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+            userId = decoded.id;
+        }
+        else if (token) {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            userId = decoded.id;
+        }
+        else {
+            return res.status(401).json({ status: 401, message: "Unauthorized" });
+        }
 
         const cart = await Cart.findOne({ user: userId })
             .populate('items.menuItem', "_id name price images");

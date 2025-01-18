@@ -1,4 +1,5 @@
 import MenuCard from "@/components/menusPage/MenuCard";
+import { fetchMenuPageItems } from "@/services/MenuService";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -6,16 +7,6 @@ const MenuSection = ({ title, category, foodType, isPersian }) => {
     const [items, setItems] = useState();
     const [branchId, setBranchId] = useState(null)
     const branch = useSearchParams().get("branch");
-
-
-    const fetchMenuItems = async () => {
-        console.log("fetch menu items")
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/branch/get-branch-items/${branchId}?sortBy=asc&category=${category}&foodType=${foodType || ""}&isPersian=${isPersian || ""}`);
-        const data = await res.json();
-
-        setItems(data?.branch?.menus);
-    }
-
 
     useEffect(() => {
         if (branch) {
@@ -28,7 +19,7 @@ const MenuSection = ({ title, category, foodType, isPersian }) => {
 
     useEffect(() => {
         if (branchId) {
-            fetchMenuItems();
+            fetchMenuPageItems(branchId, category, foodType, isPersian, setItems);
         }
     }, [branchId, category])
 

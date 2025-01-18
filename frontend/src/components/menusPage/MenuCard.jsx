@@ -16,7 +16,8 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
     const [registerModal, setRegisterModal] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const user = useUserStore(state => state.user)
+    const user = useUserStore(state => state.user);
+    const setCart = useUserStore(state => state.setCart);
 
     const finalPrice = discount
         ? discount.discountType === "percentage"
@@ -29,7 +30,6 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
         if (!user) return setRegisterModal(true);
         setLoading(true);
 
-        // alert("menu item has been added to cart");
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/add`, {
             method: "POST",
             headers: {
@@ -40,16 +40,19 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
                 menuItem: _id,
                 branch
             }),
+            credentials: "include"
         }).then(res => res.json());
 
-        const { status, message } = response;
-
+        const { status, message, cart } = response;
+        console.log(response)
         if (status == 400) {
             return toast.error("شعبه آیتم انتخابی با شعبه آیتم‌های موجود در سبد خرید مطابقت ندارد. لطفاً از همان شعبه انتخاب کنید.");
         }
         if (status == 500) {
             return toast.error("مشکلی از سمت سرور رخ داده است. لطفا دوباره تلاش کنید.")
         }
+
+        setCart(cart.items);
 
         toast.success("آیتم با موفقیت به سبد خرید اضافه شد.");
 
@@ -100,12 +103,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
                     <div className="flex xl:flex-row flex-col xl:items-center justify-between xl:gap-6 gap-3">
                         <StarRating rate={reviews?.averageRating} />
-                        <button
-                            className="bg-[#417F56] w-full rounded-md 3xl:leading-10 md:leading-9 leading-7 md:text-super-sm text-sm px-4 text-white"
-                            onClick={handleAddToCart}
-                        >
-                            افزودن به سبد خرید
-                        </button>
+                        {/* <HandleCartButton id={_id} handleAddToCart={handleAddToCart} /> */}
                     </div>
 
                 </div>
