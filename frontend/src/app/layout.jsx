@@ -1,6 +1,7 @@
 import { Vazirmatn } from "next/font/google";
 import "./globals.css";
 import MainLayout from "@/components/layout/MainLayout";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "Create Next App",
@@ -16,9 +17,15 @@ export default function RootLayout({ children }) {
       <body
         className={`${vazir.className} antialiased`} dir="rtl"
       >
-        <MainLayout>
-        {children}
-        </MainLayout>
+        <Suspense fallback={
+          <div className="w-full h-screen flex items-center justify-center">
+            <h1 className="text-2xl font-medium text-green-500">Loading...</h1>
+          </div>
+        }>
+          <MainLayout>
+            {children}
+          </MainLayout>
+        </Suspense>
       </body>
     </html>
   );
