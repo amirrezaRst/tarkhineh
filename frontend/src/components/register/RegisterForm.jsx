@@ -1,6 +1,6 @@
 import Link from "next/link";
 import FormField from "../FormField";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { handleRegister } from "@/services/UserService";

@@ -14,13 +14,14 @@ const NewAddressModal = ({ userId, isOpen, setIsOpen }) => {
     const { register, handleSubmit, formState: { errors }, setError } = useForm();
 
     const handleCreate = async (data) => {
+        console.log(data)
         const body = {
             title: data.title,
             addressLine: data.addressLine,
             recipientPhoneNumber: isMyself ? user.phoneNumber : data.recipientPhoneNumber,
             recipientFullName: isMyself && user?.fullName ? user.fullName : data.recipientFullName,
         };
-        
+
         handleNewAddress(userId, body, setIsOpen, setUser);
     }
 

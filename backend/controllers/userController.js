@@ -290,7 +290,6 @@ exports.newAddress = async (req, res) => {
 }
 
 
-//! must add edit user controller here
 exports.editAddress = async (req, res) => {
     const userId = req.params.id;
     const addressIndex = parseInt(req.params.address, 10);
@@ -326,6 +325,36 @@ exports.editAddress = async (req, res) => {
         });
     }
 };
+
+//! 1.54 KB Responding Size
+exports.editUser = async (req, res) => {
+    const userId = req.params.id;
+    const { fullName, email, userName } = req.body;
+
+    try {
+        const user = await userModel.findById(userId)
+            .select("fullName email userName");
+        if (!user) return res.status(404).json({ status: 404, message: "User not found" });
+
+        user.fullName = fullName || user.fullName;
+        user.userName = userName || user.userName;
+        user.email = email || user.email;
+
+        await user.save();
+
+        return res.status(200).json({
+            status: 200, message: "User updated",
+            user: {
+                fullName: user.fullName,
+                userName: user.userName,
+                email: user.email
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ status: 500, message: error.message });
+    }
+}
+
 
 //! Delete Request
 exports.deleteUser = async (req, res) => {

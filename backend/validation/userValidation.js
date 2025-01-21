@@ -193,6 +193,40 @@ exports.editAddressValidation = (req, res, next) => {
         })
     })
 
+    const { error } = schema.validate(req.body);
+    if (error) return res.status(400).json({ status: 400, message: error.details.map(d => d.message) });
+
+    next();
+}
+
+exports.editUserValidation = (req, res, next) => {
+    const schema = joi.object({
+        fullName: joi.string()
+            .min(3)
+            .max(50)
+            .required()
+            .messages({
+                "string.base": "'fullName' must be a valid string.",
+                "string.min": "'fullName' must be at least 3 characters long.",
+                "string.max": "'fullName' must be at most 50 characters long.",
+                "any.required": "'fullName' is required."
+            }),
+        email: joi.string()
+            .email()
+            .trim()
+            .lowercase()
+            .messages({
+                "string.base": "'email' must be a valid string.",
+            }),
+        userName: joi.string()
+            .min(3)
+            .max(50)
+            .messages({
+                "string.base": "'userName' must be a valid string.",
+                "string.min": "'userName' must be at least 3 characters long.",
+                "string.max": "'userName' must be at most 50 characters long.",
+            }),
+    });
 
     const { error } = schema.validate(req.body);
     if (error) return res.status(400).json({ status: 400, message: error.details.map(d => d.message) });

@@ -45,12 +45,9 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
         const { status, message, cart } = response;
         console.log(response)
-        if (status == 400) {
-            return toast.error("شعبه آیتم انتخابی با شعبه آیتم‌های موجود در سبد خرید مطابقت ندارد. لطفاً از همان شعبه انتخاب کنید.");
-        }
-        if (status == 500) {
-            return toast.error("مشکلی از سمت سرور رخ داده است. لطفا دوباره تلاش کنید.")
-        }
+        if (status == 400) return toast.error("شعبه آیتم انتخابی با شعبه آیتم‌های موجود در سبد خرید مطابقت ندارد. لطفاً از همان شعبه انتخاب کنید.")
+
+        if (status == 500) return toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.")
 
         setCart(cart.items);
 

@@ -29,6 +29,33 @@ export const handleRegister = async (data, setPage, setPhoneNumber, setLoading, 
     setLoading(false);
 }
 
+export const handleEditUser = async (body, user, setUser, setLoading) => {
+
+    setLoading(true);
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/editUser/${user._id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    }).then(response => response.json());
+
+    const { status, user: userData } = response;
+
+    if (status == 404) return toast.error("کاربری با این شماره تلفن یافت نشد.");
+
+    if (status >= 500) return toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
+
+    const newUser = { ...user, ...userData };
+    console.log(newUser);
+
+    toast.success("اطلاعات با موفقیت ویرایش شد.");
+    setUser(newUser);
+
+    setLoading(false);
+}
+
 
 
 

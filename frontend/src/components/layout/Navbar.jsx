@@ -30,8 +30,8 @@ const Navbar = () => {
     }, [])
 
     useEffect(() => {
-        console.log(cart)
-    }, [cart])
+        console.log(user);
+    }, [user])
 
     return (
         <header className="sticky top-0 lg:bg-white bg-[#417F56] z-10 lg:border-b border-b-[#E5F2E9]">
