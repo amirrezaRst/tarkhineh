@@ -2,6 +2,10 @@
 
 import { HeartIcon, LocationIcon, LogoutIcon, PersonalWalletIcon, SolidHeartIcon, SolidLocationIcon, SolidPersonalWalletIcon, SolidUserIcon, UserIcon } from "@/assets/Icons";
 import NavItem from "./NavItem";
+import Popup from "@/components/Popup";
+import { useState } from "react";
+import useUserStore from "@/stores/useUserStore";
+import { toast } from "react-toastify";
 
 const links = [
     {
@@ -37,15 +41,65 @@ const links = [
 
 
 const SidebarNav = () => {
+    const [isOpenPopup, setIsOpenPopup] = useState(false);
+    const clearUser = useUserStore(state => state.clearUser);
+    const clearCart = useUserStore(state => state.clearCart);
+
+    const logoutHandler = async () => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/logout`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: "include"
+        }).then(res => res.json());
+
+        console.log(response);
+
+        if (response.status >= 500) toast.error("خطای سرور رخ داده است. لطفا دوباره تلاش کنید.");
+
+        clearUser();
+        clearCart();
+
+        setIsOpenPopup(false);
+        toast.success("با موفقیت از حساب کاربری خود خارج شدید.");
+    }
+
     return (
         <nav className="lg:pt-7 md:pt-9 lg:pb-4 md:pb-14 py-5">
             <ul className="flex md:flex-col flex-row md:justify-start justify-center lg:gap-2 gap-11">
 
                 {links.map((item, index) =>
-                    <NavItem key={index} oIcon={item.outlineIcon} sIcon={item.solidIcon} path={item.path} text={item.text} />
+                    <NavItem key={index} oIcon={item.outlineIcon} sIcon={item.solidIcon} path={item.path} text={item.text} handler={() => setIsOpenPopup(true)} />
                 )}
 
             </ul>
+
+            <Popup isOpen={isOpenPopup} setIsOpen={setIsOpenPopup}>
+
+                {/*//! Content */}
+                <div className="min-h-36 flex flex-col justify-center gap-6 px-6">
+                    <p className="text-super-base text-[#353535] text-center">
+                        آیا مطمئن هستید که می‌خواهید خارج شوید؟
+                    </p>
+
+                    <div className="flex gap-3">
+                        <button
+                            className="rounded-md border border-[#417F56] text-[#417F56] text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
+                            onClick={() => setIsOpenPopup(false)}
+                        >
+                            انصراف
+                        </button>
+                        <button
+                            className="bg-[#FFF2F2] rounded-md border border-transparent text-[#C30000] text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
+                            onClick={logoutHandler}
+                        >
+                            خروج از حساب
+                        </button>
+                    </div>
+                </div>
+            </Popup>
+
         </nav>
     );
 }

@@ -4,7 +4,7 @@ export const handleRegister = async (data, setPage, setPhoneNumber, setLoading, 
     setLoading(true);
     setPhoneNumber(data['phone-number']);
     console.log(data)
-
+logoutHandler
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register`, {
         method: 'POST',
         headers: {

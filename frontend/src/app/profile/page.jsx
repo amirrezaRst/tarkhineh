@@ -4,7 +4,6 @@ import { PenIcon } from "@/assets/Icons";
 import ProfileInfoForm from "./ProfileInfoForm";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 import useUserStore from "@/stores/useUserStore";
 import { handleEditUser } from "@/services/UserService";
 
@@ -24,12 +23,7 @@ const ProfilePage = () => {
     } : {});
 
     useEffect(() => {
-        reset({
-            "fullName": user && user?.fullName,
-            "email": user && user?.email,
-            "phone": user && user?.phoneNumber,
-            "userName": user && user?.userName,
-        });
+        cancelHandler();
     }, [user])
 
     const editHandler = async (data) => {

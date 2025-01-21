@@ -20,7 +20,7 @@ router.route("/user/:id")
 router.post("/register", registerValidation, registerUser);
 router.post("/verifyOtp", verifyOtpValidation, verifyOtp);
 router.post("/login", loginValidation, login);
-router.post('/logout', logout);
+router.delete('/logout', logout);
 router.get("/refreshToken", refreshToken);
 router.patch("/editUser/:id", [ValidateObjectId, editUserValidation], editUser);
 

@@ -218,8 +218,11 @@ exports.refreshToken = async (req, res) => {
 
 exports.logout = (req, res) => {
     try {
-        res.cookie('token', '', { httpOnly: true, sameSite: 'strict', expires: new Date(0) });
-        res.cookie('refreshToken', '', { httpOnly: true, sameSite: 'strict', expires: new Date(0) });
+        // res.cookie('token', '', { httpOnly: true, sameSite: 'strict', expires: new Date(0), maxAge: new Date(0) });
+        // res.cookie('refreshToken', '', { httpOnly: true, sameSite: 'strict', expires: new Date(0), maxAge: new Date(0) });
+
+        res.cookie("token", "", { httpOnly: true, sameSite: 'strict', expires: new Date(0), maxAge: 0 });
+        res.cookie("refreshToken", "", { httpOnly: true, sameSite: 'strict', expires: new Date(0), maxAge: 0, path: `${process.env.FRONT_ADDRESS}/api/user/refreshToken` });
 
         res.status(200).json({ status: 200, message: "Logout Successfully" });
     }
