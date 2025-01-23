@@ -4,7 +4,7 @@ export const handleRegister = async (data, setPage, setPhoneNumber, setLoading, 
     setLoading(true);
     setPhoneNumber(data['phone-number']);
     console.log(data)
-logoutHandler
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register`, {
         method: 'POST',
         headers: {
@@ -28,6 +28,59 @@ logoutHandler
 
     setLoading(false);
 }
+
+export const handleSendOtp = async (otp, setOtp, phoneNumber, setLoading, setError, setPage, setIsOpen, fetchUser, fetchCart) => {
+    setLoading(true);
+
+    if (!otp) {
+        return setError({ message: "کد تایید را وارد کنید." });
+    }
+    if (otp.toString().length != 5) {
+        return setError({ message: "کد تایید باید 5 رقم باشد." });
+    }
+    if (typeof parseInt(otp, 10) == 'string') {
+        return setError({ message: "کد تایید باید عدد باشد." });
+    }
+    if (isNaN(otp)) {
+        return setError({ message: "کد تایید باید عدد باشد." });
+    }
+    setError({});
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/verifyOtp`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            phoneNumber,
+            otpCode: otp.toString(),
+        }),
+        credentials: 'include'
+    }).then(response => response.json());
+
+    const { status, message } = response;
+
+    switch (status) {
+        case 200:
+            fetchUser();
+            fetchCart();
+            setIsOpen(false);
+            setOtp();
+            setPage(0);
+            toast.success("شما با موفقیت وارد شدید.");
+            break;
+        case 403:
+            setError({ message: "کد تایید نامعتبر یا منقضی شده است." });
+            break;
+        case 404:
+            setError({ message: "کاربری با این شماره تلفن یافت نشد." });
+            break;
+        default:
+            toast.error("خطایی رخ داده است. لطفا دوباره تلاش کنید.");
+            break;
+    }
+    setLoading(false);
+};
 
 export const handleEditUser = async (body, user, setUser, setLoading) => {
 
@@ -54,6 +107,27 @@ export const handleEditUser = async (body, user, setUser, setLoading) => {
     setUser(newUser);
 
     setLoading(false);
+};
+
+export const handleLogout = async (clearUser, clearCart, setIsOpenPopup, router) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/logout`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: "include"
+    }).then(res => res.json());
+
+    console.log(response);
+
+    if (response.status >= 500) toast.error("خطای سرور رخ داده است. لطفا دوباره تلاش کنید.");
+
+    setIsOpenPopup(false);
+    router.replace("/");
+    clearUser();
+    clearCart();
+
+    toast.success("با موفقیت از حساب کاربری خود خارج شدید.");
 }
 
 

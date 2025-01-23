@@ -27,11 +27,11 @@ const Navbar = () => {
         }
         fetchUser();
         fetchCart();
-    }, [])
+    }, []);
 
     useEffect(() => {
-        console.log(user);
-    }, [user])
+        console.log(cart);
+    }, [cart])
 
     return (
         <header className="sticky top-0 lg:bg-white bg-[#417F56] z-10 lg:border-b border-b-[#E5F2E9]">
@@ -56,7 +56,9 @@ const Navbar = () => {
                         <PreserveQueryLink href={user ? "/cart" : ""}>
                             <button className="relative bg-[#E5F2E9] rounded-md p-2">
                                 <ShoppingCartIcon className="fill-[#417F56] max-xl:w-5 max-xl:h-5" />
-                                <span className="w-5 h-5 rounded-full bg-[#417F56] absolute -top-1.5 -right-1.5 text-white text-super-xs">
+                                <span
+                                    className={`w-5 h-5 rounded-full bg-[#417F56] absolute -top-1.5 -right-1.5 text-white text-super-xs ${!cart || cart?.length === 0 ? "opacity-0" : "opacity-100"}`}
+                                >
                                     {cart?.length}
                                 </span>
                             </button>

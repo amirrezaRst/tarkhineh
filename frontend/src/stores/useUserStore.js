@@ -45,7 +45,7 @@ const useUserStore = create(
 
                 // console.log(response)
 
-                set({ cart: cart.items, loading: false, error: null });
+                set({ cart: cart?.items, loading: false, error: null });
             } catch (error) {
                 console.log(error)
                 toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");

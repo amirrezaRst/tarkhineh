@@ -6,6 +6,8 @@ import Popup from "@/components/Popup";
 import { useState } from "react";
 import useUserStore from "@/stores/useUserStore";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { handleLogout } from "@/services/UserService";
 
 const links = [
     {
@@ -44,26 +46,9 @@ const SidebarNav = () => {
     const [isOpenPopup, setIsOpenPopup] = useState(false);
     const clearUser = useUserStore(state => state.clearUser);
     const clearCart = useUserStore(state => state.clearCart);
+    const router = useRouter();
 
-    const logoutHandler = async () => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/logout`, {
-            method: "DELETE",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: "include"
-        }).then(res => res.json());
 
-        console.log(response);
-
-        if (response.status >= 500) toast.error("خطای سرور رخ داده است. لطفا دوباره تلاش کنید.");
-
-        clearUser();
-        clearCart();
-
-        setIsOpenPopup(false);
-        toast.success("با موفقیت از حساب کاربری خود خارج شدید.");
-    }
 
     return (
         <nav className="lg:pt-7 md:pt-9 lg:pb-4 md:pb-14 py-5">
@@ -92,7 +77,7 @@ const SidebarNav = () => {
                         </button>
                         <button
                             className="bg-[#FFF2F2] rounded-md border border-transparent text-[#C30000] text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
-                            onClick={logoutHandler}
+                            onClick={() => handleLogout(clearUser, clearCart, setIsOpenPopup, router)}
                         >
                             خروج از حساب
                         </button>

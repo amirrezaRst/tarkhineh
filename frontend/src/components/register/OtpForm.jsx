@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useUserStore from "@/stores/useUserStore";
 import FormatTime from "@/utils/FormatTime";
-import { handleRegister } from "@/services/UserService";
+import { handleRegister, handleSendOtp } from "@/services/UserService";
 
 const OtpForm = ({ setPage, phoneNumber, setPhoneNumber, setIsOpen }) => {
     const [otp, setOtp] = useState();
@@ -13,6 +13,7 @@ const OtpForm = ({ setPage, phoneNumber, setPhoneNumber, setIsOpen }) => {
     const [loading, setLoading] = useState(false);
     const [timer, setTimer] = useState(120);
     const fetchUser = useUserStore((state) => state.fetchUser);
+    const fetchCart = useUserStore(state => state.fetchCart);
 
     useEffect(() => {
         if (timer > 0) {
@@ -24,62 +25,69 @@ const OtpForm = ({ setPage, phoneNumber, setPhoneNumber, setIsOpen }) => {
         }
     }, [timer]);
 
-
-    const handleSendOtp = async (e) => {
-        setLoading(true);
+    const optHandler = async (e) => {
         e.preventDefault();
-
-        if (!otp) {
-            return setError({ message: "کد تایید را وارد کنید." });
-        }
-        if (otp.toString().length != 5) {
-            return setError({ message: "کد تایید باید 5 رقم باشد." });
-        }
-        if (typeof parseInt(otp, 10) == 'string') {
-            return setError({ message: "کد تایید باید عدد باشد." });
-        }
-        if (isNaN(otp)) {
-            return setError({ message: "کد تایید باید عدد باشد." });
-        }
-        setError({});
-
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/verifyOtp`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                phoneNumber,
-                otpCode: otp.toString(),
-            }),
-            credentials: 'include'
-        }).then(response => response.json());
-
-        const { status, message } = response;
-
-        switch (status) {
-            case 200:
-                fetchUser();
-                setIsOpen(false);
-                toast.success("شما با موفقیت وارد شدید.");
-                break;
-            case 403:
-                setError({ message: "کد تایید نامعتبر یا منقضی شده است." });
-                break;
-            case 404:
-                setError({ message: "کاربری با این شماره تلفن یافت نشد." });
-                break;
-            default:
-                toast.error("خطایی رخ داده است. لطفا دوباره تلاش کنید.");
-                break;
-        }
-        setLoading(false);
+        handleSendOtp(otp, setOtp, phoneNumber, setLoading, setError, setPage, setIsOpen, fetchUser, fetchCart)
     };
+
+    // const handleSendOtp = async (e) => {
+    //     setLoading(true);
+    //     e.preventDefault();
+
+    //     if (!otp) {
+    //         return setError({ message: "کد تایید را وارد کنید." });
+    //     }
+    //     if (otp.toString().length != 5) {
+    //         return setError({ message: "کد تایید باید 5 رقم باشد." });
+    //     }
+    //     if (typeof parseInt(otp, 10) == 'string') {
+    //         return setError({ message: "کد تایید باید عدد باشد." });
+    //     }
+    //     if (isNaN(otp)) {
+    //         return setError({ message: "کد تایید باید عدد باشد." });
+    //     }
+    //     setError({});
+
+
+    //     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/verifyOtp`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             phoneNumber,
+    //             otpCode: otp.toString(),
+    //         }),
+    //         credentials: 'include'
+    //     }).then(response => response.json());
+
+    //     const { status, message } = response;
+
+    //     switch (status) {
+    //         case 200:
+    //             fetchUser();
+    //             fetchCart();
+    //             setIsOpen(false);
+    //             setOtp();
+    //             setPage(0);
+    //             toast.success("شما با موفقیت وارد شدید.");
+    //             break;
+    //         case 403:
+    //             setError({ message: "کد تایید نامعتبر یا منقضی شده است." });
+    //             break;
+    //         case 404:
+    //             setError({ message: "کاربری با این شماره تلفن یافت نشد." });
+    //             break;
+    //         default:
+    //             toast.error("خطایی رخ داده است. لطفا دوباره تلاش کنید.");
+    //             break;
+    //     }
+    //     setLoading(false);
+    // };
 
 
     return (
-        <form className="text-right" onSubmit={handleSendOtp}>
+        <form className="text-right" onSubmit={optHandler}>
 
             <OtpField value={otp} setValue={setOtp} error={error} />
 
