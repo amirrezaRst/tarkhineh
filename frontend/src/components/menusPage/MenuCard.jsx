@@ -9,7 +9,8 @@ import { useState } from "react";
 import MenuModal from "../modal/MenuModal";
 import RegisterModal from "../register/RegisterModal";
 import useUserStore from "@/stores/useUserStore";
-import { toast } from "react-toastify";
+import CartButton from "./CartButton";
+import { addItemToCart } from "@/services/MenuService";
 
 const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available, branch }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -27,33 +28,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
 
     const handleAddToCart = async () => {
-        if (!user) return setRegisterModal(true);
-        setLoading(true);
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/add`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user: user._id,
-                menuItem: _id,
-                branch
-            }),
-            credentials: "include"
-        }).then(res => res.json());
-
-        const { status, message, cart } = response;
-        console.log(response)
-        if (status == 400) return toast.error("شعبه آیتم انتخابی با شعبه آیتم‌های موجود در سبد خرید مطابقت ندارد. لطفاً از همان شعبه انتخاب کنید.")
-
-        if (status == 500) return toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.")
-
-        setCart(cart.items);
-
-        toast.success("آیتم با موفقیت به سبد خرید اضافه شد.");
-
-        setLoading(false);
+        addItemToCart(user, _id, branch, setRegisterModal, setLoading, setCart);
     };
 
 
@@ -100,7 +75,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
                     <div className="flex xl:flex-row flex-col xl:items-center justify-between xl:gap-6 gap-3">
                         <StarRating rate={reviews?.averageRating} />
-                        {/* <HandleCartButton id={_id} handleAddToCart={handleAddToCart} /> */}
+                        <CartButton id={_id} handleAddToCart={handleAddToCart} setLoading={setLoading} loading={loading} />
                     </div>
 
                 </div>

@@ -8,7 +8,7 @@ router.post('/add', [addNewItemCart, Authenticate], addItemToCart);
 
 router.get('/', getCartByUserId);
 
-router.delete('/remove/:userId', removeItemFromCart);
+router.delete('/remove/:userId', [Authenticate], removeItemFromCart);
 
 router.delete('/clear/:userId', clearCart);
 

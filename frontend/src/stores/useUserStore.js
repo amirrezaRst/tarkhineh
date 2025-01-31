@@ -40,7 +40,7 @@ const useUserStore = create(
                 }).then(res => res.json());
 
                 const { status, cart } = response;
-
+                // console.log(response)
                 if (status === 500) toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
 
                 // console.log(response)

@@ -9,12 +9,16 @@ import ModalContainer from "../modal/ModalContainer";
 import MenuModal from "../modal/MenuModal";
 import useUserStore from "@/stores/useUserStore";
 import RegisterModal from "../register/RegisterModal";
+import CartButton from "../menusPage/CartButton";
+import { addItemToCart } from "@/services/MenuService";
 
-const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available }) => {
+const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available, branch }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [registerModal, setRegisterModal] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const user = useUserStore(state => state.user)
+    const user = useUserStore(state => state.user);
+    const setCart = useUserStore(state => state.setCart);
 
 
     const finalPrice = discount
@@ -23,11 +27,9 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
             : price - discount.discountValue
         : price;
 
-    const handleAddToCart = () => {
-        if (!user) return setRegisterModal(true);
-        alert("menu item has been added to cart");
+    const handleAddToCart = async () => {
+        addItemToCart(user, _id, branch, setRegisterModal, setLoading, setCart);
     };
-
 
 
     return (
@@ -65,12 +67,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
                 </div>
 
-                <button
-                    className="w-full bg-[#417F56] text-white rounded-md py-1.5 text-super-sm leading-6 mt-4"
-                    onClick={handleAddToCart}
-                >
-                    افزودن به سبد خرید
-                </button>
+                <CartButton id={_id} handleAddToCart={handleAddToCart} setLoading={setLoading} loading={loading} />
             </div>
 
             {/*//! Menu Item Details Menu */}

@@ -43,7 +43,7 @@ exports.getCartByUserId = async (req, res) => {
         }
 
         const cart = await Cart.findOne({ user: userId })
-            .populate('items.menuItem', "_id name price images");
+            .populate('items.menuItem', "_id name price images ingredients");
 
         if (!cart) {
             return res.status(404).json({ status: 404, message: 'Cart not found for this user.' });
@@ -101,7 +101,8 @@ exports.addItemToCart = async (req, res) => {
             return res.status(404).json({ status: 404, message: 'Menu item not found.' });
         }
 
-        let cart = await Cart.findOne({ user });
+        let cart = await Cart.findOne({ user })
+            .populate('items.menuItem', "_id name price images ingredients");
 
         if (cart) {
             if (branch != cart.branch) return res.status(400).json({ status: 400, message: "The branch of the selected item does not match the branch of the items already in your cart. Please choose items from the same branch" });
@@ -146,7 +147,7 @@ exports.removeItemFromCart = async (req, res) => {
 
         cart.items = cart.items.filter(item => item.menuItem.toString() !== itemId.toString());
 
-        await cart.save();
+        // await cart.save();
 
         res.status(200).json({ status: 200, message: 'Item removed from cart.', cart });
     } catch (error) {
