@@ -186,18 +186,21 @@ exports.removeItemFromCart = async (req, res) => {
 
         const itemId = new mongoose.Types.ObjectId(menuItemId);
 
-        let cart = await Cart.findOne({ user: userId }).select("items");
+        let cart = await Cart.findOne({ user: userId })
+            .select("items")
+            .populate('items.menuItem', "_id name price images ingredients");
+
         if (!cart) {
             return res.status(404).json({ status: 404, message: 'User not found.' });
         }
 
-        const itemIndex = cart.items.findIndex(item => item.menuItem.toString() === itemId.toString())
+        const itemIndex = cart.items.findIndex(item => item.menuItem._id.toString() === itemId.toString())
 
         if (itemIndex === -1) return res.status(400).json({ status: 400, message: "there is no item with this menuItemId" })
 
-        cart.items = cart.items.filter(item => item.menuItem.toString() !== itemId.toString());
+        cart.items = cart.items.filter(item => item.menuItem._id.toString() !== itemId.toString());
 
-        // await cart.save();
+        await cart.save();
 
         res.status(200).json({ status: 200, message: 'Item removed from cart.', cart });
     } catch (error) {

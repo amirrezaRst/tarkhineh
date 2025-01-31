@@ -11,7 +11,7 @@ import RegisterModal from "../register/RegisterModal";
 import useUserStore from "@/stores/useUserStore";
 import CartButton from "./CartButton";
 import { addItemToCart, decreaseItemQuantity } from "@/services/MenuService";
-import { toast } from "react-toastify";
+
 
 const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available, branch }) => {
     const [isOpen, setIsOpen] = useState(false);

@@ -14,7 +14,7 @@ export const fetchBranchPageItems = async (branchId, category, ratingSort, setIt
     setItems(data?.branch?.menus);
 }
 
-export const addItemToCart = async (user, MenuItemId, branch, setRegisterModal, setLoading, setCart) => {
+export const addItemToCart = async (user, menuItemId, branch, setRegisterModal, setLoading, setCart) => {
     if (!user) return setRegisterModal(true);
     setLoading(true);
 
@@ -25,7 +25,7 @@ export const addItemToCart = async (user, MenuItemId, branch, setRegisterModal, 
         },
         body: JSON.stringify({
             user: user._id,
-            menuItem: MenuItemId,
+            menuItem: menuItemId,
             branch
         }),
         credentials: "include"
@@ -41,6 +41,28 @@ export const addItemToCart = async (user, MenuItemId, branch, setRegisterModal, 
     if (status == 201) {
         toast.success("آیتم با موفقیت به سبد خرید اضافه شد.");
     }
+};
+
+export const increaseItemQuantity = async (user, menuItemId, branch, setCart) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/add`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            user: user._id,
+            menuItem: menuItemId,
+            branch
+        }),
+        credentials: "include"
+    }).then(res => res.json());
+
+    const { status, cart } = response;
+    if (status == 400) return toast.error("شعبه آیتم انتخابی با شعبه آیتم‌های موجود در سبد خرید مطابقت ندارد. لطفاً از همان شعبه انتخاب کنید.")
+
+    if (status == 500) return toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.")
+
+    setCart(cart.items);
 };
 
 export const decreaseItemQuantity = async (user, menuItemId, setCart) => {

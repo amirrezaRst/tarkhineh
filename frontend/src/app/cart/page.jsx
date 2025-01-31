@@ -7,14 +7,22 @@ import useUserStore from "@/stores/useUserStore";
 import CartItem from "./CartItem";
 import CartLayout from "./CartLayout";
 import MobileNavigation from "./MobileNavigation";
+import { useSearchParams } from "next/navigation";
 
 const CartPage = () => {
     const [step, setStep] = useState(1);
     const cart = useUserStore(state => state.cart);
+    const [branchId, setBranchId] = useState(null)
+    const branch = useSearchParams().get("branch");
 
     useEffect(() => {
-        // console.log(cart)
-    }, [cart])
+        if (branch) {
+            if (branch == "aghdasiyeh") setBranchId("675de19cf836156025ee8575");
+            else if (branch == "tehranpars") setBranchId("675f4c1655060567771c7884");
+            else if (branch == "vanak") setBranchId("675f4bfe55060567771c7881");
+            else if (branch == "chalous") setBranchId("675f4c3155060567771c7887");
+        }
+    }, [branch]);
 
     return (
         <div className="xl:py-20 md:py-12 py-9">
@@ -38,7 +46,7 @@ const CartPage = () => {
                         <div className="border border-[#CBCBCB] rounded-lg px-6 py-7 space-y-6">
 
                             {cart?.map(({ menuItem, quantity, _id: id }, index) => (
-                                <CartItem key={index} id={id} menuItem={menuItem} quantity={quantity} />
+                                <CartItem key={index} id={id} menuItem={menuItem} quantity={quantity} branch={branchId && branchId} />
                             ))}
 
                         </div>
