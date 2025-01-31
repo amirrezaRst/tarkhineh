@@ -10,7 +10,8 @@ import MenuModal from "../modal/MenuModal";
 import RegisterModal from "../register/RegisterModal";
 import useUserStore from "@/stores/useUserStore";
 import CartButton from "./CartButton";
-import { addItemToCart } from "@/services/MenuService";
+import { addItemToCart, decreaseItemQuantity } from "@/services/MenuService";
+import { toast } from "react-toastify";
 
 const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available, branch }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +30,10 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
     const handleAddToCart = async () => {
         addItemToCart(user, _id, branch, setRegisterModal, setLoading, setCart);
+    };
+
+    const handleDecreaseQuantity = async () => {
+        decreaseItemQuantity(user, _id, setCart);
     };
 
 
@@ -75,7 +80,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
                     <div className="flex xl:flex-row flex-col xl:items-center justify-between xl:gap-6 gap-3">
                         <StarRating rate={reviews?.averageRating} />
-                        <CartButton id={_id} handleAddToCart={handleAddToCart} setLoading={setLoading} loading={loading} />
+                        <CartButton id={_id} handleAddToCart={handleAddToCart} handleDecrease={handleDecreaseQuantity} setLoading={setLoading} loading={loading} />
                     </div>
 
                 </div>

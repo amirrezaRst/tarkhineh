@@ -32,12 +32,35 @@ export const addItemToCart = async (user, MenuItemId, branch, setRegisterModal, 
     }).then(res => res.json());
 
     const { status, message, cart } = response;
-    // console.log(response)
     if (status == 400) return toast.error("شعبه آیتم انتخابی با شعبه آیتم‌های موجود در سبد خرید مطابقت ندارد. لطفاً از همان شعبه انتخاب کنید.")
 
     if (status == 500) return toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.")
 
     setCart(cart.items);
 
-    toast.success("آیتم با موفقیت به سبد خرید اضافه شد.");
+    if (status == 201) {
+        toast.success("آیتم با موفقیت به سبد خرید اضافه شد.");
+    }
+};
+
+export const decreaseItemQuantity = async (user, menuItemId, setCart) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/decrease/${user?._id}`, {
+        method: "PATCH",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            menuItemId,
+        }),
+        credentials: "include"
+    }).then(res => res.json());
+
+    const { status, cart } = response;
+
+    if (status == 400) return toast.error("این آیتم در سبد خرید شما وجود ندارد.");
+
+    if (status == 500) return toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
+
+    if (status == 200) toast.success("آیتم با موفقیت از سبد خرید حذف شد.");
+    setCart(cart.items);
 };

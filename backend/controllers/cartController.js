@@ -113,7 +113,7 @@ exports.addItemToCart = async (req, res) => {
                 cart.items.push({ menuItem, quantity });
             }
             await cart.save();
-            res.status(200).json({ message: 'Item added to cart successfully.', cart });
+            res.status(200).json({ status: 200, message: 'Item added to cart successfully.', cart });
         } else {
             cart = new Cart({ user, items: [{ menuItem, quantity }], branch });
             await cart.save();
@@ -125,6 +125,57 @@ exports.addItemToCart = async (req, res) => {
     }
 };
 
+//! Patch Request
+//? Update Item Quantity in Cart
+exports.decreaseItemQuantity = async (req, res) => {
+    const { id } = req.params;
+    const { menuItemId } = req.body;
+    const cart = await Cart.findOne({ user: id })
+        .select("-branch -user")
+        .populate('items.menuItem', "_id name price images ingredients");
+
+    if (!cart) {
+        return res.status(404).json({ status: 404, message: 'User not found.' });
+    }
+
+    const itemIndex = cart.items.findIndex(item => item.menuItem._id.toString() === menuItemId);
+    if (itemIndex === -1) return res.status(400).json({ status: 400, message: "there is no item with this menuItemId" });
+
+
+    if (cart.items[itemIndex].quantity === 1) {
+        cart.items = cart.items.filter(item => item.menuItem._id.toString() !== menuItemId);
+        cart.save();
+
+        return res.status(200).json({ status: 200, message: 'Item removed from cart.', cart });
+    } else {
+        cart.items[itemIndex].quantity -= 1;
+        cart.save();
+
+        res.status(200).json({ status: 201, message: 'Item quantity decreased.', cart });
+    }
+
+
+    // Cart.findOne({ user: userId }).then(cart => {
+    //     if (!cart) {
+    //         return res.status(404).json({ status: 404, message: 'User not found.' });
+    //     }
+
+    //     const itemIndex = cart.items.findIndex(item => item.menuItem._id.toString() === menuItemId);
+
+    //     if (itemIndex === -1) return res.status(400).json({ status: 400, message: "there is no item with this menuItemId" });
+
+    //     if (cart.items[itemIndex].quantity === 1) {
+    //         cart.items = cart.items.filter(item => item.menuItem._id.toString() !== menuItemId);
+    //     } else {
+    //         cart.items[itemIndex].quantity -= 1;
+    //     }
+
+    //     cart.save()
+    //         .then(() => res.status(200).json({ status: 200, message: 'Item quantity decreased.', cart }))
+    //         .catch(err => res.status(500).json({ status: 500, message: 'An error occurred while decreasing item quantity.' }));
+    // })
+    //     .catch(err => res.status(500).json({ status: 500, message: 'An error occurred while decreasing item quantity.' }));
+}
 
 //! Delete Request
 //? Remove Item from Cart

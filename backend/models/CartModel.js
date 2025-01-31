@@ -37,4 +37,13 @@ const CartSchema = new mongoose.Schema({
 //     await this.save();
 // };
 
+CartSchema.set('toJSON', {
+    transform: (doc, ret) => {
+        delete ret.createdAt;
+        delete ret.updatedAt;
+        delete ret.__v;
+        return ret;
+    },
+});
+
 module.exports = mongoose.model('Cart', CartSchema);

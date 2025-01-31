@@ -2,7 +2,7 @@ import { MinusIcon, PlusIcon, TrashIcon } from "@/assets/Icons";
 import useUserStore from "@/stores/useUserStore";
 import { useEffect, useState } from "react";
 
-const CartButton = ({ id, handleAddToCart, setLoading, loading }) => {
+const CartButton = ({ id, handleAddToCart, handleDecrease, setLoading, loading }) => {
     const cart = useUserStore(state => state.cart);
     const [quantity, setQuantity] = useState(null);
 
@@ -21,6 +21,8 @@ const CartButton = ({ id, handleAddToCart, setLoading, loading }) => {
         }
     }, [cart]);
 
+
+
     return (
         <>
             {quantity === null ?
@@ -38,10 +40,16 @@ const CartButton = ({ id, handleAddToCart, setLoading, loading }) => {
                         {quantity}
                     </p>
                     {quantity == 1 ?
-                        <button className="p-1.5">
+                        <button
+                            className="p-1.5"
+                            onClick={handleDecrease}
+                        >
                             <TrashIcon className="w-[22px] h-[22px] fill-[#417F56]" />
                         </button> :
-                        <button className="p-1.5">
+                        <button
+                            className="p-1.5"
+                            onClick={handleDecrease}
+                        >
                             <MinusIcon className="w-6 h-6 stroke-[#417F56]" />
                         </button>
                     }

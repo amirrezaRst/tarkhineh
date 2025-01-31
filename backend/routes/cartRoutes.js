@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { addItemToCart, getCartByUserId, updateCart, removeItemFromCart, clearCart } = require('../controllers/cartController');
-const { addNewItemCart } = require('../validation/cartValidation');
+const { addItemToCart, getCartByUserId, updateCart, removeItemFromCart, clearCart, decreaseItemQuantity } = require('../controllers/cartController');
+const { addNewItemCartValidation, decreaseQuantityValidation } = require('../validation/cartValidation');
 const Authenticate = require('../middleware/Authenticate');
+const ValidateObjectId = require('../middleware/ValidateObjectId');
 
-router.post('/add', [addNewItemCart, Authenticate], addItemToCart);
+router.post('/add', [addNewItemCartValidation, Authenticate], addItemToCart);
+router.patch('/decrease/:id', [ValidateObjectId, decreaseQuantityValidation, Authenticate], decreaseItemQuantity);
 
 router.get('/', getCartByUserId);
 
