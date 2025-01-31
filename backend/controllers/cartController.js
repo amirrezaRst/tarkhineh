@@ -106,9 +106,8 @@ exports.addItemToCart = async (req, res) => {
 
         if (cart) {
             if (branch != cart.branch) return res.status(400).json({ status: 400, message: "The branch of the selected item does not match the branch of the items already in your cart. Please choose items from the same branch" });
-            const itemIndex = cart.items.findIndex(item => item.menuItem.toString() === menuItem);
+            const itemIndex = cart.items.findIndex(item => item.menuItem._id.toString() === menuItem);
             if (itemIndex > -1) {
-                console.log(cart.items[itemIndex].quantity)
                 cart.items[itemIndex].quantity += quantity;
             } else {
                 cart.items.push({ menuItem, quantity });

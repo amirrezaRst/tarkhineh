@@ -28,7 +28,10 @@ const CartButton = ({ id, handleAddToCart, setLoading, loading }) => {
                     className="bg-[#E5F2E9] w-full text-[#417F56] flex items-center justify-around rounded-md mt-4 px-3"
                 >
 
-                    <button className="p-1.5">
+                    <button
+                        className="p-1.5"
+                        onClick={handleAddToCart}
+                    >
                         <PlusIcon className="w-6 h-6 stroke-[#417F56]" />
                     </button>
                     <p>
