@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Overlay from "./modal/Overlay";
 import { XmarkIcon } from "@/assets/Icons";
 
-const Popup = ({ children, isOpen, setIsOpen }) => {
+const Popup = ({ children, isOpen, setIsOpen, title }) => {
     const [show, setShow] = useState(isOpen);
 
     useEffect(() => {
@@ -26,17 +26,18 @@ const Popup = ({ children, isOpen, setIsOpen }) => {
     return (
         <Overlay show={show} setIsOpen={setIsOpen}>
             <div
-                onClick={(e) => e.stopPropagation()}
                 className="w-full h-full flex items-center justify-center"
+                onClick={()=>setIsOpen(false)}
             >
                 <div
-                    className="bg-white min-w-[450px] rounded-lg py-5 px-7"
+                    className="bg-white md:w-[450px] w-[90%] rounded-lg py-5 px-7"
+                    onClick={(e) => e.stopPropagation()}
                 >
 
                     {/*//! Title */}
                     <div className="relative w-full mb-4">
-                        <h6 className="text-center text-[#353535] font-medium text-xl">حذف آدرس</h6>
-                        <button className="absolute left-0 -top-1 p-1" onClick={()=>setIsOpen(false)}>
+                        <h6 className="text-center text-[#353535] font-medium md:text-xl text-lg">{title ? title : "حذف آدرس"}</h6>
+                        <button className="absolute left-0 -top-1 p-1" onClick={() => setIsOpen(false)}>
                             <XmarkIcon className="fill-[#717171] w-7 h-7" />
                         </button>
                     </div>

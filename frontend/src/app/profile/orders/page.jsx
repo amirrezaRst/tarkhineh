@@ -1,4 +1,4 @@
-import { CalenderIcon, CheckmarkIcon, ChevronIcon, CircleCheckmarkIcon, ClockIcon, HomeIcon, LocationIcon, PersonalWalletIcon, TruckIcon } from "@/assets/Icons";
+import { CalenderIcon, CheckmarkIcon, ChevronIcon, CircleCheckmarkIcon, ClockIcon, HomeIcon, LocationIcon, PersonalWalletIcon, TruckFastIcon, TruckIcon } from "@/assets/Icons";
 
 const OrdersPage = () => {
     return (
@@ -108,7 +108,7 @@ const OrdersPage = () => {
                         </div>
                         <div className="w-full md:border-t-2 border-t-[1.5px] border-dashed border-[#CBCBCB] flex-1"></div>
                         <div className="flex items-center gap-2">
-                            <TruckIcon className="xl:w-[27px] xl:h-[27px] md:w-6 md:h-6 w-[26px] h-[26px] fill-[#CBCBCB]" />
+                            <TruckFastIcon className="xl:w-[27px] xl:h-[27px] md:w-6 md:h-6 w-[26px] h-[26px] fill-[#CBCBCB]" />
                             <p className="text-[#CBCBCB] md:block hidden">ارسال توسط پیک</p>
                         </div>
                         <div className="w-full md:border-t-2 border-t-[1.5px] border-dashed border-[#CBCBCB] flex-1"></div>

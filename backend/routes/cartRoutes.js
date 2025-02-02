@@ -12,6 +12,6 @@ router.get('/', getCartByUserId);
 
 router.delete('/remove/:userId', [Authenticate], removeItemFromCart);
 
-router.delete('/clear/:userId', clearCart);
+router.delete('/clear/:userId', [Authenticate], clearCart);
 
 module.exports = router;

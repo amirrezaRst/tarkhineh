@@ -43,6 +43,47 @@ export const addItemToCart = async (user, menuItemId, branch, setRegisterModal, 
     }
 };
 
+export const deleteCart = async (userId, clearCart) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/clear/${userId}`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        credentials: "include"
+    }).then(res => res.json());
+
+    const { status } = response;
+
+    if (status == 404) return toast.error("سبد خریدی پیدا نشد. لطفا دوباره تلاش کنید.");
+
+    clearCart();
+
+    toast.success("سبد خرید با موفقیت خالی شد.");
+}
+
+export const removeItemFromCart = async (userId, menuItemId, setIsOpen, setCart) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/remove/${userId}`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            menuItemId
+        }),
+        credentials: "include"
+    }).then(res => res.json());
+
+    const { status, message, cart } = response;
+
+    setIsOpen(false);
+    if (status == 500) return toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.")
+
+    if (status == 404) return toast.error("آیتم مورد نظر یافت نشد.");
+    setCart(cart.items)
+
+    toast.success("آیتم با موفقیت از سبد خرید حذف شد.");
+}
+
 export const increaseItemQuantity = async (user, menuItemId, branch, setCart) => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/add`, {
         method: "POST",

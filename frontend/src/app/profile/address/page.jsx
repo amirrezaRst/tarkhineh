@@ -8,7 +8,7 @@ import AddressCard from "./AddressCard";
 import NewAddressModal from "./NewAddressModal";
 
 
-const AddressPage = () => {
+const AddressPage = ({ cartPage, selectedAddress, setSelectedAddress }) => {
     const [isOpen, setIsOpen] = useState(false);
     const user = useUserStore(state => state.user);
 
@@ -24,22 +24,24 @@ const AddressPage = () => {
                     </div>
                 ) :
                 user?.addresses?.length === 0 ?
-                    <EmptyAddressesList /> :
+                    <EmptyAddressesList cartPage={true} /> :
                     (
                         <>
                             <div
                                 className="grid lg:grid-cols-2 xl:gap-7 lg:gap-3.5 gap-5 mt-4"
                             >
                                 {user?.addresses.map((item, index) =>
-                                    <AddressCard index={index} key={index} {...item} userId={user?._id} />
+                                    <AddressCard index={index} key={index} {...item} userId={user?._id} selectedAddress={selectedAddress} setSelectedAddress={setSelectedAddress} />
                                 )}
                             </div>
-                            <button
-                                className="border border-[#417F56] rounded-md text-[#417F56] text-super-sm px-12 py-2 mx-auto block mt-7"
-                                onClick={() => setIsOpen(true)}
-                            >
-                                افزودن آدرس جدید
-                            </button>
+                            {!cartPage &&
+                                <button
+                                    className="border border-[#417F56] rounded-md text-[#417F56] text-super-sm px-12 py-2 mx-auto block mt-7"
+                                    onClick={() => setIsOpen(true)}
+                                >
+                                    افزودن آدرس جدید
+                                </button>
+                            }
                         </>
                     )
             }

@@ -12,7 +12,7 @@ const MainLayout = ({ children }) => {
             <Slider />
             <Searchbox />
 
-            <BottomNavbar />
+            {/* <BottomNavbar /> */}
 
             {children}
 

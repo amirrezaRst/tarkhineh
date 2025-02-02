@@ -7,18 +7,22 @@ import DeleteAddressPopup from "./DeleteAddressPopup";
 import ModalContainer from "@/components/modal/ModalContainer";
 import EditAddressModal from "./EditAddressModal";
 
-const AddressCard = ({ index, title, addressLine, recipientPhoneNumber, recipientFullName, userId }) => {
+const AddressCard = ({ index, title, addressLine, recipientPhoneNumber, recipientFullName, userId, selectedAddress, setSelectedAddress }) => {
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
+    console.log(selectedAddress)
 
-    const handleEdit = async () => {
-
-    };
+    const handleSelect = () => {
+        if (selectedAddress != null || selectedAddress != undefined) {
+            setSelectedAddress(index);
+        };
+    }
 
     return (
         <>
             <div
-                className="bg-[#F9F9F9] border border-[#CBCBCB] rounded-lg py-5 px-4 hover:shadow-md duration-300"
+                className={`bg-[#F9F9F9] border rounded-lg py-5 px-4 hover:shadow-md duration-300 ${selectedAddress != null && "cursor-pointer"}  ${selectedAddress == index ? "border-[#417F56] ring-1 ring-[#417F56] shadow-sm" : "border-[#CBCBCB]"}`}
+                onClick={handleSelect}
             >
 
                 <div className="flex items-start justify-between gap-2.5">

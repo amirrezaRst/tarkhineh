@@ -40,12 +40,12 @@ const useUserStore = create(
                 }).then(res => res.json());
 
                 const { status, cart } = response;
-                // console.log(response)
+                console.log(response)
                 if (status === 500) toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
 
                 // console.log(response)
 
-                set({ cart: cart?.items, loading: false, error: null });
+                set({ cart: cart?.items || [], loading: false, error: null });
             } catch (error) {
                 console.log(error)
                 toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
@@ -53,7 +53,7 @@ const useUserStore = create(
             }
         },
         clearUser: () => set({ user: null }),
-        clearCart: () => set({ cart: null }),
+        clearCart: () => set({ cart: [] }),
         setUser: newUser => set({ user: newUser }),
         setCart: newCart => set({ cart: newCart })
     }

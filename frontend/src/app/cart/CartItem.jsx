@@ -1,16 +1,17 @@
 import { MinusIcon, PlusIcon, TrashIcon } from "@/assets/Icons";
 import Popup from "@/components/Popup";
-import { addItemToCart, decreaseItemQuantity, increaseItemQuantity } from "@/services/MenuService";
+import { addItemToCart, decreaseItemQuantity, increaseItemQuantity, removeItemFromCart } from "@/services/MenuService";
 import useUserStore from "@/stores/useUserStore";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import FormatPrice from "@/utils/FormatPrice";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import CartPopup from "./CartPopup";
+import useCartStore from "@/stores/useCartStore";
 
 const CartItem = ({ id, menuItem, quantity, branch }) => {
     const [isOpen, setIsOpen] = useState(false);
     const user = useUserStore(state => state.user);
-    const setCart = useUserStore(state => state.setCart);
+    const setCart = useCartStore(state => state.setCart);
     const { name, price, images, discount, ingredients } = menuItem;
 
     const finalPrice = discount
@@ -20,27 +21,7 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
         : price;
 
     const handleDelete = async () => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/remove/${user?._id}`, {
-            method: "DELETE",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                menuItemId: menuItem._id
-            }),
-            credentials: "include"
-        }).then(res => res.json());
-
-        const { status, message, cart } = response;
-
-        console.log(response)
-        setIsOpen(false);
-        if (status == 500) return toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.")
-
-        if (status == 404) return toast.error("آیتم مورد نظر یافت نشد.");
-        setCart(cart.items)
-
-        toast.success("آیتم با موفقیت از سبد خرید حذف شد.");
+        removeItemFromCart(user?._id, menuItem._id, setIsOpen, setCart)
     }
 
     const handleDecreaseQuantity = async () => {
@@ -51,6 +32,7 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
         increaseItemQuantity(user, menuItem._id, branch, setCart)
     };
 
+    console.log(menuItem)
 
     return (
         <div className="flex border border-[#CBCBCB] rounded-lg overflow-hidden">
@@ -79,7 +61,7 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
                     {discount &&
                         <div className="flex gap-1.5">
                             <p className="text-[#ADADAD] xl:text-super-base line-through">
-                                {PersianNumber(FormatPrice(price))}
+                                {PersianNumber(FormatPrice(price || 0))}
                             </p>
                             <span
                                 className="bg-[#FFF2F2] xl:text-super-xs text-xs text-[#C30000] leading-4 flex items-center text-nowrap rounded-full px-2"
@@ -125,10 +107,17 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
                 </div>
             </div>
 
-            {/*//! Delete Item Popup */}
-            <Popup isOpen={isOpen} setIsOpen={setIsOpen}>
+            <CartPopup
+                title="حذف ایتم سبد خرید"
+                text="آیا از حذف این آیتم مطمئن هستید؟"
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                handler={handleDelete}
+            />
 
-                {/*//! Content */}
+            {/*//! Delete Item Popup */}
+            {/* <Popup isOpen={isOpen} setIsOpen={setIsOpen}>
+
                 <div className="min-h-36 flex flex-col justify-center gap-6 px-6">
                     <p className="text-super-base text-[#353535] text-center">
                         آیا از حذف این آیتم مطمئن هستید؟
@@ -149,7 +138,9 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
                         </button>
                     </div>
                 </div>
-            </Popup>
+            </Popup> */}
+
+
 
         </div>
     );

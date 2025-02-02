@@ -38,7 +38,7 @@ const Navbar = () => {
             <div className="w-full h-[4px] 3xl:bg-amber-400 2xl:bg-slate-600 xl:bg-stone-600 lg:bg-red-500 md:bg-yellow-400 sm:bg-violet-600 bg-teal-400" />
             <div className="container flex items-center justify-between md:py-3.5 py-4.5">
 
-                <button>
+                <button className="lg:hidden block">
                     <MenuIcon className="fill-[#417F56] w-7 h-7" />
                 </button>
 
