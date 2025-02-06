@@ -4,12 +4,13 @@ import PersianNumber from "@/utils/ConvertToPersianNumber";
 import { decreaseItemQuantity, increaseItemQuantity, removeItemFromCart } from "@/services/MenuService";
 import Popup from "@/components/Popup";
 import { useState } from "react";
+import useCartStore from "@/stores/useCartStore";
 
 const CartMiniItem = ({ id, menuItem, quantity, branch }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const user = useUserStore(state => state.user);
-    const setCart = useUserStore(state => state.setCart);
+    const setCart = useCartStore(state => state.setCart);
 
     const { name, price } = menuItem;
 

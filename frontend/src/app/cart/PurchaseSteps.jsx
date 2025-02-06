@@ -3,7 +3,7 @@ import { PersonalWalletIcon, ShoppingCartIcon, SquareCheckmarkIcon } from "@/ass
 const PurchaseSteps = ({ step, setStep }) => {
     return (
         <section
-            className="lg:px-20 md:px-6 px-4"
+            className="lg:px-20 md:px-6 px-4 md:mb-0 mb-10"
         >
             <div className="container flex items-center justify-between md:gap-4 gap-2">
 

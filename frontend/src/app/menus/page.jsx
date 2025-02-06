@@ -7,12 +7,12 @@ import { useSearchParams } from "next/navigation";
 import SelectBranchSection from "../branches/SelectBranchSection";
 import { ShoppingCartIcon } from "@/assets/Icons";
 import CartButtonFlow from "./CartButtonFlow";
-import useUserStore from "@/stores/useUserStore";
+import useCartStore from "@/stores/useCartStore";
 
 const MenuPage = () => {
     const branch = useSearchParams().get("branch");
     const category = useSearchParams().get("category") || "main";
-    const cart = useUserStore(state => state.cart);
+    const cart = useCartStore(state => state.cart);
 
 
     return (

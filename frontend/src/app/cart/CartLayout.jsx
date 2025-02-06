@@ -7,16 +7,17 @@ import useUserStore from "@/stores/useUserStore";
 import { toast } from "react-toastify";
 import CartPopup from "./CartPopup";
 import { deleteCart } from "@/services/MenuService";
+import useCartStore from "@/stores/useCartStore";
+import CartMiniItemSkeleton from "./CartMiniItemSkeleton";
 
-const CartLayout = ({ children, cart, step, setStep, branch }) => {
+const CartLayout = ({ children, cart, step, setStep }) => {
     const [isOpen, setIsOpen] = useState(false);
-
-    const setCart = useUserStore(state => state.setCart);
-    const clearCart = useUserStore(state => state.clearCart);
+    const { clearCart, cartBranch } = useUserStore();
     const user = useUserStore(state => state.user);
 
+
     const { amount, totalDiscount } = useMemo(() => {
-        return cart.reduce(
+        return cart?.reduce(
             (acc, item) => {
                 const { menuItem, quantity } = item;
                 const { price, discount } = menuItem;
@@ -45,12 +46,14 @@ const CartLayout = ({ children, cart, step, setStep, branch }) => {
 
     const handleDeleteCart = async () => {
         deleteCart(user?._id, clearCart)
-    }
+    };
+
+
 
     return (
-        <section className="flex items-start xl:gap-10 gap-5">
+        <section className="flex lg:flex-row flex-col items-start xl:gap-10 gap-5">
             {/*//! Main Content */}
-            <article className="lg:block hidden flex-1">{children}</article>
+            <article className={`${step == 1 && "lg:block hidden"} flex-1 w-full`}>{children}</article>
 
             {/*//! Side Content */}
             <aside className="xl:w-[440px] lg:w-[300px] w-full border border-[#CBCBCB] rounded-lg xl:py-8 xl:px-6 lg:py-3 lg:px-3.5 md:p-8 p-4">
@@ -68,14 +71,18 @@ const CartLayout = ({ children, cart, step, setStep, branch }) => {
 
                 {/*//! Cart Items List */}
                 <div
-                    className={`max-h-56 ${step == 1 ? "lg:hidden block" : ""}  overflow-hidden pb-4 mb-4 border-b border-b-[#CBCBCB] overflow-y-auto`}
+                    className={`max-h-56 ${step == 1 ? "lg:hidden block" : "lg:block hidden"}  overflow-hidden pb-4 mb-4 border-b border-b-[#CBCBCB] overflow-y-auto`}
                 >
 
                     <div className={`${step == 1 ? "border border-[#CBCBCB] rounded-lg px-3 py-3.5" : " space-y-3"}`}>
 
-                        {cart?.map(({ menuItem, quantity, _id: id }, index) => (
-                            <CartMiniItem key={index} id={id} menuItem={menuItem} quantity={quantity} branch={branch} />
-                        ))}
+                        {cart?.length == 0 ?
+                            [...Array(3)].map((item, index) => (
+                                <CartMiniItemSkeleton key={index} />
+                            )) : cart?.map(({ menuItem, quantity, _id: id }, index) => (
+                                <CartMiniItem key={index} id={id} menuItem={menuItem} quantity={quantity} branch={cartBranch} />
+                            ))
+                        }
 
                     </div>
 
@@ -88,9 +95,9 @@ const CartLayout = ({ children, cart, step, setStep, branch }) => {
                 <div className="pb-4 mb-4 border-b border-b-[#CBCBCB]">
                     <div className="flex items-center justify-between mb-2.5 xl:text-super-sm lg:text-sm md:text-base text-super-sm">
                         <p className="text-[#353535]">هزینه ارسال</p>
-                        <p className="text-[#717171]">0 تومان</p>
+                        <p className="text-[#717171]">{PersianNumber(FormatPrice(step > 1 ? 29000 : 0))} تومان</p>
                     </div>
-                    <p className="xl:text-super-xs text-xs text-[#A9791C] font-light flex items-center gap-2 text-justify">
+                    <p className={step == 1 ? "xl:text-super-xs text-xs text-[#A9791C] font-light flex items-center gap-2 text-justify" : "hidden"}>
                         <WarningIcon className="lg:w-11 lg:h-11" />
                         هزینه ارسال در ادامه بر اساس آدرس، زمان و نحوه ارسال انتخابی شما محاسبه و به این مبلغ اضافه خواهد شد.
                     </p>

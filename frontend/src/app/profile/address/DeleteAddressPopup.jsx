@@ -1,9 +1,9 @@
 import Popup from "@/components/Popup";
 import { handleDeleteAddress } from "@/services/AddressService";
-import useUserStore from "@/stores/useUserStore";
+import useCartStore from "@/stores/useCartStore";
 
 const DeleteAddressPopup = ({ isOpen, setIsOpen, userId, index }) => {
-    const setUser = useUserStore(state => state.setUser);
+    const setUser = useCartStore(state => state.setUser);
 
     const handleDelete = () => {
         handleDeleteAddress(userId, index, setIsOpen, setUser);

@@ -8,6 +8,7 @@ import useUserStore from "@/stores/useUserStore";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { handleLogout } from "@/services/UserService";
+import useCartStore from "@/stores/useCartStore";
 
 const links = [
     {
@@ -45,7 +46,7 @@ const links = [
 const SidebarNav = () => {
     const [isOpenPopup, setIsOpenPopup] = useState(false);
     const clearUser = useUserStore(state => state.clearUser);
-    const clearCart = useUserStore(state => state.clearCart);
+    const clearCart = useCartStore(state => state.clearCart);
     const router = useRouter();
 
 

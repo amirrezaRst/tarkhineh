@@ -2,10 +2,13 @@ import CartItem from "./CartItem";
 import CartLayout from "./CartLayout";
 import EmptyCart from "./EmptyCart";
 import CartItemSkeleton from "./CartItemSkeleton";
+import useCartStore from "@/stores/useCartStore";
+import CartLayoutSkeleton from "./CartLayoutSkeleton";
 
 
-const ShoppingCart = ({ cart, branchId }) => {
-    // const { cart, branchId } = useCart();
+const ShoppingCart = ({ step, setStep }) => {
+    const cart = useCartStore((state) => state.cart);
+    const { cartBranch } = useCartStore();
 
     if (cart === null) {
         return (
@@ -18,10 +21,10 @@ const ShoppingCart = ({ cart, branchId }) => {
     }
 
     return cart.length > 0 ? (
-        <CartLayout cart={cart || []} >
+        <CartLayout cart={cart || []} step={step} setStep={setStep}>
             <div className="border border-[#CBCBCB] rounded-lg px-6 py-7 space-y-6">
                 {cart.map(({ menuItem, quantity, _id: id }, index) => (
-                    <CartItem key={index} id={id} menuItem={menuItem} quantity={quantity} branch={branchId} />
+                    <CartItem key={index} id={id} menuItem={menuItem} quantity={quantity} branch={cartBranch} />
                 ))}
             </div>
         </CartLayout>

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import useUserStore from "@/stores/useUserStore";
 import FormatTime from "@/utils/FormatTime";
 import { handleRegister, handleSendOtp } from "@/services/UserService";
+import useCartStore from "@/stores/useCartStore";
 
 const OtpForm = ({ setPage, phoneNumber, setPhoneNumber, setIsOpen }) => {
     const [otp, setOtp] = useState();
@@ -12,7 +13,7 @@ const OtpForm = ({ setPage, phoneNumber, setPhoneNumber, setIsOpen }) => {
     const [loading, setLoading] = useState(false);
     const [timer, setTimer] = useState(120);
     const fetchUser = useUserStore((state) => state.fetchUser);
-    const fetchCart = useUserStore(state => state.fetchCart);
+    const fetchCart = useCartStore(state => state.fetchCart);
 
     useEffect(() => {
         if (timer > 0) {

@@ -75,7 +75,8 @@ exports.getCartByUserId = async (req, res) => {
             cart: {
                 user: cart.user,
                 items: itemsWithDiscounts //! sending the items with their respective discounts
-            }
+            },
+            cartBranch: cart.branch
         });
     } catch (error) {
         console.error(error);

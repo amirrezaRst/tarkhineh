@@ -9,13 +9,14 @@ import ModalContainer from "../modal/ModalContainer";
 import { useEffect, useState } from "react";
 import RegisterModal from "../register/RegisterModal";
 import PreserveQueryLink from "@/hooks/PreserveQueryLink";
+import useCartStore from "@/stores/useCartStore";
 
 const Navbar = () => {
     const fetchUser = useUserStore((state) => state.fetchUser);
-    const fetchCart = useUserStore(state => state.fetchCart);
+    const fetchCart = useCartStore(state => state.fetchCart);
 
     const user = useUserStore((state) => state.user);
-    const cart = useUserStore(state => state.cart);
+    const cart = useCartStore(state => state.cart);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {

@@ -11,6 +11,7 @@ import useUserStore from "@/stores/useUserStore";
 import RegisterModal from "../register/RegisterModal";
 import CartButton from "../menusPage/CartButton";
 import { addItemToCart } from "@/services/MenuService";
+import useCartStore from "@/stores/useCartStore";
 
 const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available, branch }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +19,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
     const [loading, setLoading] = useState(false);
 
     const user = useUserStore(state => state.user);
-    const setCart = useUserStore(state => state.setCart);
+    const setCart = useCartStore(state => state.setCart);
 
 
     const finalPrice = discount

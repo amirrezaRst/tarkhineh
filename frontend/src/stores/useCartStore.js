@@ -1,12 +1,14 @@
+import { toast } from "react-toastify";
 import { create } from "zustand";
 
 const useCartStore = create((set) => ({
-    cart: [],
+    cart: null,
     deliveryType: "courier",
     selectedAddress: null,
     notes: "",
     paymentMethod: "online",
     paymentGateway: "saman",
+    cartBranch: null, //! Must be Change and set anytime cart is nul and after set new item
     loading: false,
     error: null,
 
@@ -28,12 +30,11 @@ const useCartStore = create((set) => ({
                 credentials: 'include'
             }).then(res => res.json());
 
-            const { status, cart } = response;
-            // console.log(response)
+            const { status, cart, cartBranch } = response;
+            console.log("fetchCart response: ", response)
             if (status === 500) toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
 
-
-            set({ cart: cart?.items || [], loading: false, error: null });
+            set({ cart: cart?.items || [], cartBranch, loading: false, error: null });
         } catch (error) {
             toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
             set({ error: error.message, loading: false });

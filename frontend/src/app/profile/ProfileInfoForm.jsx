@@ -1,6 +1,4 @@
 import FormField from "@/components/FormField";
-import useUserStore from "@/stores/useUserStore";
-import { useForm } from "react-hook-form";
 
 const ProfileInfoForm = ({ isEdit, register, errors }) => {
 

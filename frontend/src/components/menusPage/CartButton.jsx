@@ -1,9 +1,9 @@
 import { MinusIcon, PlusIcon, TrashIcon } from "@/assets/Icons";
-import useUserStore from "@/stores/useUserStore";
+import useCartStore from "@/stores/useCartStore";
 import { useEffect, useState } from "react";
 
 const CartButton = ({ id, handleAddToCart, handleDecrease, setLoading, loading }) => {
-    const cart = useUserStore(state => state.cart);
+    const cart = useCartStore(state => state.cart);
     const [quantity, setQuantity] = useState(null);
 
     useEffect(() => {
