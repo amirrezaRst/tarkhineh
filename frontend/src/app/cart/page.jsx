@@ -12,7 +12,7 @@ import useCartStore from "@/stores/useCartStore";
 const CartPage = () => {
     const [step, setStep] = useState(2);
     const { user } = useUserStore();
-    const { deliveryType, selectedAddress, notes, paymentMethod, paymentGateway } = useCartStore();
+    const { cart, deliveryType, selectedAddress, notes, paymentMethod, paymentGateway, cartBranch } = useCartStore();
 
     //! Now we must handle payment
 
@@ -20,6 +20,32 @@ const CartPage = () => {
         console.log("Payment Address: ", user.addresses[selectedAddress]);
         console.log("Delivery Type : ", deliveryType);
         console.log("Payment Me : ", paymentMethod);
+        console.log(cart)
+        console.log(user)
+
+        const body = {
+            user: user?._id,
+            items: cart?.map(item => {
+                return { menuItem: item.menuItem._id, quantity: item.quantity }
+            }),
+            deliveryFee: deliveryType == "courier" ? 26000 : undefined,
+            deliveryAddress: {
+                addressLine: user?.addresses?.[selectedAddress].addressLine,
+                recipientPhoneNumber: user?.addresses?.[selectedAddress].recipientPhoneNumber,
+                recipientFullName: user?.addresses?.[selectedAddress].recipientFullName,
+            },
+            paymentMethod,
+            customerNote: notes,
+            branch: cartBranch
+        }
+
+        // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/`, {
+        //     method: "POST",
+        //     // body:
+        // }).then(res => res.json());
+
+        // console.log(response);
+
     }
 
 

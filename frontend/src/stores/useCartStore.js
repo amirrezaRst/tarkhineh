@@ -9,6 +9,7 @@ const useCartStore = create((set) => ({
     paymentMethod: "online",
     paymentGateway: "saman",
     cartBranch: null, //! Must be Change and set anytime cart is nul and after set new item
+    discount: null,
     loading: false,
     error: null,
 
@@ -18,6 +19,7 @@ const useCartStore = create((set) => ({
     setNotes: (notes) => set({ notes }),
     setPaymentMethod: (paymentMethod) => set({ paymentMethod }),
     setPaymentGateway: (paymentGateway) => set({ paymentGateway }),
+    setDiscount: (discount) => set({ discount }),
 
     fetchCart: async () => {
         set({ loading: true, error: null });

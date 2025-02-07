@@ -10,7 +10,7 @@ exports.getOrderById = async (req, res) => {
         const order = await Order.findById(id).populate('user', 'fullName email').populate('items.menuItem', 'name price');
 
         if (!order) {
-            return res.status(404).json({status:404, message: "Order not found" });
+            return res.status(404).json({ status: 404, message: "Order not found" });
         }
 
         res.status(200).json({ status: 200, order });
@@ -37,15 +37,15 @@ exports.getOrdersByUser = async (req, res) => {
 //! Post Request
 exports.createOrder = async (req, res) => {
     try {
-        const { user, items, discount, deliveryFee, deliveryAddress, paymentMethod } = req.body;
+        const { user, items, discount, deliveryFee, deliveryAddress, paymentMethod, estimatedDeliveryTime, branch, customerNote, paymentTransactionId } = req.body;
 
-        // Validate user
+        //! Validate user
         const userExists = await User.findById(user);
         if (!userExists) {
             return res.status(404).json({ status: 404, message: "User not found" });
         }
 
-        // Validate menu items and calculate total price
+        //! Validate menu items and calculate total price
         let totalPrice = 0;
         const validatedItems = await Promise.all(items.map(async item => {
             const menuItem = await Menu.findById(item.menuItem).select("price");
@@ -59,7 +59,7 @@ exports.createOrder = async (req, res) => {
 
         const finalPrice = totalPrice - discount + deliveryFee;
 
-        // Create order
+        //! Create order
         const order = new Order({
             user,
             items: validatedItems,
@@ -69,9 +69,14 @@ exports.createOrder = async (req, res) => {
             deliveryFee,
             deliveryAddress,
             paymentMethod,
+            estimatedDeliveryTime,
+            branch,
+            customerNote,
+            paymentTransactionId
         });
 
         await order.save();
+
         res.status(201).json({ status: 201, message: "Order created successfully", order });
     } catch (error) {
         console.error(error);
