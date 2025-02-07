@@ -37,9 +37,6 @@ exports.createOrderValidation = (req, res, next) => {
             "number.min": "Delivery fee cannot be negative."
         }),
         deliveryAddress: joi.object({
-            title: joi.string().allow(null, '').messages({
-                "string.base": "Title must be a string."
-            }),
             addressLine: joi.string().required().messages({
                 "any.required": "Address line is required."
             }),
@@ -50,18 +47,8 @@ exports.createOrderValidation = (req, res, next) => {
                     "string.pattern.base": "Recipient phone number must be a valid number.",
                     "any.required": "Recipient phone number is required."
                 }),
-            recipientFullname: joi.string().required().messages({
+            recipientFullName: joi.string().required().messages({
                 "any.required": "Recipient full name is required."
-            }),
-            coordinates: joi.object({
-                lat: joi.number().messages({
-                    "number.base": "Latitude must be a number."
-                }),
-                lng: joi.number().messages({
-                    "number.base": "Longitude must be a number."
-                })
-            }).messages({
-                "object.base": "Coordinates must be an object containing 'lat' and 'lng'."
             }),
         }).required(true),
         paymentMethod: joi.string()
@@ -69,7 +56,19 @@ exports.createOrderValidation = (req, res, next) => {
             .default("online")
             .messages({
                 "any.only": "Payment method must be 'cash' or 'online'."
-            })
+            }),
+        estimatedDeliveryTime: joi.number().default(null),
+        branch: joi.string().required(),
+        customerNote: joi.string(),
+        paymentTransactionId: joi.string().when("paymentMethod", {
+            is: joi.valid("online"),
+            then: joi.required().messages({
+                "any.required": "'paymentTransactionId' is required when 'paymentMethod' is online.",
+            }),
+            otherwise: joi.forbidden().messages({
+                "any.unknown": "'paymentTransactionId' is not allowed when 'paymentMethod' is not online."
+            }),
+        }),
     });
 
     const { error } = schema.validate(req.body);

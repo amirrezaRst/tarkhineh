@@ -19,13 +19,14 @@ const OrderSchema = new mongoose.Schema({
     discount: { type: Number, default: 0 },
     finalPrice: { type: Number, required: true },
     deliveryType: { type: String, enum: ["courier", "person"] },
-    orderReadyOrDeliveredAt: { type: Date },
+    estimatedDeliveryTime: { type: Date },  //! New Field
     deliveryFee: { type: Number, default: 0 },
-    branch: { type: mongoose.Schema.Types.ObjectId, ref: "Branch" },
+    branch: { type: mongoose.Schema.Types.ObjectId, ref: "Branch" },    //! New Field
+    customerNote: { type: String, default: "" },    //! New Field
     status: {
         type: String,
         enum: ['pending', 'preparing', 'on_the_way', 'delivered', 'cancelled'],
-        default: 'pending'
+        default: 'preparing'
     },
     deliveryAddress: { type: OrderAddressSchema, required: true },
     paymentMethod: {
@@ -38,6 +39,8 @@ const OrderSchema = new mongoose.Schema({
         enum: ['paid', 'unpaid', 'failed'],
         default: 'unpaid'
     },
+    paymentTransactionId: { type: String }, //! New Field
+    refundStatus: { type: String, enum: ['none', 'requested', 'processed'] },   //! New Field
     deliveredAt: { type: Date }
 }, { timestamps: true });
 
