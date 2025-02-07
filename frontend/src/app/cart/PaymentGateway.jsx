@@ -1,9 +1,28 @@
-import { PersonalWalletIcon } from "@/assets/Icons";
+import { PersonalWalletIcon, WarningIcon } from "@/assets/Icons";
 import useCartStore from "@/stores/useCartStore";
 
 const PaymentGateway = () => {
-    const { paymentGateway: selectedGateway, setPaymentGateway } = useCartStore();
+    const { paymentMethod, paymentGateway: selectedGateway, setPaymentGateway } = useCartStore();
     const gateways = ["melat", "saman", "parsian"];
+
+    if (paymentMethod == "cash") return (
+        <div
+            className="flex md:flex-row flex-col md:items-center xl:gap-8 gap-4 border border-[#CBCBCB] rounded-lg xl:px-9 px-4 xl:py-10 md:py-8 py-4"
+        >
+
+            <div className="flex items-center gap-2 md:border-b-0 border-b border-b-[#CBCBCB] md:pb-0 pb-4 md:mb-0 mb-1">
+                <WarningIcon className="fill-[#353535] md:w-7 md:h-7" />
+                <p className="lg:text-lg md:text-base text-super-sm text-[#353535]">
+                    قابل توجه
+                </p>
+            </div>
+            <p className="flex-1 xl:text-super-sm md:text-sm text-xs md:leading-6 leading-5 text-[#717171]">
+                هزینه سفارش شما در حین تحویل کالا دریافت خواهد شد. لطفا قبل از تحویل کالا کارت بانکی یا پول نقد همراه خود
+                داشته باشید و از درخواست برای پرداخت در زمان بعدی یا نسیه خودداری فرمایید. با تشکر از همراهی شما.
+            </p>
+
+        </div>
+    )
 
     return (
         <div className="border border-[#CBCBCB] rounded-lg xl:px-9 px-4 xl:py-10 md:py-8 py-4">

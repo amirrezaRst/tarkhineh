@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
-const { AddressSchema } = require("./AddressSchema");
+
+const OrderAddressSchema = mongoose.Schema({
+    addressLine: { type: String, required: true },
+    recipientPhoneNumber: { type: String, required: true },
+    recipientFullName: { type: String, required: true },
+});
 
 const OrderSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, //? User ID
@@ -13,13 +18,16 @@ const OrderSchema = new mongoose.Schema({
     totalPrice: { type: Number, required: true },
     discount: { type: Number, default: 0 },
     finalPrice: { type: Number, required: true },
+    deliveryType: { type: String, enum: ["courier", "person"] },
+    orderReadyOrDeliveredAt: { type: Date },
     deliveryFee: { type: Number, default: 0 },
+    branch: { type: mongoose.Schema.Types.ObjectId, ref: "Branch" },
     status: {
         type: String,
         enum: ['pending', 'preparing', 'on_the_way', 'delivered', 'cancelled'],
         default: 'pending'
     },
-    deliveryAddress: { type: AddressSchema, required: true },
+    deliveryAddress: { type: OrderAddressSchema, required: true },
     paymentMethod: {
         type: String,
         enum: ['cash', 'online'],

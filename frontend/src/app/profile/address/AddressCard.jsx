@@ -1,16 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { PenIcon, TrashIcon, XmarkIcon } from "@/assets/Icons";
+import { PenIcon, TrashIcon } from "@/assets/Icons";
 import ConvertToPersianNumbers from "@/utils/ConvertToPersianNumber";
 import DeleteAddressPopup from "./DeleteAddressPopup";
-import ModalContainer from "@/components/modal/ModalContainer";
 import EditAddressModal from "./EditAddressModal";
 
 const AddressCard = ({ index, title, addressLine, recipientPhoneNumber, recipientFullName, userId, selectedAddress, setSelectedAddress }) => {
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
-    console.log(selectedAddress)
 
     const handleSelect = () => {
         if (selectedAddress != null || selectedAddress != undefined) {

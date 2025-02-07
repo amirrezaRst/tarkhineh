@@ -3,6 +3,7 @@ import DeliveryAddress from "./DeliveryAddress";
 import OrderNotes from "./OrderNotes";
 import CartLayout from "./CartLayout";
 import useCartStore from "@/stores/useCartStore";
+import BranchLocation from "./BranchLocation";
 
 
 const CheckoutDetails = ({ step, setStep }) => {
@@ -14,6 +15,8 @@ const CheckoutDetails = ({ step, setStep }) => {
 
                 {/*//! Delivery Type */}
                 <DeliveryType />
+
+                <BranchLocation />
 
                 {/*//! Delivery Address */}
                 <DeliveryAddress />

@@ -1,6 +1,5 @@
 import { MinusIcon, PlusIcon, TrashIcon } from "@/assets/Icons";
-import Popup from "@/components/Popup";
-import { addItemToCart, decreaseItemQuantity, increaseItemQuantity, removeItemFromCart } from "@/services/MenuService";
+import { decreaseItemQuantity, increaseItemQuantity, removeItemFromCart } from "@/services/MenuService";
 import useUserStore from "@/stores/useUserStore";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import FormatPrice from "@/utils/FormatPrice";
@@ -31,8 +30,6 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
     const handelIncreaseQuantity = async () => {
         increaseItemQuantity(user, menuItem._id, branch, setCart)
     };
-
-    console.log(menuItem)
 
     return (
         <div className="flex border border-[#CBCBCB] rounded-lg overflow-hidden">
@@ -114,33 +111,6 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
                 setIsOpen={setIsOpen}
                 handler={handleDelete}
             />
-
-            {/*//! Delete Item Popup */}
-            {/* <Popup isOpen={isOpen} setIsOpen={setIsOpen}>
-
-                <div className="min-h-36 flex flex-col justify-center gap-6 px-6">
-                    <p className="text-super-base text-[#353535] text-center">
-                        آیا از حذف این آیتم مطمئن هستید؟
-                    </p>
-
-                    <div className="flex gap-3">
-                        <button
-                            className="rounded-md border border-[#417F56] text-[#417F56] text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            انصراف
-                        </button>
-                        <button
-                            className="bg-[#FFF2F2] rounded-md border border-transparent text-[#C30000] text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
-                            onClick={handleDelete}
-                        >
-                            حذف
-                        </button>
-                    </div>
-                </div>
-            </Popup> */}
-
-
 
         </div>
     );

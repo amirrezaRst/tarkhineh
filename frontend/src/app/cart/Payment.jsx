@@ -3,12 +3,13 @@ import CartLayout from "./CartLayout";
 import DiscountCode from "./DiscountCode";
 import PaymentGateway from "./PaymentGateway";
 import PaymentMethod from "./PaymentMethod";
+import { WarningIcon } from "@/assets/Icons";
 
-const Payment = ({ step, setStep }) => {
+const Payment = ({ step, setStep, handler }) => {
     const { cart } = useCartStore();
 
     return (
-        <CartLayout cart={cart || []} step={step} setStep={setStep}>
+        <CartLayout cart={cart || []} step={step} setStep={setStep} handler={handler}>
 
             <div className="md:space-y-8 space-y-5 lg:mb-0 mb-4">
 
@@ -20,6 +21,8 @@ const Payment = ({ step, setStep }) => {
 
                 {/*//! Gateways */}
                 <PaymentGateway />
+
+                
 
             </div>
         </CartLayout>

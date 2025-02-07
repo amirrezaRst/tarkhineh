@@ -1,7 +1,7 @@
 import { ChevronIcon, CircleCheckmarkIcon, PersonalWalletIcon, TrashIcon, WalletIcon, WarningIcon } from "@/assets/Icons";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import FormatPrice from "@/utils/FormatPrice";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CartMiniItem from "./CartMiniItem";
 import useUserStore from "@/stores/useUserStore";
 import { toast } from "react-toastify";
@@ -10,9 +10,9 @@ import { deleteCart } from "@/services/MenuService";
 import useCartStore from "@/stores/useCartStore";
 import CartMiniItemSkeleton from "./CartMiniItemSkeleton";
 
-const CartLayout = ({ children, cart, step, setStep }) => {
+const CartLayout = ({ children, cart, step, setStep, handler }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const { clearCart, cartBranch } = useUserStore();
+    const { clearCart, cartBranch, deliveryType } = useCartStore();
     const user = useUserStore(state => state.user);
 
 
@@ -87,7 +87,6 @@ const CartLayout = ({ children, cart, step, setStep }) => {
                     </div>
 
                 </div>
-
                 <div className="flex items-center justify-between pb-4 mb-4 border-b border-b-[#CBCBCB] xl:text-super-sm lg:text-sm md:text-base text-super-sm">
                     <p className="text-[#353535]">تخفیف محصولات</p>
                     <p className="text-[#717171]">{PersianNumber(FormatPrice(totalDiscount))} تومان</p>
@@ -95,10 +94,10 @@ const CartLayout = ({ children, cart, step, setStep }) => {
                 <div className="pb-4 mb-4 border-b border-b-[#CBCBCB]">
                     <div className="flex items-center justify-between mb-2.5 xl:text-super-sm lg:text-sm md:text-base text-super-sm">
                         <p className="text-[#353535]">هزینه ارسال</p>
-                        <p className="text-[#717171]">{PersianNumber(FormatPrice(step > 1 ? 29000 : 0))} تومان</p>
+                        <p className="text-[#717171]">{PersianNumber(FormatPrice(step > 1 && deliveryType == "courier" ? 29000 : 0))} تومان</p>
                     </div>
                     <p className={step == 1 ? "xl:text-super-xs text-xs text-[#A9791C] font-light flex items-center gap-2 text-justify" : "hidden"}>
-                        <WarningIcon className="lg:w-11 lg:h-11" />
+                        <WarningIcon className="fill-[#A9791C] lg:w-11 lg:h-11" />
                         هزینه ارسال در ادامه بر اساس آدرس، زمان و نحوه ارسال انتخابی شما محاسبه و به این مبلغ اضافه خواهد شد.
                     </p>
                 </div>
@@ -110,7 +109,7 @@ const CartLayout = ({ children, cart, step, setStep }) => {
 
                 <button
                     className="bg-[#417F56] w-full py-2 rounded-md flex items-center justify-center text-white lg:text-super-sm text-sm font-light"
-                    onClick={() => setStep(step + 1)}
+                    onClick={step < 3 ? () => setStep(step + 1) : handler}
                 >
 
                     {step === 1 ?
