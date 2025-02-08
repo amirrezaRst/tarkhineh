@@ -28,7 +28,7 @@ const OrderSchema = new mongoose.Schema({
         enum: ['pending', 'preparing', 'on_the_way', 'delivered', 'cancelled'],
         default: 'preparing'
     },
-    deliveryAddress: { type: OrderAddressSchema, required: true },
+    deliveryAddress: { type: OrderAddressSchema },
     paymentMethod: {
         type: String,
         enum: ['cash', 'online'],
@@ -41,7 +41,8 @@ const OrderSchema = new mongoose.Schema({
     },
     paymentTransactionId: { type: String }, //! New Field
     refundStatus: { type: String, enum: ['none', 'requested', 'processed'] },   //! New Field
-    pickupCode: { type: Number },
+    pickupCode: { type: Number },   //! New Field
+    approvedAt: { type: Date, default: null },  //! New Field
     deliveredAt: { type: Date },
 }, { timestamps: true });
 

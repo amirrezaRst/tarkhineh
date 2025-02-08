@@ -36,6 +36,30 @@ exports.createOrderValidation = (req, res, next) => {
             "number.base": "Delivery fee must be a number.",
             "number.min": "Delivery fee cannot be negative."
         }),
+        deliveryType: joi.string().valid("courier", "person").required(),
+        // deliveryAddress: joi.object({
+        //     addressLine: joi.string().required().messages({
+        //         "any.required": "Address line is required."
+        //     }),
+        //     recipientPhoneNumber: joi.string()
+        //         .pattern(/^\d+$/)
+        //         .required()
+        //         .messages({
+        //             "string.pattern.base": "Recipient phone number must be a valid number.",
+        //             "any.required": "Recipient phone number is required."
+        //         }),
+        //     recipientFullName: joi.string().required().messages({
+        //         "any.required": "Recipient full name is required."
+        //     }),
+        // }).when("deliveryType", {
+        //     is: joi.string("courier"),
+        //     then: joi.required().messages({
+        //         "any.required": "'deliveryAddress' is required when 'deliveryType is courier'"
+        //     }),
+        //     otherwise: joi.forbidden().messages({
+        //         "any.unknown": "'deliveryAddress' is not allowed when 'deliveryAddress' is not courier"
+        //     })
+        // }),
         deliveryAddress: joi.object({
             addressLine: joi.string().required().messages({
                 "any.required": "Address line is required."
@@ -50,25 +74,33 @@ exports.createOrderValidation = (req, res, next) => {
             recipientFullName: joi.string().required().messages({
                 "any.required": "Recipient full name is required."
             }),
-        }).required(true),
+        }).when("deliveryType", {
+            is: "courier",
+            then: joi.required().messages({
+                "any.required": "'deliveryAddress' is required when 'deliveryType' is 'courier'"
+            }),
+            otherwise: joi.forbidden().messages({
+                "any.unknown": "'deliveryAddress' is not allowed when 'deliveryType' is not 'courier'"
+            })
+        }),
         paymentMethod: joi.string()
             .valid("cash", "online")
             .default("online")
             .messages({
                 "any.only": "Payment method must be 'cash' or 'online'."
             }),
-        estimatedDeliveryTime: joi.number().default(null),
+        // estimatedDeliveryTime: joi.number().default(null),
         branch: joi.string().required(),
         customerNote: joi.string(),
-        paymentTransactionId: joi.string().when("paymentMethod", {
-            is: joi.valid("online"),
-            then: joi.required().messages({
-                "any.required": "'paymentTransactionId' is required when 'paymentMethod' is online.",
-            }),
-            otherwise: joi.forbidden().messages({
-                "any.unknown": "'paymentTransactionId' is not allowed when 'paymentMethod' is not online."
-            }),
-        }),
+        // paymentTransactionId: joi.string().when("paymentMethod", {
+        //     is: joi.valid("online"),
+        //     then: joi.required().messages({
+        //         "any.required": "'paymentTransactionId' is required when 'paymentMethod' is online.",
+        //     }),
+        //     otherwise: joi.forbidden().messages({
+        //         "any.unknown": "'paymentTransactionId' is not allowed when 'paymentMethod' is not online."
+        //     }),
+        // }),
     });
 
     const { error } = schema.validate(req.body);
@@ -82,13 +114,33 @@ exports.createOrderValidation = (req, res, next) => {
 
 exports.updateOrderStatusValidation = (req, res, next) => {
     const schema = joi.object({
-        status: joi.string().trim().required().messages({
-            "string.base": "Status must be a string.",
-            "any.required": "Status is required."
-        })
+        status: joi.string()
+            .trim()
+            .required()
+            .valid('pending', 'preparing', 'on_the_way', 'delivered', 'cancelled')
+            .messages({
+                "string.base": "Status must be a string.",
+                "any.required": "Status is required.",
+                "any.only": "'status' must be ['pending', 'preparing', 'on_the_way', 'delivered', 'cancelled']."
+            })
     });
     const { error } = schema.validate(req.body);
     if (error) return res.status(400).json({ status: 400, message: error.details[0].message });
 
     next();
-}
+};
+
+
+exports.approveOrderValidation = (req, res, next) => {
+    const schema = joi.object({
+        estimatedDeliveryTime: joi.number().required().messages({
+            "number.base": "'estimatedDeliveryTime' must be a number",
+            "any.required": "'estimatedDeliveryTime' is required"
+        })
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) return res.status(400).json({ status: 400, message: error.details[0].message });
+
+    next();
+};

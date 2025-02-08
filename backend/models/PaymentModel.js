@@ -2,9 +2,11 @@ const mongoose = require('mongoose');
 
 const PaymentSchema = new mongoose.Schema({
     order: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     paymentMethod: { type: String, enum: ['online', 'cash'], required: true },
     status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
     amount: { type: Number, required: true },
+    paymentCode: { type: String },
     transactionId: { type: String },
 }, { timestamps: true });
 
