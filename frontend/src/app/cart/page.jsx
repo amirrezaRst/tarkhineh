@@ -15,11 +15,12 @@ import { SquareCheckIcon } from "@/assets/Icons";
 import PreserveQueryLink from "@/hooks/PreserveQueryLink";
 
 const CartPage = () => {
-    const [step, setStep] = useState(3);
+    const [step, setStep] = useState(1);
     const { user } = useUserStore();
-    const { cart, deliveryType, selectedAddress, notes, paymentMethod, paymentGateway, cartBranch, discount, clearCart } = useCartStore();
+    const { cart, deliveryType, selectedAddress, notes, paymentMethod, paymentGateway, cartBranch, discount, clearCart, loading, setLoading } = useCartStore();
 
     const [alertOpened, setAlertOpened] = useState(false);
+    // const [loading, setLoading] = useState(false);
 
     const router = useRouter();
 
@@ -34,16 +35,12 @@ const CartPage = () => {
             discount: discount || 0,
             deliveryFee: deliveryType == "courier" ? 26000 : undefined,
             deliveryType,
-            // deliveryAddress: {
-            //     addressLine: user?.addresses?.[selectedAddress].addressLine,
-            //     recipientPhoneNumber: user?.addresses?.[selectedAddress].recipientPhoneNumber,
-            //     recipientFullName: user?.addresses?.[selectedAddress].recipientFullName,
-            // },
             paymentMethod,
             customerNote: notes.trim(),
             branch: cartBranch
         }
 
+        setLoading(true)
         if (deliveryType == "courier") {
             body.deliveryAddress = {
                 addressLine: user?.addresses?.[selectedAddress].addressLine,
@@ -52,7 +49,26 @@ const CartPage = () => {
             };
 
             if (paymentMethod == "online") {
-                console.log(`deliveryType:${deliveryType} and paymentMethod:${paymentMethod} | body: `, body);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: "include",
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+
+                const { status, url } = response;
+
+                setLoading(false);
+                if (status !== 200 && status !== 201) {
+                    return toast.error("خطایی از سمت سرور رخ داده، لطفا دوباره امتحان کنید.")
+                }
+
+                toast.info("درحال ارسال به درگاه پرداخت")
+                window.location.href = url;
+
+                console.log(response);
             } else {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
                     method: "POST",
@@ -64,6 +80,7 @@ const CartPage = () => {
                 }).then(res => res.json());
 
                 const { status, url } = response;
+                setLoading(false);
 
                 if (status !== 200 && status !== 201) {
                     return toast.error("خطایی از سمت سرور رخ داده، لطفا دوباره امتحان کنید.")
@@ -74,12 +91,33 @@ const CartPage = () => {
                 setAlertOpened(true)
                 setStep(1);
 
+
                 toast.success("سفارش شما با موفقیت ثبت شد. پرداخت به صورت نقدی در هنگام تحویل انجام خواهد شد.")
             }
         }
         else if (deliveryType == "person") {
-            if (paymentMethod == "online") {
 
+            if (paymentMethod == "online") {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: "include",
+                    body: JSON.stringify(body)
+                }).then(res => res.json());
+
+                const { status, url } = response;
+
+                setLoading(false);
+                if (status !== 200 && status !== 201) {
+                    return toast.error("خطایی از سمت سرور رخ داده، لطفا دوباره امتحان کنید.")
+                }
+
+                toast.info("درحال ارسال به درگاه پرداخت")
+                window.location.href = url;
+
+                console.log(response);
             } else {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
                     method: "POST",
@@ -91,6 +129,7 @@ const CartPage = () => {
                 }).then(res => res.json());
 
                 const { status, url } = response;
+                setLoading(false);
 
                 if (status !== 200 && status !== 201) {
                     return toast.error("خطایی از سمت سرور رخ داده، لطفا دوباره امتحان کنید.")
@@ -103,7 +142,7 @@ const CartPage = () => {
                 setAlertOpened(true);
                 setStep(1);
 
-                toast.success("سفارش شما با موفقیت ثبت شد. پرداخت به صورت نقدی در هنگام تحویل انجام خواهد شد.")
+                // toast.success("سفارش شما با موفقیت ثبت شد. پرداخت به صورت نقدی در هنگام تحویل انجام خواهد شد.")
             }
         }
     }

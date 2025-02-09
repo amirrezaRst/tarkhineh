@@ -22,7 +22,7 @@ const Payment = ({ step, setStep, handler }) => {
                 {/*//! Gateways */}
                 <PaymentGateway />
 
-                
+
 
             </div>
         </CartLayout>

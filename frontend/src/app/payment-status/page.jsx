@@ -2,6 +2,7 @@
 
 import { SquareCheckIcon, SquareXmarkIcon } from "@/assets/Icons";
 import PreserveQueryLink from "@/hooks/PreserveQueryLink";
+import useCartStore from "@/stores/useCartStore";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -16,6 +17,7 @@ const PaymentStatus = () => {
     const statusParams = params.get("Status");
     const authority = params.get("Authority");
     const [refId, setRefId] = useState();
+    const { clearCart } = useCartStore();
 
     const handleVerifyPayment = async () => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/verifyPayment/${authority}`, {
@@ -29,6 +31,7 @@ const PaymentStatus = () => {
         const { status: responseStatus, orderStatus, transactionId } = response;
 
         if (responseStatus == 200 && orderStatus == 101 || orderStatus == 100) {
+            clearCart();
             setRefId(transactionId);
             setLoading(false);
             return setStatus(200);

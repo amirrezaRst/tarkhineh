@@ -12,7 +12,7 @@ import CartMiniItemSkeleton from "../../components/cart/CartMiniItemSkeleton";
 
 const CartLayout = ({ children, cart, step, setStep, handler }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const { clearCart, cartBranch, deliveryType } = useCartStore();
+    const { loading, clearCart, cartBranch, deliveryType } = useCartStore();
     const user = useUserStore(state => state.user);
 
 
@@ -111,17 +111,17 @@ const CartLayout = ({ children, cart, step, setStep, handler }) => {
                     className="bg-[#417F56] w-full py-2 rounded-md flex items-center justify-center text-white lg:text-super-sm text-sm font-light"
                     onClick={step < 3 ? () => setStep(step + 1) : handler}
                 >
-
-                    {step === 1 ?
-                        <>
-                            تکمیل اطلاعات <ChevronIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] rotate-90" />
-                        </> : step === 2 ?
+                    {loading ?
+                        "loading..." : step === 1 ?
                             <>
-                                <CircleCheckmarkIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] ml-1.5" /> ثبت سفارش
-                            </> :
-                            <>
-                                <PersonalWalletIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] ml-1.5" /> تایید و پرداخت
-                            </>
+                                تکمیل اطلاعات <ChevronIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] rotate-90" />
+                            </> : step === 2 ?
+                                <>
+                                    <CircleCheckmarkIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] ml-1.5" /> ثبت سفارش
+                                </> :
+                                <>
+                                    <PersonalWalletIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] ml-1.5" /> تایید و پرداخت
+                                </>
                     }
                 </button>
             </aside>
