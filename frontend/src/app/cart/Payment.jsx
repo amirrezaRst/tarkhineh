@@ -1,8 +1,8 @@
 import useCartStore from "@/stores/useCartStore";
 import CartLayout from "./CartLayout";
-import DiscountCode from "./DiscountCode";
-import PaymentGateway from "./PaymentGateway";
-import PaymentMethod from "./PaymentMethod";
+import DiscountCode from "../../components/cart/payment/DiscountCode";
+import PaymentGateway from "../../components/cart/payment/PaymentGateway";
+import PaymentMethod from "../../components/cart/payment/PaymentMethod";
 import { WarningIcon } from "@/assets/Icons";
 
 const Payment = ({ step, setStep, handler }) => {

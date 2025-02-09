@@ -37,29 +37,6 @@ exports.createOrderValidation = (req, res, next) => {
             "number.min": "Delivery fee cannot be negative."
         }),
         deliveryType: joi.string().valid("courier", "person").required(),
-        // deliveryAddress: joi.object({
-        //     addressLine: joi.string().required().messages({
-        //         "any.required": "Address line is required."
-        //     }),
-        //     recipientPhoneNumber: joi.string()
-        //         .pattern(/^\d+$/)
-        //         .required()
-        //         .messages({
-        //             "string.pattern.base": "Recipient phone number must be a valid number.",
-        //             "any.required": "Recipient phone number is required."
-        //         }),
-        //     recipientFullName: joi.string().required().messages({
-        //         "any.required": "Recipient full name is required."
-        //     }),
-        // }).when("deliveryType", {
-        //     is: joi.string("courier"),
-        //     then: joi.required().messages({
-        //         "any.required": "'deliveryAddress' is required when 'deliveryType is courier'"
-        //     }),
-        //     otherwise: joi.forbidden().messages({
-        //         "any.unknown": "'deliveryAddress' is not allowed when 'deliveryAddress' is not courier"
-        //     })
-        // }),
         deliveryAddress: joi.object({
             addressLine: joi.string().required().messages({
                 "any.required": "Address line is required."
@@ -85,22 +62,14 @@ exports.createOrderValidation = (req, res, next) => {
         }),
         paymentMethod: joi.string()
             .valid("cash", "online")
-            .default("online")
+            // .default("online")
+            .required()
             .messages({
-                "any.only": "Payment method must be 'cash' or 'online'."
+                "any.only": "Payment method must be 'cash' or 'online'.",
+                "any.required": "'paymentMethod' is required"
             }),
-        // estimatedDeliveryTime: joi.number().default(null),
         branch: joi.string().required(),
-        customerNote: joi.string(),
-        // paymentTransactionId: joi.string().when("paymentMethod", {
-        //     is: joi.valid("online"),
-        //     then: joi.required().messages({
-        //         "any.required": "'paymentTransactionId' is required when 'paymentMethod' is online.",
-        //     }),
-        //     otherwise: joi.forbidden().messages({
-        //         "any.unknown": "'paymentTransactionId' is not allowed when 'paymentMethod' is not online."
-        //     }),
-        // }),
+        customerNote: joi.string().allow("").default(""),
     });
 
     const { error } = schema.validate(req.body);

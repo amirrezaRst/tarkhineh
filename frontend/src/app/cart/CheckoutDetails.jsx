@@ -1,9 +1,9 @@
-import DeliveryType from "./DeliveryType";
-import DeliveryAddress from "./DeliveryAddress";
-import OrderNotes from "./OrderNotes";
+import DeliveryType from "../../components/cart/checkoutDetails/DeliveryType";
+import DeliveryAddress from "../../components/cart/checkoutDetails/DeliveryAddress";
+import OrderNotes from "../../components/cart/checkoutDetails/OrderNotes";
 import CartLayout from "./CartLayout";
 import useCartStore from "@/stores/useCartStore";
-import BranchLocation from "./BranchLocation";
+import BranchLocation from "../../components/cart/checkoutDetails/BranchLocation";
 
 
 const CheckoutDetails = ({ step, setStep }) => {

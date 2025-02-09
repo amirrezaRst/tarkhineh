@@ -101,7 +101,7 @@ exports.createOrder = async (req, res) => {
             if (paymentMethod === "online") {
                 await zarinpal.PaymentRequest({
                     Amount: finalPrice,
-                    CallbackURL: `${process.env.FRONT_ADDRESS}successful-payment`,
+                    CallbackURL: `${process.env.FRONT_ADDRESS}payment-status`,
                     Description: `پرداخت برای سفارش شماره ${order._id} از رستوران زنجیره‌ای ترخینه. مبلغ نهایی شامل هزینه غذا، تخفیف‌ها و هزینه ارسال می‌باشد. لطفاً در صورت بروز هرگونه مشکل، با پشتیبانی تماس بگیرید.`,
                     Mobile: userExists.phoneNumber,
                 }).then(async (response) => {
@@ -120,10 +120,10 @@ exports.createOrder = async (req, res) => {
             } else {
                 await order.save();
                 await payment.save();
+
+                await Cart.findOneAndDelete({ user: payment.user });
                 return res.status(201).json({ status: 201, message: "Order created successfully. Please proceed to pick up your order." })
             }
-
-            // return res.status(201).json({ status: 201, message: "Order created successfully", order });
         }
         else {
             //! Courier Delivery
@@ -156,7 +156,7 @@ exports.createOrder = async (req, res) => {
             if (paymentMethod === "online") {
                 await zarinpal.PaymentRequest({
                     Amount: finalPrice,
-                    CallbackURL: `${process.env.FRONT_ADDRESS}successful-payment`,
+                    CallbackURL: `${process.env.FRONT_ADDRESS}payment-status`,
                     Description: `پرداخت برای سفارش شماره ${order._id} از رستوران زنجیره‌ای ترخینه. مبلغ نهایی شامل هزینه غذا، تخفیف‌ها و هزینه ارسال می‌باشد. لطفاً در صورت بروز هرگونه مشکل، با پشتیبانی تماس بگیرید.`,
                     Mobile: userExists.phoneNumber,
                 }).then(async (response) => {
@@ -175,22 +175,11 @@ exports.createOrder = async (req, res) => {
             } else {
                 await order.save();
                 await payment.save();
+
+                await Cart.findOneAndDelete({ user: payment.user });
                 return res.status(201).json({ status: 201, message: "Order created successfully. Your order will be delivered soon." })
             }
         }
-
-
-        // const createTransaction = await zarinpal.create({
-        //     amount: finalPrice,
-        //     callback_url: `${process.env.FRONT_ADDRESS}successful-payment`,
-        //     mobile: userExists.phoneNumber,
-        //     // email: "my@site.com",
-        //     description: "توضیحات تراکنش",
-        // });
-
-
-
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: 500, message: "Error creating order", error: error.message });
@@ -198,11 +187,13 @@ exports.createOrder = async (req, res) => {
 };
 
 exports.verifyPayment = async (req, res) => {
-    const { authority, status } = req.params;
+    const { authority } = req.params;
 
     const payment = await Payment.findOne({ paymentCode: authority }).select("order user status amount transactionId");
-    const order = await Order.findById(payment.order).select("paymentTransactionId");
-    // const user = await User.findById(payment.user);
+    if (!payment) return res.status(404).json({ status: 404, message: "no payment found with this code. please check your information" })
+
+    const userOrder = await Order.findById(payment.order).select("paymentTransactionId");
+    if (!userOrder) return res.status(404).json({ status: 404, message: "no order found for this payment" })
 
     zarinpal.PaymentVerification({
         Amount: payment.amount,
@@ -213,12 +204,12 @@ exports.verifyPayment = async (req, res) => {
             if (status === 100) {
                 payment.transactionId = response.refId;
                 payment.status = "completed";
-                order.paymentTransactionId = response.refId;
+                userOrder.paymentTransactionId = response.refId;
 
                 await Cart.findOneAndDelete({ user: payment.user });
 
                 await payment.save();
-                await order.save();
+                await userOrder.save();
 
                 res.status(200).json({
                     status: 200,
@@ -237,7 +228,7 @@ exports.verifyPayment = async (req, res) => {
                 payment.status = "failed";
                 await payment.save();
 
-                console.log(response);
+                console.log("response: ", response);
                 res.status(400).json({
                     status: 400,
                     message: "Payment verification failed or invalid status. Please check your payment details and try again.",
@@ -246,6 +237,7 @@ exports.verifyPayment = async (req, res) => {
         })
         .catch((err) => {
             console.error(err);
+            if (err.errors.code == -51) return res.status(400).json({ status: 400, message: "payment verification failed or invalid status" })
             res.status(500).json({
                 status: 500,
                 message: "An error occurred while verifying the payment. Please try again later.",

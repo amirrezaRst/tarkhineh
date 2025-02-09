@@ -1,7 +1,7 @@
-import CartItem from "./CartItem";
+import CartItem from "../../components/cart/shopping/CartItem";
 import CartLayout from "./CartLayout";
-import EmptyCart from "./EmptyCart";
-import CartItemSkeleton from "./CartItemSkeleton";
+import EmptyCart from "../../components/cart/shopping/EmptyCart";
+import CartItemSkeleton from "../../components/cart/shopping/CartItemSkeleton";
 import useCartStore from "@/stores/useCartStore";
 import CartLayoutSkeleton from "./CartLayoutSkeleton";
 

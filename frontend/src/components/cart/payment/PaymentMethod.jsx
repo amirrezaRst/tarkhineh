@@ -1,5 +1,5 @@
 import useCartStore from "@/stores/useCartStore";
-import RadioGroup from "./RadioGroup";
+import RadioGroup from "../RadioGroup";
 import { PersonalWallet2Icon, PersonalWalletIcon, WalletMoneyIcon } from "@/assets/Icons";
 
 const PaymentMethod = () => {

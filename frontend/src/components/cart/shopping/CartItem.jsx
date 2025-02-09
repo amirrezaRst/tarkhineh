@@ -4,7 +4,7 @@ import useUserStore from "@/stores/useUserStore";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import FormatPrice from "@/utils/FormatPrice";
 import { useState } from "react";
-import CartPopup from "./CartPopup";
+import CartPopup from "../CartPopup";
 import useCartStore from "@/stores/useCartStore";
 
 const CartItem = ({ id, menuItem, quantity, branch }) => {

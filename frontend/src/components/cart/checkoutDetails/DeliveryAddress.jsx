@@ -1,9 +1,9 @@
 import { CirclePlusIcon, LocationIcon } from "@/assets/Icons";
-import AddressPage from "../profile/address/page";
-import NewAddressModal from "../profile/address/NewAddressModal";
 import { useState, useEffect } from "react";
 import useUserStore from "@/stores/useUserStore";
 import useCartStore from "@/stores/useCartStore";
+import AddressPage from "@/app/profile/address/page";
+import NewAddressModal from "@/app/profile/address/NewAddressModal";
 
 const DeliveryAddress = () => {
     const [isOpen, setIsOpen] = useState(false);

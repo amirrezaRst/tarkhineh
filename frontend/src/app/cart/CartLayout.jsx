@@ -2,13 +2,13 @@ import { ChevronIcon, CircleCheckmarkIcon, PersonalWalletIcon, TrashIcon, Wallet
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import FormatPrice from "@/utils/FormatPrice";
 import { useEffect, useMemo, useState } from "react";
-import CartMiniItem from "./CartMiniItem";
+import CartMiniItem from "../../components/cart/CartMiniItem";
 import useUserStore from "@/stores/useUserStore";
 import { toast } from "react-toastify";
-import CartPopup from "./CartPopup";
+import CartPopup from "../../components/cart/CartPopup";
 import { deleteCart } from "@/services/MenuService";
 import useCartStore from "@/stores/useCartStore";
-import CartMiniItemSkeleton from "./CartMiniItemSkeleton";
+import CartMiniItemSkeleton from "../../components/cart/CartMiniItemSkeleton";
 
 const CartLayout = ({ children, cart, step, setStep, handler }) => {
     const [isOpen, setIsOpen] = useState(false);

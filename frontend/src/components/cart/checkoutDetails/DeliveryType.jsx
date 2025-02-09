@@ -1,6 +1,6 @@
 import { ShoppingBag, TruckFastIcon, TruckIcon } from "@/assets/Icons";
+import RadioGroup from "@/components/cart/RadioGroup";
 import useCartStore from "@/stores/useCartStore";
-import RadioGroup from "./RadioGroup";
 
 const DeliveryType = () => {
     const { deliveryType, setDeliveryType } = useCartStore();

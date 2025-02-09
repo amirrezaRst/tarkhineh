@@ -1,4 +1,4 @@
-import CartMiniItemSkeleton from "./CartMiniItemSkeleton";
+import CartMiniItemSkeleton from "../../components/cart/CartMiniItemSkeleton";
 
 const CartLayoutSkeleton = ({ children }) => {
     return (
