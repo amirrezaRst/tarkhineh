@@ -20,11 +20,6 @@ const CartPage = () => {
     const { cart, deliveryType, selectedAddress, notes, paymentMethod, paymentGateway, cartBranch, discount, clearCart, loading, setLoading } = useCartStore();
 
     const [alertOpened, setAlertOpened] = useState(false);
-    // const [loading, setLoading] = useState(false);
-
-    const router = useRouter();
-
-    //! Now we must handle payment
 
     const handlePayment = async () => {
         var body = {

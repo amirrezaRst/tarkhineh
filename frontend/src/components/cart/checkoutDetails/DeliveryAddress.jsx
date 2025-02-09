@@ -8,15 +8,14 @@ import NewAddressModal from "@/app/profile/address/NewAddressModal";
 const DeliveryAddress = () => {
     const [isOpen, setIsOpen] = useState(false);
     const user = useUserStore(state => state.user);
-    const { selectedAddress, setSelectedAddress } = useCartStore();
+    const { deliveryType, selectedAddress, setSelectedAddress } = useCartStore();
 
     useEffect(() => {
         if (user?.addresses && user?.addresses?.length > 0) {
             setSelectedAddress(0);
         }
     }, [user?.addresses, setSelectedAddress]);
-
-    return (
+    if (deliveryType == "courier") return (
         <div className="border border-[#CBCBCB] rounded-lg xl:px-9 px-4 xl:py-10 md:py-8 py-4">
             <div className="flex items-center justify-between border-b border-b-[#CBCBCB] pb-3.5 mb-7">
                 <div className="flex items-center gap-1">

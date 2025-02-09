@@ -31,6 +31,8 @@ export const addItemToCart = async (user, menuItemId, branch, setRegisterModal, 
         credentials: "include"
     }).then(res => res.json());
 
+    console.log("MenuCard Response: ",response)
+
     const { status, message, cart } = response;
     if (status == 400) return toast.error("شعبه آیتم انتخابی با شعبه آیتم‌های موجود در سبد خرید مطابقت ندارد. لطفاً از همان شعبه انتخاب کنید.")
 

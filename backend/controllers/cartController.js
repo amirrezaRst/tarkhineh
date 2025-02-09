@@ -111,12 +111,14 @@ exports.addItemToCart = async (req, res) => {
             if (itemIndex > -1) {
                 cart.items[itemIndex].quantity += quantity;
             } else {
-                cart.items.push({ menuItem, quantity });
+                let newItem = await Menu.findById(menuItem).select("_id name price images ingredients")
+                cart.items.push({ menuItem: newItem, quantity });
             }
             await cart.save();
             res.status(200).json({ status: 200, message: 'Item added to cart successfully.', cart });
         } else {
-            cart = new Cart({ user, items: [{ menuItem, quantity }], branch });
+            let newItem = await Menu.findById(menuItem).select("_id name price images ingredients")
+            cart = new Cart({ user, items: [{ menuItem: newItem, quantity }], branch });
             await cart.save();
             res.status(201).json({ status: 201, message: 'Cart created and item added.', cart });
         }
