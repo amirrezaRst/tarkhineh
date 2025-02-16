@@ -5,11 +5,11 @@ const CouponSchema = new mongoose.Schema({
     description: { type: String },
     discountType: { type: String, enum: ['percentage', 'flat'], required: true },
     discountValue: { type: Number, required: true },
-    maxDiscountAmount: { type: Number },
+    maxAmount: { type: Number },
+    minAmount: { type: Number },
     usageLimit: { type: Number, default: 1 },
-    usedCount: { type: Number, default: 0 },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     validFrom: { type: Date, required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     validTo: { type: Date, required: true },
     active: { type: Boolean, default: true }
 });

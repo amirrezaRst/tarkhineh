@@ -33,38 +33,103 @@ exports.getCouponByCode = async (req, res) => {
 };
 
 
-//! Create Request
+
+//! Post Request
 //? Create New Coupon
 exports.createCoupon = async (req, res) => {
     try {
-        const { description, discountType, discountValue, maxDiscountAmount, usageLimit, validFrom, validTo, active } = req.body;
+        const { description, discountType, discountValue, maxAmount, minAmount, usageLimit, validFrom, validTo, active } = req.body;
 
-        // Validate the coupon expiration date
+        //! Validate the coupon expiration date
         if (new Date(validFrom) > new Date(validTo)) {
-            return res.status(400).json({status:400, message: "The 'validFrom' date cannot be later than 'validTo'." });
+            return res.status(400).json({ status: 400, message: "The 'validFrom' date cannot be later than 'validTo'." });
         }
-
         const code = shortid.generate().toLocaleLowerCase();
 
-        const newCoupon = new Coupon({
+        const coupon = new Coupon({
             code,
             description,
             discountType,
             discountValue,
-            maxDiscountAmount,
+            maxAmount,
+            minAmount,
             usageLimit,
-            validFrom,
+            validFrom: validFrom || new Date().toISOString().replace("Z", "+00:00"),
             validTo,
             active
         });
 
-        const savedCoupon = await newCoupon.save();
-        res.status(201).json({status:201, message: "Coupon created successfully.", coupon: savedCoupon });
+        coupon.save();
+        res.status(201).json({ status: 201, message: "Coupon created successfully.", coupon });
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: 500, message: "An error occurred while creating the coupon." });
     }
 };
+
+
+//? Apply Coupon
+exports.applyCoupon = async (req, res) => {
+    try {
+        const { code } = req.params;
+        const coupon = await Coupon.findOne({ code }).select("code usageLimit");
+
+        if (!coupon) {
+            return res.status(404).json({ status: 404, message: "Coupon not found." });
+        }
+
+        coupon.usageLimit -= 1;
+
+        if (coupon.usageLimit === 0) {
+            await Coupon.deleteOne({ _id: coupon._id });
+            return res.status(200).json({ status: 200, message: "Coupon applied and removed as usage limit reached." });
+        };
+
+        await coupon.save();
+
+        res.status(200).json({ status: 200, message: "Coupon applied successfully." });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 500, message: "An error occurred while updating the coupon." });
+    };
+};
+
+
+exports.validateCoupon = async (req, res) => {
+    try {
+        const { code, itemAmount } = req.body;
+
+        if (!code || itemAmount == null) {
+            return res.status(400).json({ status: 400, message: "Code and itemAmount are required." });
+        };
+
+        const coupon = await Coupon.findOne({ code }).select("code maxAmount minAmount discountType discountValue");
+
+        if (!coupon) {
+            return res.status(404).json({ status: 404, message: "Coupon not found." });
+        };
+
+        //! Check amount limits
+        if (coupon.maxAmount && itemAmount > coupon.maxAmount) {
+            return res.status(400).json({ status: 400, message: `The maximum allowed amount is ${coupon.maxAmount}.` });
+        };
+
+        if (coupon.minAmount && itemAmount < coupon.minAmount) {
+            return res.status(400).json({ status: 400, message: `The minimum required amount is ${coupon.minAmount}.` });
+        };
+
+        return res.status(200).json({
+            status: 200,
+            message: "Coupon is valid.",
+            coupon
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "An error occurred while validating coupon." });
+    }
+};
+
+
 
 
 //! Put Request
@@ -78,7 +143,7 @@ exports.updateCoupon = async (req, res) => {
             return res.status(404).json({ status: 404, message: "Coupon not found." });
         }
 
-        res.status(200).json({status:200, message: "Coupon updated successfully.", coupon: updatedCoupon });
+        res.status(200).json({ status: 200, message: "Coupon updated successfully.", coupon: updatedCoupon });
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: 500, message: "An error occurred while updating the coupon." });
