@@ -7,27 +7,31 @@ exports.createOrderValidation = (req, res, next) => {
             "string.pattern.base": "Invalid user ID format.",
             "any.required": "User ID is required."
         }),
-        items: joi.array()
-            .items(
-                joi.object({
-                    menuItem: joi.string().pattern(/^[0-9a-fA-F]{24}$/).required().messages({
-                        "string.pattern.base": "Invalid menu item ID format.",
-                        "any.required": "Menu item ID is required."
-                    }),
-                    quantity: joi.number().integer().min(1).required().messages({
-                        "number.base": "Quantity must be a number.",
-                        "number.min": "Quantity must be at least 1.",
-                        "any.required": "Quantity is required."
-                    }),
-                })
-            )
-            .min(1)
-            .required()
-            .messages({
-                "array.base": "Items must be an array.",
-                "array.min": "At least one item is required.",
-                "any.required": "Items are required."
-            }),
+        // items: joi.array()
+        //     .items(
+        //         joi.object({
+        //             menuItem: joi.string().pattern(/^[0-9a-fA-F]{24}$/).required().messages({
+        //                 "string.pattern.base": "Invalid menu item ID format.",
+        //                 "any.required": "Menu item ID is required."
+        //             }),
+        //             quantity: joi.number().integer().min(1).required().messages({
+        //                 "number.base": "Quantity must be a number.",
+        //                 "number.min": "Quantity must be at least 1.",
+        //                 "any.required": "Quantity is required."
+        //             }),
+        //         })
+        //     )
+        //     .min(1)
+        //     .required()
+        //     .messages({
+        //         "array.base": "Items must be an array.",
+        //         "array.min": "At least one item is required.",
+        //         "any.required": "Items are required."
+        //     }),
+        amount: joi.number().required().messages({
+            "number.base": "Amount must be a number.",
+            "any.required": "Amount is required."
+        }),
         discount: joi.number().min(0).default(0).messages({
             "number.base": "Discount must be a number.",
             "number.min": "Discount cannot be negative."

@@ -17,22 +17,4 @@ router.route("/:code")
 router.patch("/apply-coupon/:code", applyCoupon);
 router.post("/validate-coupon", validateCoupon);
 
-// router.route("/:id")
-//     .get()
-
-// // روت ایجاد کوپن
-// router.post('/coupons', couponController.createCoupon);
-
-// // روت دریافت تمام کوپن‌ها
-// router.get('/coupons', couponController.getAllCoupons);
-
-// // روت دریافت یک کوپن خاص با کد
-// router.get('/coupons/:code', couponController.getCouponByCode);
-
-// // روت بروزرسانی یک کوپن
-// router.put('/coupons/:code', couponController.updateCoupon);
-
-// // روت حذف یک کوپن
-// router.delete('/coupons/:code', couponController.deleteCoupon);
-
 module.exports = router;

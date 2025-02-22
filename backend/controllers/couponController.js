@@ -111,11 +111,11 @@ exports.validateCoupon = async (req, res) => {
 
         //! Check amount limits
         if (coupon.maxAmount && itemAmount > coupon.maxAmount) {
-            return res.status(400).json({ status: 400, message: `The maximum allowed amount is ${coupon.maxAmount}.` });
+            return res.status(400).json({ status: 400, message: `مبلغ سفارش بیش از حد مجاز است!` });
         };
 
         if (coupon.minAmount && itemAmount < coupon.minAmount) {
-            return res.status(400).json({ status: 400, message: `The minimum required amount is ${coupon.minAmount}.` });
+            return res.status(400).json({ status: 400, message: `سفارش شما کمتر از حداقل مبلغ مورد نیاز است!` });
         };
 
         return res.status(200).json({
