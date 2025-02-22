@@ -48,27 +48,15 @@ exports.getOrdersByUser = async (req, res) => {
 //! Post Request
 exports.createOrder = async (req, res) => {
     try {
-        const { user, items, discount, deliveryFee, deliveryType, deliveryAddress, paymentMethod, branch, customerNote, paymentTransactionId } = req.body;
+        const { user, amount, discount, deliveryFee, deliveryType, deliveryAddress, paymentMethod, branch, customerNote, paymentTransactionId } = req.body;
 
         //! Validate user
         const userExists = await User.findById(user).select("phoneNumber");
         if (!userExists) {
             return res.status(404).json({ status: 404, message: "User not found" });
         };
-        // console.log(userExists)
-        //! Validate menu items and calculate total price
-        let totalPrice = 0;
-        const validatedItems = await Promise.all(items.map(async item => {
-            const menuItem = await Menu.findById(item.menuItem).select("price");
-            if (!menuItem) {
-                throw new Error(`Menu item with ID ${item.menuItem} not found.`);
-            }
-            const price = menuItem.price;
-            totalPrice += price * item.quantity;
-            return { menuItem: item.menuItem, quantity: item.quantity, price };
-        }));
 
-        const finalPrice = totalPrice - discount + deliveryFee;
+        const finalPrice = amount - discount + deliveryFee;
 
         if (deliveryType === "person") {
             //! Person Delivery
@@ -76,8 +64,7 @@ exports.createOrder = async (req, res) => {
             //! Create order
             let order = new Order({
                 user,
-                items: validatedItems,
-                totalPrice,
+                totalPrice: amount,
                 discount,
                 finalPrice,
                 deliveryFee,
@@ -86,9 +73,7 @@ exports.createOrder = async (req, res) => {
                 branch,
                 customerNote,
                 pickupCode: Math.floor(1000 + Math.random() * 9000),
-                // paymentTransactionId
             });
-            // await order.save();
 
             let payment = new Payment({
                 order: order._id,
@@ -96,7 +81,6 @@ exports.createOrder = async (req, res) => {
                 paymentMethod,
                 amount: finalPrice
             })
-            // await payment.save();
 
             if (paymentMethod === "online") {
                 await zarinpal.PaymentRequest({
@@ -131,8 +115,7 @@ exports.createOrder = async (req, res) => {
             //! Create order
             let order = new Order({
                 user,
-                items: validatedItems,
-                totalPrice,
+                totalPrice: amount,
                 discount,
                 finalPrice,
                 deliveryFee,
@@ -142,9 +125,7 @@ exports.createOrder = async (req, res) => {
                 branch,
                 customerNote,
                 pickupCode: Math.floor(1000 + Math.random() * 9000),
-                // paymentTransactionId
             });
-            console.log("deliveryType: courier")
 
             let payment = new Payment({
                 order: order._id,

@@ -5,7 +5,7 @@ const MenuCardDiscount = ({ discount, price }) => {
     return (
         <div className={`${discount ? "flex" : "hidden"} items-center justify-center gap-2`}>
             <span
-                className="text-[ 3xl:text-lg text-base#ADADAD] line-through"
+                className="3xl:text-lg text-base text-[#ADADAD] line-through"
             >{FormatPrice(price)}</span>
             <span
                 className="bg-[#FFF2F2] 3xl:text-base md:text-sm text-xs text-[#C30000] rounded-full pt-0.5 px-2"

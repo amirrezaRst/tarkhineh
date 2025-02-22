@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import PurchaseSteps from "../../components/cart/PurchaseSteps";
-import MobileNavigation from "../../components/cart/MobileNavigation";
+import { useState } from "react";
+import MobileNavigation from "@/components/cart/MobileNavigation";
+import PurchaseSteps from "@/components/cart/PurchaseSteps";
 import ShoppingCart from "./ShoppingCart";
 import CheckoutDetails from "./CheckoutDetails";
 import Payment from "./Payment";
 import useUserStore from "@/stores/useUserStore";
 import useCartStore from "@/stores/useCartStore";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import PopAlert from "./PopAlert";
 import { SquareCheckIcon } from "@/assets/Icons";
 import PreserveQueryLink from "@/hooks/PreserveQueryLink";
@@ -17,23 +16,26 @@ import PreserveQueryLink from "@/hooks/PreserveQueryLink";
 const CartPage = () => {
     const [step, setStep] = useState(1);
     const { user } = useUserStore();
-    const { cart, deliveryType, selectedAddress, notes, paymentMethod, paymentGateway, cartBranch, discount, clearCart, loading, setLoading } = useCartStore();
+    const { cart, deliveryType, selectedAddress, notes, paymentMethod, paymentGateway, cartBranch, clearCart, loading, setLoading } = useCartStore();
 
     const [alertOpened, setAlertOpened] = useState(false);
 
-    const handlePayment = async () => {
+    const handlePayment = async (amount, discount) => {
         var body = {
             user: user?._id,
-            items: cart?.map(item => {
-                return { menuItem: item.menuItem._id, quantity: item.quantity }
-            }),
+            // items: cart?.map(item => {
+            //     return { menuItem: item.menuItem._id, quantity: item.quantity }
+            // }),
+            amount,
             discount: discount || 0,
             deliveryFee: deliveryType == "courier" ? 26000 : undefined,
             deliveryType,
             paymentMethod,
             customerNote: notes.trim(),
             branch: cartBranch
-        }
+        };
+
+        // console.log(amount)
 
         setLoading(true)
         if (deliveryType == "courier") {
