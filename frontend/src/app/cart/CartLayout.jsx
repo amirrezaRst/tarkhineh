@@ -273,7 +273,7 @@ const CartLayout = ({ children, cart, step, setStep, handler }) => {
 
                 <button
                     className="bg-[#417F56] w-full py-2 rounded-md flex items-center justify-center text-white lg:text-super-sm text-sm font-light"
-                    onClick={step < 3 ? () => setStep(step + 1) : () => handler(finalAmount,finalDiscount)}
+                    onClick={step < 3 ? () => setStep(step + 1) : () => handler(finalAmount, finalDiscount)}
                 >
                     {loading ?
                         "loading..." : step === 1 ?

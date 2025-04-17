@@ -22,11 +22,13 @@ module.exports = {
         "3xl": "2000px"
       },
       width: {
-        4.5:"18px",
+        4.5: "18px",
+        13: "3.25rem",
         "8.5": "2.13rem"
       },
       height: {
-        4.5:"18px",
+        4.5: "18px",
+        13: "3.25rem",
         "8.5": "2.13rem"
       },
       fontSize: {
@@ -47,8 +49,8 @@ module.exports = {
         400: "400ms",
         600: "600ms",
       },
-      padding:{
-        4.5:"18px"
+      padding: {
+        4.5: "18px"
       }
     },
   },
