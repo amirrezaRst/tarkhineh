@@ -58,6 +58,7 @@ exports.singleUser = async (req, res) => {
 };
 
 
+
 // 67588061e2d7717059d7aacd
 //! Post Request
 exports.registerUser = async (req, res) => {

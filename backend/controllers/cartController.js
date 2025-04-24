@@ -128,6 +128,68 @@ exports.addItemToCart = async (req, res) => {
     }
 };
 
+exports.repeatOrder = async (req, res) => {
+    try {
+        const { user, items, branch } = req.body; // items = [{ menuItem, quantity }]
+
+        const userExists = await User.findById(user);
+        if (!userExists) {
+            return res.status(404).json({ status: 404, message: 'User not found.' });
+        }
+
+        // چک کردن اینکه همه آیتم‌ها وجود دارن
+        const menuIds = items.map(i => i.menuItem);
+        const foundMenuItems = await Menu.find({ _id: { $in: menuIds } }).select("_id name price images ingredients");
+
+        if (foundMenuItems.length !== menuIds.length) {
+            return res.status(404).json({ status: 404, message: 'One or more menu items not found.' });
+        }
+
+        let cart = await Cart.findOne({ user }).populate('items.menuItem', "_id name price images ingredients");
+
+        if (cart) {
+            if (cart.branch != branch) {
+                return res.status(400).json({
+                    status: 400,
+                    message: "The branch of the selected items does not match the branch of the existing cart items."
+                });
+            }
+
+            // اضافه یا آپدیت آیتم‌ها
+            for (let i of items) {
+                const existingIndex = cart.items.findIndex(ci => ci.menuItem._id.toString() === i.menuItem);
+                if (existingIndex > -1) {
+                    cart.items[existingIndex].quantity += i.quantity;
+                } else {
+                    const menuData = foundMenuItems.find(m => m._id.toString() === i.menuItem);
+                    if (menuData) cart.items.push({ menuItem: menuData, quantity: i.quantity });
+                }
+            }
+
+            await cart.save();
+            return res.status(200).json({ status: 200, message: 'Items added to cart.', cart });
+
+        } else {
+            // سبد جدید
+            const newItems = items.map(i => {
+                const menuData = foundMenuItems.find(m => m._id.toString() === i.menuItem);
+                return { menuItem: menuData, quantity: i.quantity };
+            });
+
+            cart = new Cart({ user, items: newItems, branch });
+            await cart.save();
+
+            return res.status(201).json({ status: 201, message: 'New cart created with repeated items.', cart });
+        }
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ status: 500, message: 'An error occurred while repeating the order.' });
+    }
+};
+
+
+
 //! Patch Request
 //? Update Item Quantity in Cart
 exports.decreaseItemQuantity = async (req, res) => {

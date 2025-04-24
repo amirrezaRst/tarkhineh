@@ -45,7 +45,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
             >
 
                 <img
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[0]}`}
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images?.[0]}`}
                     alt={`ترخینه ${name}`}
                     className="h-full 3xl:w-[230px] 2xl:w-[210px] xl:w-[190px] lg:w-[170px] md:w-[240px] w-[140px] object-cover cursor-pointer"
                     onClick={() => setIsOpen(true)}

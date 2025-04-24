@@ -1,15 +1,13 @@
 import MainLayout from "@/components/layout/panel/PanelLayout";
 
 
-const PanelLayout = ({ children }) => {
+const AdminLayout = ({ children }) => {
     return (
         <>
 
             <MainLayout>
 
-
                 {children}
-
 
             </MainLayout>
 
@@ -17,4 +15,4 @@ const PanelLayout = ({ children }) => {
     );
 }
 
-export default PanelLayout;
+export default AdminLayout;

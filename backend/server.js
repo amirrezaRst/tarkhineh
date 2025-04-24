@@ -39,6 +39,7 @@ app.use("/api/cart", require('./routes/cartRoutes'));
 app.use("/api/order", require('./routes/orderRoutes'));
 app.use("/api/payment", require('./routes/paymentRoutes'));
 app.use("/api/like", require('./routes/likeRoutes'));
+app.use("/api/branch-manager", require('./routes/branchManagerRoutes'));
 
 //! Report Scheduler
 require('./utils/reportScheduler');

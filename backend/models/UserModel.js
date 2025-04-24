@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     userName: { type: String, default: null },
     role: {
         type: String,
-        enum: ['user', 'admin', 'branch_manager'],
+        enum: ['user', 'admin', 'branch_manager',"delivery"],
         default: 'user'
     },
     // wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Menu" }],

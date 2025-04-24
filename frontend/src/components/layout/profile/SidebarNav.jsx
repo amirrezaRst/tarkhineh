@@ -71,7 +71,7 @@ const SidebarNav = () => {
 
                     <div className="flex gap-3">
                         <button
-                            className="rounded-md border border-[#417F56] text-[#417F56] text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
+                            className="rounded-md bg-[#717171]/10 border border-[#717171] text-[#717171] text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
                             onClick={() => setIsOpenPopup(false)}
                         >
                             انصراف

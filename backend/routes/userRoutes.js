@@ -3,7 +3,7 @@ const { Router } = require('express');
 const ValidateObjectId = require('../middleware/ValidateObjectId');
 const Authenticate = require('../middleware/Authenticate');
 const Authorize = require('../middleware/Authorize');
-const { allUser, singleUser, deleteUser, registerUser, login, logout, refreshToken, verifyOtp, newAddress, deleteAddress, editAddress, editUser } = require('../controllers/userController');
+const { allUser, singleUser, deleteUser, registerUser, login, logout, refreshToken, verifyOtp, newAddress, deleteAddress, editAddress, editUser, getOrders } = require('../controllers/userController');
 const { registerValidation, loginValidation, verifyOtpValidation, newAddressValidation, editAddressValidation, editUserValidation } = require('../validation/userValidation');
 
 const router = Router();

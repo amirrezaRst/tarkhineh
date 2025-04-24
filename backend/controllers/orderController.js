@@ -31,17 +31,74 @@ exports.getOrderById = async (req, res) => {
     }
 };
 
+// exports.getOrdersByUser = async (req, res) => {
+//     try {
+//         const { userId } = req.params;
+//         const status = req.query.status || "all";
+
+//         const orders = await Order.find({ user: userId })
+//             .populate('items.menuItem', 'name price')
+//             .sort({ createdAt: -1 });
+
+//         res.status(200).json({ status: 200, orders });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ status: 500, message: "Error fetching user's orders", error: error.message });
+//     }
+// };
+
+
 exports.getOrdersByUser = async (req, res) => {
     try {
         const { userId } = req.params;
-        const orders = await Order.find({ user: userId }).sort({ createdAt: -1 }).populate('items.menuItem', 'name price');
+        const status = req.query.status || "all";
 
-        res.status(200).json({ status: 200, orders });
+        // Pagination query params
+        const limit = parseInt(req.query.limit) || 10;
+        const page = parseInt(req.query.page) || 1;
+        const skip = (page - 1) * limit;
+
+        const query = { user: userId };
+
+        if (status !== "all" && ['delivered', 'cancelled', 'preparing'].includes(status)) {
+            if (status === "preparing") {
+                query.status = { $in: ['pending', 'preparing', 'on_the_way'] };
+            } else {
+                query.status = status;
+            }
+        }
+
+        // Count total for pagination
+        const totalCount = await Order.countDocuments(query);
+
+        // Fetch paginated orders
+        const orders = await Order.find(query)
+            .populate('items.menuItem', 'name price images')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        res.status(200).json({
+            status: 200,
+            orders,
+            pagination: {
+                total: totalCount,
+                page,
+                limit,
+                totalPages: Math.ceil(totalCount / limit),
+            },
+        });
+
     } catch (error) {
         console.error(error);
-        res.status(500).json({ status: 500, message: "Error fetching user's orders", error: error.message });
+        res.status(500).json({
+            status: 500,
+            message: "Error fetching user's orders",
+            error: error.message,
+        });
     }
 };
+
 
 
 
@@ -237,7 +294,15 @@ exports.updateOrderStatus = async (req, res) => {
         const order = await Order.findById(orderId).select("user totalPrice status").populate("user", "fullName email phoneNumber");
         if (!order) return res.status(404).json({ status: 404, message: "Order not found" });
 
+        if (status === "cancelled" && order.status === "on_the_way") {
+            return res.status(400).json({
+                status: 400,
+                message: "سفارشی که در حال ارسال است قابل لغو نیست.",
+            });
+        };
+
         order.status = status;
+
         if (status === 'delivered') {
             order.deliveredAt = new Date();
         }
