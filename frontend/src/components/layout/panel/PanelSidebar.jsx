@@ -7,28 +7,28 @@ import { usePathname } from "next/navigation";
 
 const sidebarItemsByRole = {
     admin: [
-        { label: "داشبورد", href: "/panel", icon: DashboardIcon },
-        { label: "مدیریت رستوران‌ها", href: "/panel/restaurants", icon: FastFoodIcon },
-        { label: "گزارشات کلی", href: "/panel/reports", icon: DiagramIcon },
+        { label: "داشبورد", href: "/admin", icon: DashboardIcon },
+        { label: "مدیریت رستوران‌ها", href: "/admin/restaurants", icon: FastFoodIcon },
+        { label: "گزارشات کلی", href: "/admin/reports", icon: DiagramIcon },
     ],
     branch_manager: [
         { label: "داشبورد", href: "/panel/branch", icon: DashboardIcon },
         { label: "منو رستوران", href: "/panel/branch/menu", icon: FastFoodMenuIcon },
-        { label: "پیک‌ها", href: "/panel/branch/deliveries", icon: DeliveryIcon },
+        { label: "پیک‌ها", href: "/panel/branch/couriers", icon: DeliveryIcon },
         { label: "سفارش‌ها", href: "/panel/branch/orders", icon: FastFoodIcon },
         { label: "گزارشات", href: "/panel/branch/reports", icon: DiagramIcon },
     ],
-    delivery: [
-        { label: "داشبورد", href: "/panel/delivery", icon: DashboardIcon },
-        { label: "سفارش‌های من", href: "/panel/delivery/my-orders", icon: DeliveryIcon },
-        { label: "تاریخچه تحویل", href: "/panel/delivery/history", icon: HistoryIcon },
-        { label: "وضعیت فعالیت", href: "/panel/delivery/status", icon: DeliveryIcon },
+    courier: [
+        { label: "داشبورد", href: "/panel/courier", icon: DashboardIcon },
+        { label: "سفارش‌های من", href: "/panel/courier/orders", icon: DeliveryIcon },
+        { label: "تاریخچه تحویل", href: "/panel/courier/history", icon: HistoryIcon },
+        { label: "وضعیت فعالیت", href: "/panel/courier/status", icon: DeliveryIcon },
     ]
 };
 
 const PanelSidebar = () => {
-    const role = "branch_manager"; // This should be dynamically set based on the logged-in user's role
-    const sidebarItems = sidebarItemsByRole[role] || sidebarItemsByRole.branch_manager; // Default to branch_manager if role is not found
+    const role = "branch_manager"; //! This should be dynamically set based on the logged-in user's role
+    const sidebarItems = sidebarItemsByRole[role] || sidebarItemsByRole.branch_manager; //! Default to branch_manager if role is not found
     const pathname = usePathname();
 
 

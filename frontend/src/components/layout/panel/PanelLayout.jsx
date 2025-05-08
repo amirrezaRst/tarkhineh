@@ -1,5 +1,3 @@
-import { DashboardIcon, ShoppingCartIcon, UserHeartIcon, UserPlusIcon, WalletMoneyIcon } from "@/assets/Icons";
-import Link from "next/link";
 import PanelSidebar from "./PanelSidebar";
 
 const PanelLayout = ({ children }) => {
@@ -8,9 +6,11 @@ const PanelLayout = ({ children }) => {
 
             <PanelSidebar />
 
-
             {/*//! START MAIN CONTENT */}
-            <main className="ease-soft-in-out xl:ml-68.5 relative h-full max-h-screen rounded-xl overflow-y-auto transition-all duration-200 py-12">
+            <main
+                className="w-full h-full relative max-h-screen rounded-xl overflow-y-auto transition-all duration-200 py-12
+                px-10"
+            >
 
                 {children}
 
