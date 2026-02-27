@@ -11,7 +11,9 @@ dotEnv.config({ path: './config/config.env' });
 
 
 //! Connect to Database
+require('./config/redis');
 connectDb();
+
 
 //! cors options
 const corsOptions = {
@@ -23,7 +25,6 @@ const app = express().use(express.json())
     .use(cors(corsOptions))
     .use(express.urlencoded({ extended: true }))
     .use(cookieParser());
-
 
 //! Static Folder
 app.use("/public", express.static(path.join(__dirname, "public", "menu-images")));
