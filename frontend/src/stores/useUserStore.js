@@ -21,6 +21,8 @@ const useUserStore = create(
 
                 if (status === 500) toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
 
+                document.cookie = `role=${user.role}; path=/`;
+
                 set({ user: user, loading: false });
             } catch (error) {
                 console.log(error)

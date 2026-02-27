@@ -26,13 +26,11 @@ const Navbar = () => {
         if (!cart) {
             fetchCart();
         }
+        
         fetchUser();
         fetchCart();
     }, []);
 
-    // useEffect(() => {
-    //     console.log(cart);
-    // }, [cart])
 
     return (
         <header className="sticky top-0 bg-white z-10 lg:border-b border-b-[#E5F2E9] lg:shadow-none shadow">

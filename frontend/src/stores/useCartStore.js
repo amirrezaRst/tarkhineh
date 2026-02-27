@@ -34,7 +34,7 @@ const useCartStore = create((set) => ({
             }).then(res => res.json());
 
             const { status, cart, cartBranch } = response;
-            console.log("fetchCart response: ", response)
+            
             if (status === 500) toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
 
             set({ cart: cart?.items || [], cartBranch, loading: false, error: null });

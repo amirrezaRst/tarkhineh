@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 export const handleRegister = async (data, setPage, setPhoneNumber, setLoading, setError) => {
     setLoading(true);
     setPhoneNumber(data['phone-number']);
-    console.log(data)
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register`, {
         method: 'POST',
@@ -58,7 +57,9 @@ export const handleSendOtp = async (otp, setOtp, phoneNumber, setLoading, setErr
         credentials: 'include'
     }).then(response => response.json());
 
-    const { status, message } = response;
+    const { status, message, user } = response;
+
+    document.cookie = `role=${user.role}; path=/`;
 
     switch (status) {
         case 200:
