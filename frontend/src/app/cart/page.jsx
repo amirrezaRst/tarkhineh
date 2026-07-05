@@ -16,23 +16,23 @@ import PreserveQueryLink from "@/hooks/PreserveQueryLink";
 const CartPage = () => {
     const [step, setStep] = useState(1);
     const { user } = useUserStore();
-    const { cart, deliveryType, selectedAddress, notes, paymentMethod, paymentGateway, cartBranch, clearCart, loading, setLoading } = useCartStore();
+    const { cart, deliveryType, selectedAddress, notes, paymentMethod, paymentGateway, cartBranch, discount: appliedCoupon, clearCart, loading, setLoading } = useCartStore();
 
     const [alertOpened, setAlertOpened] = useState(false);
 
     const handlePayment = async (amount, discount) => {
         var body = {
-            user: user?._id,
-            // items: cart?.map(item => {
-            //     return { menuItem: item.menuItem._id, quantity: item.quantity }
-            // }),
+            // amount/discount/deliveryFee/branch are no longer trusted by the
+            // backend (it recomputes everything from the server-side cart) -
+            // couponCode is what actually drives the discount now.
             amount,
             discount: discount || 0,
             deliveryFee: deliveryType == "courier" ? 26000 : undefined,
             deliveryType,
             paymentMethod,
             customerNote: notes.trim(),
-            branch: cartBranch
+            branch: cartBranch,
+            couponCode: appliedCoupon?.code,
         };
 
         // console.log(amount)
