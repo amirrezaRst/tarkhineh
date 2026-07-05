@@ -3,44 +3,13 @@ const Cart = require('../models/CartModel');
 const Menu = require('../models/MenuModel');
 const User = require('../models/UserModel');
 const Discount = require('../models/DiscountModel');
-const jwt = require('jsonwebtoken');
 
 
 //! Get Request
 //? Get User Cart by userID
-// exports.getCartByUserId = async (req, res) => {
-//     try {
-//         const { userId } = req.params;
-
-//         const cart = await Cart.findOne({ user: userId }).populate('items.menuItem',"_id name price images");
-
-//         if (!cart) {
-//             return res.status(404).json({ status: 404, message: 'Cart not found for this user.' });
-//         }
-
-//         res.status(200).json({ status: 200, message: "new item added to the cart", cart });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ status: 500, message: 'An error occurred while fetching the cart.' });
-//     }
-// };
-
 exports.getCartByUserId = async (req, res) => {
     try {
-        const { refreshToken, token } = req.cookies;
-        var userId = null;
-
-        if (refreshToken) {
-            const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-            userId = decoded.id;
-        }
-        else if (token) {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            userId = decoded.id;
-        }
-        else {
-            return res.status(401).json({ status: 401, message: "Unauthorized" });
-        }
+        const userId = req.user.id;
 
         const cart = await Cart.findOne({ user: userId })
             .populate('items.menuItem', "_id name price images ingredients");

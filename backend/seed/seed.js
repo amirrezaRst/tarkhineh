@@ -254,6 +254,15 @@ async function seed() {
     },
   ]);
 
+  // 4b) Link managers/couriers back to their branch
+  await Promise.all(
+    managers.map((m, i) => User.updateOne({ _id: m._id }, { $set: { branch: branches[i]._id } }))
+  );
+  const couriers = users.filter((u) => u.role === "courier");
+  await Promise.all(
+    couriers.map((c, i) => User.updateOne({ _id: c._id }, { $set: { branch: branches[i]._id } }))
+  );
+
   // 5) Coupon (optional)
   const coupon = await Coupon.create({
     code: "WELCOME10",

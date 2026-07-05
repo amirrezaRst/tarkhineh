@@ -2,30 +2,18 @@ const express = require('express');
 const router = express.Router();
 const { getMenuItems, createMenuItem, getMenuItemById, updateMenuItem, deleteMenuItem } = require('../controllers/menuController');
 const { createMenuValidation } = require('../validation/menuValidation');
+const Authenticate = require('../middleware/Authenticate');
+const Authorize = require('../middleware/Authorize');
+const { ROLES } = require('../config/roles');
 
 
 router.route("/")
     .get(getMenuItems)
-    .post( createMenuItem);
+    .post(Authenticate, Authorize([ROLES.ADMIN]), createMenuItem);
 
 router.route("/:id")
     .get(getMenuItemById)
-    .put(updateMenuItem)
-    .delete(deleteMenuItem);
-
-// // ایجاد آیتم جدید در منو
-// router.post('/menu', menuController.createMenuItem);
-
-// // دریافت همه آیتم‌های منو
-// router.get('/menu', menuController.getMenuItems);
-
-// // دریافت یک آیتم خاص از منو بر اساس ID
-// router.get('/menu/:id', menuController.getMenuItemById);
-
-// // ویرایش آیتم منو
-// router.put('/menu/:id', menuController.updateMenuItem);
-
-// // حذف آیتم منو
-// router.delete('/menu/:id', menuController.deleteMenuItem);
+    .put(Authenticate, Authorize([ROLES.ADMIN]), updateMenuItem)
+    .delete(Authenticate, Authorize([ROLES.ADMIN]), deleteMenuItem);
 
 module.exports = router;

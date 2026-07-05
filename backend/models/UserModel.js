@@ -13,6 +13,8 @@ const UserSchema = new mongoose.Schema({
         enum: ['user', 'admin', 'branch_manager',"courier"],
         default: 'user'
     },
+    // Only meaningful for branch_manager / courier roles.
+    branch: { type: mongoose.Schema.Types.ObjectId, ref: 'Branch', default: null },
     // wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Menu" }],
     coupons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' }],
     orderHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],

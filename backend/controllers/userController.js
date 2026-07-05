@@ -34,7 +34,7 @@ exports.singleUser = async (req, res) => {
             if (!user) {
                 return res.status(404).json({ status: 404, message: "User not found" });
             }
-            const newTokenData = { id: user._id, email: user.email, role: user.role };
+            const newTokenData = { id: user._id, email: user.email, role: user.role, branch: user.branch };
 
             //! Generate new access token and refresh token
             const newToken = generateAccessToken(newTokenData);
@@ -101,7 +101,7 @@ exports.registerUser = async (req, res) => {
 exports.verifyOtp = async (req, res) => {
     try {
         const { phoneNumber, otpCode } = req.body;
-        const user = await userModel.findOne({ phoneNumber }).select("phoneNumber role otpCode otpExpires");
+        const user = await userModel.findOne({ phoneNumber }).select("phoneNumber role branch otpCode otpExpires");
 
         if (!user) {
             return res.status(404).json({ status: 404, message: "User not found" });
@@ -119,6 +119,7 @@ exports.verifyOtp = async (req, res) => {
             id: user._id,
             phoneNumber: user.phoneNumber,
             role: user.role,
+            branch: user.branch,
         }
 
         const token = generateAccessToken(tokenData);
@@ -147,7 +148,7 @@ exports.login = async (req, res) => {
     const { email, password, remember } = req.body;
     try {
         const user = await userModel.findOne({ email })
-            .select("email password role refreshToken");
+            .select("email password role branch refreshToken");
 
         if (!user) {
             return res.status(404).json({ status: 404, message: "User not found" });
@@ -162,6 +163,7 @@ exports.login = async (req, res) => {
             id: user._id,
             email: user.email,
             role: user.role,
+            branch: user.branch,
         }
 
         const token = generateAccessToken(tokenData);
@@ -192,14 +194,14 @@ exports.refreshToken = async (req, res) => {
         //! Verify the refresh token
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
         const user = await userModel.findById(decoded.id)
-            .select("email role refreshToken");
+            .select("email role branch refreshToken");
 
         if (!user || user.refreshToken !== refreshToken) {
             return res.status(403).json({ status: 403, message: "Invalid refresh token" });
         }
 
         //! Generate a new access token
-        const newTokenData = { id: user._id, email: user.email, role: user.role };
+        const newTokenData = { id: user._id, email: user.email, role: user.role, branch: user.branch };
         const newToken = generateAccessToken(newTokenData);
 
         //! Optionally generate a new refresh token
@@ -232,36 +234,6 @@ exports.logout = (req, res) => {
     }
 };
 
-
-//? Add new Address
-exports.newAddress = async (req, res) => {
-    const { title, addressLine, recipientPhoneNumber, recipientFullName, coordinates } = req.body;
-
-    try {
-        const user = await userModel.findById(req.params.id);
-        if (!user) {
-            return res.status(404).json({ status: 404, message: "User not found" });
-        }
-
-        const address = {
-            title,
-            addressLine,
-            recipientPhoneNumber,
-            recipientFullName,
-            coordinates
-        }
-
-        const addresses = [...user.addresses, address];
-        user.addresses = addresses;
-
-        await user.save();
-
-        res.status(200).json({ status: 200, message: "a new address has been added", user });
-    }
-    catch (error) {
-        res.status(500).json({ status: 500, message: error.message });
-    }
-}
 
 //? Add new Address
 exports.newAddress = async (req, res) => {
@@ -370,28 +342,6 @@ exports.deleteUser = async (req, res) => {
             return res.status(404).json({ status: 404, message: "User not found" });
         }
         res.status(200).json({ status: 200, message: "User deleted" });
-    }
-    catch (error) {
-        res.status(500).json({ status: 500, message: error.message });
-    }
-}
-
-exports.deleteAddress = async (req, res) => {
-    const userId = req.params.id;
-    const addressIndex = req.params.address;
-
-    try {
-        const user = await userModel.findById(userId);
-        if (!user) {
-            return res.status(404).json({ status: 404, message: "User not found" });
-        }
-
-        const address = await user.addresses.filter((_, index) => index != addressIndex);
-        user.addresses = address
-
-        await user.save();
-
-        res.status(200).json({ status: 200, message: "Address has been successfully removed", user });
     }
     catch (error) {
         res.status(500).json({ status: 500, message: error.message });

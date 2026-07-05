@@ -4,6 +4,7 @@ const Menu = require('../models/MenuModel');
 const Payment = require('../models/PaymentModel');
 const Cart = require('../models/CartModel');
 const ZarinpalCheckout = require("zarinpal-checkout");
+const { ROLES, STAFF_ROLES } = require('../config/roles');
 
 const zarinpal = ZarinpalCheckout.create(
     "eaa46b01-819e-42ef-8a67-ba2bb7f69a32",
@@ -291,8 +292,23 @@ exports.updateOrderStatus = async (req, res) => {
         const { id: orderId } = req.params;
         const { status } = req.body;
 
-        const order = await Order.findById(orderId).select("user totalPrice status").populate("user", "fullName email phoneNumber");
+        const order = await Order.findById(orderId).select("user branch totalPrice status").populate("user", "fullName email phoneNumber");
         if (!order) return res.status(404).json({ status: 404, message: "Order not found" });
+
+        const isStaff = STAFF_ROLES.includes(req.user.role);
+        if (!isStaff) {
+            const isOwner = order.user._id.toString() === req.user.id;
+            if (!isOwner) {
+                return res.status(403).json({ status: 403, message: "You do not have access to this order" });
+            }
+            if (status !== "cancelled") {
+                return res.status(403).json({ status: 403, message: "You can only cancel your own order" });
+            }
+        } else if (req.user.role === ROLES.BRANCH_MANAGER || req.user.role === ROLES.COURIER) {
+            if (!req.user.branch || order.branch?.toString() !== req.user.branch) {
+                return res.status(403).json({ status: 403, message: "You do not have access to this branch's orders" });
+            }
+        }
 
         if (status === "cancelled" && order.status === "on_the_way") {
             return res.status(400).json({
@@ -323,9 +339,13 @@ exports.approveOrder = async (req, res) => {
         const { estimatedDeliveryTime } = req.body; //! Estimated delivery time set by the manager
 
         //! Find the order
-        const order = await Order.findById(orderId).select("approvedAt estimatedDeliveryTime");
+        const order = await Order.findById(orderId).select("branch approvedAt estimatedDeliveryTime");
         if (!order) {
             return res.status(404).json({ status: 404, message: "Order not found." });
+        }
+
+        if (req.user.role === ROLES.BRANCH_MANAGER && (!req.user.branch || order.branch?.toString() !== req.user.branch)) {
+            return res.status(403).json({ status: 403, message: "You do not have access to this branch's orders" });
         }
 
         //! Check if the order is already approved
