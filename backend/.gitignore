@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Environment / secrets
+config/config.env
+.env
+.env.*
+!.env.example
+!config/config.env.example
+
 # Static folder
 public/
 
