@@ -6,6 +6,7 @@ export const likeMenuItemItem = async (user, menuItem, setIsLiked) => {
         headers: {
             'Content-Type': 'application/json',
         },
+        credentials: "include",
         body: JSON.stringify({
             user,
             menuItem
@@ -25,7 +26,8 @@ export const checkLikeStatus = async (userId, itemId, setIsLiked) => {
         method: "GET",
         headers: {
             'Content-Type': 'application/json',
-        }
+        },
+        credentials: "include"
     }).then(res => res.json());
 
     const { status, liked } = response;
@@ -43,6 +45,7 @@ export const fetchInterestItems = async (userId, category, setItems) => {
         headers: {
             'Content-Type': 'application/json',
         },
+        credentials: "include",
     }).then(res => res.json());
 
     const { status, likes } = response;

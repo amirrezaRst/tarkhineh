@@ -5,7 +5,8 @@ export const handleDeleteAddress = async (userId, index, setIsOpen, setUser) => 
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
-        }
+        },
+        credentials: "include"
     }).then(res => res.json());
 
     const { status, user } = response;
@@ -27,6 +28,7 @@ export const handleEditAddress = async (userId, index, body, setIsOpen, setUser)
         headers: {
             'Content-Type': 'application/json',
         },
+        credentials: "include",
         body: JSON.stringify(
             body
         )
@@ -51,6 +53,7 @@ export const handleNewAddress = async (userId, body, setIsOpen, setUser) => {
         headers: {
             'Content-Type': 'application/json',
         },
+        credentials: "include",
         body: JSON.stringify(
             body
         )

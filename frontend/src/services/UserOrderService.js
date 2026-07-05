@@ -6,6 +6,7 @@ export const handleCancelOrder = async (orderId, setIsOpenPopup, onStatusUpdate)
         headers: {
             'Content-Type': 'application/json',
         },
+        credentials: "include",
         body: JSON.stringify({ status: "cancelled" }),
     }).then(res => res.json());
     const { status, message } = response;

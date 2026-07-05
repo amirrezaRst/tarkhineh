@@ -42,6 +42,7 @@ const DiscountCode = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: "include",
             body: JSON.stringify({
                 code: code,
                 itemAmount: totalAmount

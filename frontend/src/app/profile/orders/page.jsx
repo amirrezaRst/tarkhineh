@@ -45,7 +45,9 @@ const OrdersPage = () => {
     const fetchOrders = async (status) => {
         setLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/user/${user?._id}?status=${status}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order/user/${user?._id}?status=${status}`, {
+                credentials: "include",
+            });
             const data = await res.json();
 
             if (res.ok) {
