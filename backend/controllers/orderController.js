@@ -1,19 +1,19 @@
 const Order = require('../models/OrderModel');
 const User = require('../models/UserModel');
-const Menu = require('../models/MenuModel');
 const Payment = require('../models/PaymentModel');
 const Cart = require('../models/CartModel');
+const Discount = require('../models/DiscountModel');
+const Coupon = require('../models/CouponModel');
 const ZarinpalCheckout = require("zarinpal-checkout");
 const { ROLES, STAFF_ROLES } = require('../config/roles');
 
 const zarinpal = ZarinpalCheckout.create(
-    "eaa46b01-819e-42ef-8a67-ba2bb7f69a32",
-    true,
+    process.env.ZARINPAL_MERCHANT_ID,
+    process.env.ZARINPAL_SANDBOX !== "false",
     "IRT"
 );
 
-// const ZarinpalPayment = require('zarinpal-pay');
-// const zarinpal = new ZarinpalPayment("eaa46b01-819e-42ef-8a67-ba2bb7f69a32", { isToman: true, isSandbox: true })
+const COURIER_DELIVERY_FEE = 26000;
 
 //! Get Request
 exports.getOrderById = async (req, res) => {
@@ -116,7 +116,7 @@ exports.getOrdersByUser = async (req, res) => {
 exports.createOrder = async (req, res) => {
     try {
         const user = req.user.id;
-        const { amount, discount, deliveryFee, deliveryType, deliveryAddress, paymentMethod, branch, customerNote, paymentTransactionId } = req.body;
+        const { deliveryType, deliveryAddress, paymentMethod, customerNote, couponCode } = req.body;
 
         //! Validate user
         const userExists = await User.findById(user).select("phoneNumber");
@@ -124,111 +124,132 @@ exports.createOrder = async (req, res) => {
             return res.status(404).json({ status: 404, message: "User not found" });
         };
 
-        const finalPrice = amount - discount + deliveryFee;
+        //! Price is computed entirely server-side from the user's own cart -
+        //! never trust an amount/discount/deliveryFee sent by the client.
+        const cart = await Cart.findOne({ user }).populate("items.menuItem", "price");
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).json({ status: 400, message: "Cart is empty" });
+        }
 
-        if (deliveryType === "person") {
-            //! Person Delivery
+        const now = new Date();
+        const orderItems = [];
+        let totalPrice = 0;
 
-            //! Create order
-            let order = new Order({
-                user,
-                totalPrice: amount,
-                discount,
-                finalPrice,
-                deliveryFee,
-                deliveryType,
-                paymentMethod,
-                branch,
-                customerNote,
-                pickupCode: Math.floor(1000 + Math.random() * 9000),
-            });
+        for (const cartItem of cart.items) {
+            const menuItem = cartItem.menuItem;
+            const activeDiscount = await Discount.findOne({
+                menuItem: menuItem._id,
+                active: true,
+                startDate: { $lte: now },
+                endDate: { $gte: now },
+            }).select("discountType discountValue");
 
-            let payment = new Payment({
-                order: order._id,
-                user: userExists._id,
-                paymentMethod,
-                amount: finalPrice
-            })
+            let price = menuItem.price;
+            if (activeDiscount) {
+                price = activeDiscount.discountType === "percentage"
+                    ? price - (price * activeDiscount.discountValue) / 100
+                    : price - activeDiscount.discountValue;
+            }
+            price = Math.max(Math.round(price), 0);
 
-            if (paymentMethod === "online") {
-                await zarinpal.PaymentRequest({
+            orderItems.push({ menuItem: menuItem._id, quantity: cartItem.quantity, price });
+            totalPrice += price * cartItem.quantity;
+        }
+
+        let discount = 0;
+        let appliedCoupon = null;
+
+        if (couponCode) {
+            appliedCoupon = await Coupon.findOne({ code: couponCode, active: true });
+            if (!appliedCoupon) {
+                return res.status(404).json({ status: 404, message: "Coupon not found." });
+            }
+            if (appliedCoupon.validFrom > now || appliedCoupon.validTo < now) {
+                return res.status(400).json({ status: 400, message: "این کد تخفیف دیگر معتبر نیست." });
+            }
+            if (appliedCoupon.maxAmount && totalPrice > appliedCoupon.maxAmount) {
+                return res.status(400).json({ status: 400, message: "مبلغ سفارش بیش از حد مجاز است!" });
+            }
+            if (appliedCoupon.minAmount && totalPrice < appliedCoupon.minAmount) {
+                return res.status(400).json({ status: 400, message: "سفارش شما کمتر از حداقل مبلغ مورد نیاز است!" });
+            }
+
+            discount = appliedCoupon.discountType === "percentage"
+                ? (totalPrice * appliedCoupon.discountValue) / 100
+                : appliedCoupon.discountValue;
+            discount = Math.min(Math.round(discount), totalPrice);
+        }
+
+        const deliveryFee = deliveryType === "courier" ? COURIER_DELIVERY_FEE : 0;
+        const finalPrice = totalPrice - discount + deliveryFee;
+        const branch = cart.branch;
+
+        if (appliedCoupon) {
+            // atomic decrement so two concurrent orders can't both redeem the last use
+            const consumed = await Coupon.findOneAndUpdate(
+                { _id: appliedCoupon._id, usageLimit: { $gt: 0 } },
+                { $inc: { usageLimit: -1 } }
+            );
+            if (!consumed) {
+                return res.status(400).json({ status: 400, message: "این کد تخفیف دیگر معتبر نیست." });
+            }
+        }
+
+        const order = new Order({
+            user,
+            items: orderItems,
+            totalPrice,
+            discount,
+            finalPrice,
+            deliveryFee,
+            deliveryType,
+            ...(deliveryType === "courier" && { deliveryAddress }),
+            paymentMethod,
+            branch,
+            customerNote,
+            pickupCode: Math.floor(1000 + Math.random() * 9000),
+        });
+
+        const payment = new Payment({
+            order: order._id,
+            user,
+            paymentMethod,
+            amount: finalPrice,
+        });
+
+        if (paymentMethod === "online") {
+            try {
+                const response = await zarinpal.PaymentRequest({
                     Amount: finalPrice,
                     CallbackURL: `${process.env.FRONT_ADDRESS}payment-status`,
                     Description: `پرداخت برای سفارش شماره ${order._id} از رستوران زنجیره‌ای ترخینه. مبلغ نهایی شامل هزینه غذا، تخفیف‌ها و هزینه ارسال می‌باشد. لطفاً در صورت بروز هرگونه مشکل، با پشتیبانی تماس بگیرید.`,
                     Mobile: userExists.phoneNumber,
-                }).then(async (response) => {
-                    if (response.status === 100) {
-                        payment.paymentCode = response.authority;
+                });
 
-                        await order.save();
-                        await payment.save();
-                        res.status(200).json({ status: 200, message: "Payment request was successful. Please proceed to complete the payment.", url: response.url });
-                    };
-                })
-                    .catch((err) => {
-                        console.log(err)
-                        return res.status(400).json({ status: 400, message: "Payment request encountered an issue. Please try again later." });
-                    });
-            } else {
+                if (response.status !== 100) {
+                    throw new Error("Zarinpal rejected the payment request");
+                }
+
+                payment.paymentCode = response.authority;
                 await order.save();
                 await payment.save();
 
-                await Cart.findOneAndDelete({ user: payment.user });
-                return res.status(201).json({ status: 201, message: "Order created successfully. Please proceed to pick up your order." })
+                return res.status(200).json({ status: 200, message: "Payment request was successful. Please proceed to complete the payment.", url: response.url });
+            } catch (err) {
+                console.error(err);
+                return res.status(400).json({ status: 400, message: "Payment request encountered an issue. Please try again later." });
             }
         }
-        else {
-            //! Courier Delivery
 
-            //! Create order
-            let order = new Order({
-                user,
-                totalPrice: amount,
-                discount,
-                finalPrice,
-                deliveryFee,
-                deliveryType,
-                deliveryAddress,
-                paymentMethod,
-                branch,
-                customerNote,
-                pickupCode: Math.floor(1000 + Math.random() * 9000),
-            });
+        await order.save();
+        await payment.save();
+        await Cart.findOneAndDelete({ user });
 
-            let payment = new Payment({
-                order: order._id,
-                user: userExists._id,
-                paymentMethod,
-                amount: finalPrice
-            });
+        const successMessage = deliveryType === "courier"
+            ? "Order created successfully. Your order will be delivered soon."
+            : "Order created successfully. Please proceed to pick up your order.";
 
-            if (paymentMethod === "online") {
-                await zarinpal.PaymentRequest({
-                    Amount: finalPrice,
-                    CallbackURL: `${process.env.FRONT_ADDRESS}payment-status`,
-                    Description: `پرداخت برای سفارش شماره ${order._id} از رستوران زنجیره‌ای ترخینه. مبلغ نهایی شامل هزینه غذا، تخفیف‌ها و هزینه ارسال می‌باشد. لطفاً در صورت بروز هرگونه مشکل، با پشتیبانی تماس بگیرید.`,
-                    Mobile: userExists.phoneNumber,
-                }).then(async (response) => {
-                    if (response.status === 100) {
-                        payment.paymentCode = response.authority;
-
-                        await order.save();
-                        await payment.save();
-                        return res.status(201).json({ status: 201, message: "Payment request was successful. Please proceed to complete the payment.", url: response.url });
-                    };
-                })
-                    .catch((err) => {
-                        console.log(err)
-                        return res.status(400).json({ status: 400, message: "Payment request encountered an issue. Please try again later." });
-                    });
-            } else {
-                await order.save();
-                await payment.save();
-
-                await Cart.findOneAndDelete({ user: payment.user });
-                return res.status(201).json({ status: 201, message: "Order created successfully. Your order will be delivered soon." })
-            }
-        }
+        return res.status(201).json({ status: 201, message: successMessage });
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: 500, message: "Error creating order", error: error.message });

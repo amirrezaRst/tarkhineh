@@ -3,43 +3,14 @@ const joi = require("joi");
 
 exports.createOrderValidation = (req, res, next) => {
     const schema = joi.object({
-        user: joi.string().pattern(/^[0-9a-fA-F]{24}$/).required().messages({
-            "string.pattern.base": "Invalid user ID format.",
-            "any.required": "User ID is required."
-        }),
-        // items: joi.array()
-        //     .items(
-        //         joi.object({
-        //             menuItem: joi.string().pattern(/^[0-9a-fA-F]{24}$/).required().messages({
-        //                 "string.pattern.base": "Invalid menu item ID format.",
-        //                 "any.required": "Menu item ID is required."
-        //             }),
-        //             quantity: joi.number().integer().min(1).required().messages({
-        //                 "number.base": "Quantity must be a number.",
-        //                 "number.min": "Quantity must be at least 1.",
-        //                 "any.required": "Quantity is required."
-        //             }),
-        //         })
-        //     )
-        //     .min(1)
-        //     .required()
-        //     .messages({
-        //         "array.base": "Items must be an array.",
-        //         "array.min": "At least one item is required.",
-        //         "any.required": "Items are required."
-        //     }),
-        amount: joi.number().required().messages({
-            "number.base": "Amount must be a number.",
-            "any.required": "Amount is required."
-        }),
-        discount: joi.number().min(0).default(0).messages({
-            "number.base": "Discount must be a number.",
-            "number.min": "Discount cannot be negative."
-        }),
-        deliveryFee: joi.number().min(0).default(0).messages({
-            "number.base": "Delivery fee must be a number.",
-            "number.min": "Delivery fee cannot be negative."
-        }),
+        // user/amount/discount/deliveryFee/branch are ignored by the controller
+        // (identity comes from the session, price is recomputed server-side from
+        // the cart) but still accepted here since the frontend still sends them.
+        user: joi.string().pattern(/^[0-9a-fA-F]{24}$/).optional(),
+        amount: joi.number().optional(),
+        discount: joi.number().min(0).optional(),
+        deliveryFee: joi.number().min(0).optional(),
+        couponCode: joi.string().trim().optional(),
         deliveryType: joi.string().valid("courier", "person").required(),
         deliveryAddress: joi.object({
             addressLine: joi.string().required().messages({
@@ -72,15 +43,12 @@ exports.createOrderValidation = (req, res, next) => {
                 "any.only": "Payment method must be 'cash' or 'online'.",
                 "any.required": "'paymentMethod' is required"
             }),
-        branch: joi.string().required(),
+        branch: joi.string().optional(),
         customerNote: joi.string().allow("").default(""),
     });
 
     const { error } = schema.validate(req.body);
     if (error) return res.status(400).json({ status: 400, message: error.details[0].message });
-
-    if (!req.body.discount) req.body.discount = 0;
-    if (!req.body.deliveryFee) req.body.deliveryFee = 0;
 
     next();
 }
