@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Cart = require('../models/CartModel');
 const Menu = require('../models/MenuModel');
-const User = require('../models/UserModel');
 const Discount = require('../models/DiscountModel');
 
 
@@ -59,12 +58,8 @@ exports.getCartByUserId = async (req, res) => {
 //? Add Item to Cart
 exports.addItemToCart = async (req, res) => {
     try {
-        const { user, menuItem, quantity, branch } = req.body;
-
-        const userExists = await User.findById(user);
-        if (!userExists) {
-            return res.status(404).json({ status: 404, message: 'User not found.' });
-        }
+        const user = req.user.id;
+        const { menuItem, quantity, branch } = req.body;
 
         const menuItemExists = await Menu.findById(menuItem).select("_id");
         if (!menuItemExists) {
@@ -99,12 +94,8 @@ exports.addItemToCart = async (req, res) => {
 
 exports.repeatOrder = async (req, res) => {
     try {
-        const { user, items, branch } = req.body; // items = [{ menuItem, quantity }]
-
-        const userExists = await User.findById(user);
-        if (!userExists) {
-            return res.status(404).json({ status: 404, message: 'User not found.' });
-        }
+        const user = req.user.id;
+        const { items, branch } = req.body; // items = [{ menuItem, quantity }]
 
         // چک کردن اینکه همه آیتم‌ها وجود دارن
         const menuIds = items.map(i => i.menuItem);

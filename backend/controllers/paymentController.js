@@ -1,5 +1,6 @@
 const Payment = require('../models/PaymentModel');
 const Order = require('../models/OrderModel');
+const { ROLES } = require('../config/roles');
 
 
 //! Get Request
@@ -40,6 +41,10 @@ exports.getPaymentById = async (req, res) => {
             return res.status(404).json({ status: 404, message: "Payment not found." });
         }
 
+        if (payment.user.toString() !== req.user.id && req.user.role !== ROLES.ADMIN) {
+            return res.status(403).json({ status: 403, message: "You do not have access to this payment" });
+        }
+
         res.status(200).json({ status: 200, message: "Payment fetched successfully", payment });
     } catch (error) {
         console.error(error);
@@ -55,14 +60,19 @@ exports.createPayment = async (req, res) => {
         const { order, paymentMethod, transactionId } = req.body;
 
         // Validate order
-        const existingOrder = await Order.findById(order).select("totalPrice");
+        const existingOrder = await Order.findById(order).select("user totalPrice");
         if (!existingOrder) {
             return res.status(404).json({ status: 404, message: "Order not found." });
+        }
+
+        if (existingOrder.user.toString() !== req.user.id && req.user.role !== ROLES.ADMIN) {
+            return res.status(403).json({ status: 403, message: "You do not have access to this order" });
         }
 
         // Create payment
         const payment = new Payment({
             order,
+            user: existingOrder.user,
             paymentMethod,
             amount: existingOrder.totalPrice,
             transactionId,

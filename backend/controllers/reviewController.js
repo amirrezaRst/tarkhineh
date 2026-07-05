@@ -1,5 +1,6 @@
 const Review = require('../models/ReviewModel');
 const User = require('../models/UserModel');
+const { ROLES } = require('../config/roles');
 
 exports.getAllReviews = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -49,10 +50,9 @@ exports.getReview = async (req, res) => {
 };
 
 exports.createReview = async (req, res) => {
-    //! must send review category in the request body => [movie or series]
-
     try {
-        const newReview = await Review.create(req.body);
+        const { text, rating, menuItem, branch } = req.body;
+        const newReview = await Review.create({ text, rating, menuItem, branch, user: req.user.id });
         res.status(201).json({
             status: 201,
             message: 'Review created successfully',
@@ -60,51 +60,63 @@ exports.createReview = async (req, res) => {
         });
     } catch (err) {
         res.status(400).json({
-            status: 404,
-            message: err
+            status: 400,
+            message: err.message
         });
     }
 };
 
 
-//! This controller is not very useful in a real-world application
 exports.updateReview = async (req, res) => {
     try {
-        const review = await Review.findByIdAndUpdate(req.params.id, req.body, {
+        const review = await Review.findById(req.params.id).select("user");
+        if (!review) {
+            return res.status(404).json({ status: 404, message: 'No review found with that ID' });
+        }
+        if (review.user.toString() !== req.user.id && req.user.role !== ROLES.ADMIN) {
+            return res.status(403).json({ status: 403, message: "You do not have access to this review" });
+        }
+
+        const updatedReview = await Review.findByIdAndUpdate(req.params.id, { text: req.body.text }, {
             new: true,
             runValidators: true
         });
         res.status(200).json({
             status: 200,
             message: 'Review updated successfully',
-            review
+            review: updatedReview
         });
     } catch (err) {
         res.status(404).json({
             status: 404,
-            message: err
+            message: err.message
         });
     }
 };
 
 exports.deleteReview = async (req, res) => {
     try {
-        const review = await Review.findByIdAndDelete(req.params.id);
+        const review = await Review.findById(req.params.id).select("user");
         if (!review) {
             return res.status(404).json({
                 status: 404,
                 message: 'No review found with that ID'
             });
         }
+        if (review.user.toString() !== req.user.id && req.user.role !== ROLES.ADMIN) {
+            return res.status(403).json({ status: 403, message: "You do not have access to this review" });
+        }
+
+        await Review.findByIdAndDelete(req.params.id);
 
         res.status(200).json({
-            status: 204,
+            status: 200,
             message: 'Review deleted successfully',
         });
     } catch (err) {
         res.status(404).json({
             status: 404,
-            message: err
+            message: err.message
         });
     }
 };

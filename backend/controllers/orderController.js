@@ -25,6 +25,15 @@ exports.getOrderById = async (req, res) => {
             return res.status(404).json({ status: 404, message: "Order not found" });
         }
 
+        const isOwner = order.user._id.toString() === req.user.id;
+        const isAdmin = req.user.role === ROLES.ADMIN;
+        const isBranchStaff = [ROLES.BRANCH_MANAGER, ROLES.COURIER].includes(req.user.role)
+            && req.user.branch && order.branch?.toString() === req.user.branch;
+
+        if (!isOwner && !isAdmin && !isBranchStaff) {
+            return res.status(403).json({ status: 403, message: "You do not have access to this order" });
+        }
+
         res.status(200).json({ status: 200, order });
     } catch (error) {
         console.error(error);
@@ -106,7 +115,8 @@ exports.getOrdersByUser = async (req, res) => {
 //! Post Request
 exports.createOrder = async (req, res) => {
     try {
-        const { user, amount, discount, deliveryFee, deliveryType, deliveryAddress, paymentMethod, branch, customerNote, paymentTransactionId } = req.body;
+        const user = req.user.id;
+        const { amount, discount, deliveryFee, deliveryType, deliveryAddress, paymentMethod, branch, customerNote, paymentTransactionId } = req.body;
 
         //! Validate user
         const userExists = await User.findById(user).select("phoneNumber");

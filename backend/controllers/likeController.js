@@ -146,7 +146,8 @@ exports.getUserLikes = async (req, res) => {
 //! Post Request
 //? Liked Menu Item
 exports.like = async (req, res) => {
-    const { user, menuItem } = req.body;
+    const user = req.user.id;
+    const { menuItem } = req.body;
     try {
         const existingLike = await Like.findOne({ user, menuItem }).select("_id");
         if (existingLike) {
@@ -170,7 +171,8 @@ exports.like = async (req, res) => {
 
 //? unliked Menu Item
 exports.unlike = async (req, res) => {
-    const { user, menuItem } = req.body;
+    const user = req.user.id;
+    const { menuItem } = req.body;
     try {
         const like = await Like.findOneAndDelete({ user, menuItem });
         if (!like) {
