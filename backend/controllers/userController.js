@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 
 const userModel = require("../models/UserModel");
 const { generateAccessToken, generateRefreshToken } = require("../utils/tokenUtils");
@@ -138,49 +137,6 @@ exports.verifyOtp = async (req, res) => {
             user,
         });
     } catch (error) {
-        res.status(500).json({ status: 500, message: error.message });
-    }
-};
-
-
-//? Login
-exports.login = async (req, res) => {
-    const { email, password, remember } = req.body;
-    try {
-        const user = await userModel.findOne({ email })
-            .select("email password role branch refreshToken");
-
-        if (!user) {
-            return res.status(404).json({ status: 404, message: "User not found" });
-        }
-
-        const isMatch = bcrypt.compareSync(password, user.password);
-        if (!isMatch) {
-            return res.status(401).json({ status: 401, message: "Invalid Credentials" });
-        }
-
-        const tokenData = {
-            id: user._id,
-            email: user.email,
-            role: user.role,
-            branch: user.branch,
-        }
-
-        const token = generateAccessToken(tokenData);
-
-
-        if (remember) {
-            const refreshToken = generateRefreshToken(tokenData);
-            setRefreshTokenCookie(res, refreshToken);
-            user.refreshToken = refreshToken; //! Save refresh token to user database
-        }
-        await user.save();
-        setTokenCookie(res, token);
-
-        //! Set HTTP Only cookie for token (access token)
-        res.status(200).json({ status: 200, message: "Login Successfully" });
-    }
-    catch (error) {
         res.status(500).json({ status: 500, message: error.message });
     }
 };

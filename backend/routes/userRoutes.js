@@ -5,8 +5,8 @@ const Authenticate = require('../middleware/Authenticate');
 const Authorize = require('../middleware/Authorize');
 const AuthorizeOwner = require('../middleware/AuthorizeOwner');
 const { ROLES } = require('../config/roles');
-const { allUser, singleUser, deleteUser, registerUser, login, logout, refreshToken, verifyOtp, newAddress, deleteAddress, editAddress, editUser, getOrders } = require('../controllers/userController');
-const { registerValidation, loginValidation, verifyOtpValidation, newAddressValidation, editAddressValidation, editUserValidation } = require('../validation/userValidation');
+const { allUser, singleUser, deleteUser, registerUser, logout, refreshToken, verifyOtp, newAddress, deleteAddress, editAddress, editUser } = require('../controllers/userController');
+const { registerValidation, verifyOtpValidation, newAddressValidation, editAddressValidation, editUserValidation } = require('../validation/userValidation');
 
 const router = Router();
 
@@ -21,7 +21,6 @@ router.route("/user/:id")
 
 router.post("/register", registerValidation, registerUser);
 router.post("/verifyOtp", verifyOtpValidation, verifyOtp);
-router.post("/login", loginValidation, login);
 router.delete('/logout', logout);
 router.get("/refreshToken", refreshToken);
 router.patch("/editUser/:id", Authenticate, AuthorizeOwner('id'), [ValidateObjectId, editUserValidation], editUser);
