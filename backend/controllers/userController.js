@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const userModel = require("../models/UserModel");
 const { generateAccessToken, generateRefreshToken } = require("../utils/tokenUtils");
-const { setRefreshTokenCookie, setTokenCookie } = require("../utils/cookieUtils");
+const { setRefreshTokenCookie, setTokenCookie, clearAuthCookies } = require("../utils/cookieUtils");
 
 //! Get Request
 exports.allUser = async (req, res) => {
@@ -175,13 +175,20 @@ exports.refreshToken = async (req, res) => {
     }
 };
 
-exports.logout = (req, res) => {
+exports.logout = async (req, res) => {
     try {
-        // res.cookie('token', '', { httpOnly: true, sameSite: 'strict', expires: new Date(0), maxAge: new Date(0) });
-        // res.cookie('refreshToken', '', { httpOnly: true, sameSite: 'strict', expires: new Date(0), maxAge: new Date(0) });
+        const { refreshToken } = req.cookies;
 
-        res.cookie("token", "", { httpOnly: true, sameSite: 'strict', expires: new Date(0), maxAge: 0 });
-        res.cookie("refreshToken", "", { httpOnly: true, sameSite: 'strict', expires: new Date(0), maxAge: 0, path: `${process.env.FRONT_ADDRESS}/api/user/refreshToken` });
+        if (refreshToken) {
+            try {
+                const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+                await userModel.findByIdAndUpdate(decoded.id, { refreshToken: null });
+            } catch (err) {
+                // token already invalid/expired - nothing to invalidate server-side
+            }
+        }
+
+        clearAuthCookies(res);
 
         res.status(200).json({ status: 200, message: "Logout Successfully" });
     }
