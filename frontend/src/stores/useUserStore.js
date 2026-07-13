@@ -1,5 +1,6 @@
 import { toast } from 'react-toastify';
 import { create } from 'zustand';
+import { api } from '@/utils/apiClient';
 
 const useUserStore = create(
     (set) => ({
@@ -10,46 +11,26 @@ const useUserStore = create(
         fetchUser: async () => {
             set({ loading: true, error: null });
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/userData`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include'
-                }).then(res => res.json());
-                const { status, user } = response;
-
-                if (status === 500) toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
-
-                set({ user: user, loading: false });
-            } catch (error) {
-                console.log(error)
-                toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
-                set({ error: error.message, loading: false });
+                const { user } = await api.get('/user/userData');
+                set({ user, loading: false });
+            } catch (err) {
+                // 401/404 just means "not logged in" - not an error worth surfacing
+                if (err.status !== 401 && err.status !== 404) {
+                    toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
+                }
+                set({ user: null, error: err.status ? null : err.message, loading: false });
             }
         },
         fetchCart: async () => {
             set({ loading: true, error: null });
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/`, {
-                    method: "GET",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include'
-                }).then(res => res.json());
-
-                const { status, cart } = response;
-                console.log(response)
-                if (status === 500) toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
-
-                // console.log(response)
-
+                const { cart } = await api.get('/cart/');
                 set({ cart: cart?.items || [], loading: false, error: null });
-            } catch (error) {
-                console.log(error)
-                toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
-                set({ error: error.message, loading: false });
+            } catch (err) {
+                if (err.status !== 401 && err.status !== 404) {
+                    toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
+                }
+                set({ cart: [], error: err.status ? null : err.message, loading: false });
             }
         },
         clearUser: () => set({ user: null }),

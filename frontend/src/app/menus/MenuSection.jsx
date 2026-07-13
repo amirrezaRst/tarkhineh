@@ -18,9 +18,10 @@ const MenuSection = ({ title, category, foodType, isPersian }) => {
     }, [branch]);
 
     useEffect(() => {
-        if (branchId) {
-            fetchMenuPageItems(branchId, category, foodType, isPersian, setItems);
-        }
+        if (!branchId) return;
+        const controller = new AbortController();
+        fetchMenuPageItems(branchId, category, foodType, isPersian, setItems, controller.signal);
+        return () => controller.abort();
     }, [branchId, category])
 
 

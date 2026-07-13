@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { api } from "@/utils/apiClient";
 
 const PaymentStatus = () => {
     const [loading, setLoading] = useState(true);
@@ -20,26 +21,21 @@ const PaymentStatus = () => {
     const { clearCart } = useCartStore();
 
     const handleVerifyPayment = async () => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/verifyPayment/${authority}`, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: "include"
-        }).then(res => res.json());
-
-        const { status: responseStatus, orderStatus, transactionId } = response;
-
-        if (responseStatus == 200 && orderStatus == 101 || orderStatus == 100) {
-            clearCart();
-            setRefId(transactionId);
+        try {
+            const { orderStatus, transactionId } = await api.get(`/payment/verifyPayment/${authority}`);
+            if (orderStatus == 101 || orderStatus == 100) {
+                clearCart();
+                setRefId(transactionId);
+                setLoading(false);
+                return setStatus(200);
+            }
+            setStatus(400);
             setLoading(false);
-            return setStatus(200);
+        } catch (err) {
+            if (err.status === 404) return router.back();
+            setStatus(400);
+            setLoading(false);
         }
-        else if (responseStatus == 404) return router.back();
-
-        setStatus(400);
-        setLoading(false)
     };
 
     useEffect(() => {
