@@ -2,6 +2,7 @@ import { CheckmarkIcon, DiscountIcon } from "@/assets/Icons";
 import useCartStore from "@/stores/useCartStore";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { api } from "@/utils/apiClient";
 
 const DiscountCode = () => {
     const [code, setCode] = useState();
@@ -13,7 +14,6 @@ const DiscountCode = () => {
         e.preventDefault();
 
         if (isApplied) return false;
-        console.log(cart);
 
         let totalAmount = 0;
 
@@ -37,31 +37,16 @@ const DiscountCode = () => {
         });
 
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/coupon/validate-coupon`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                code: code,
-                itemAmount: totalAmount
-            }),
-        }).then(res => res.json());
-
-        const { status, message } = response;
-
-        if (status === 500) return toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.")
-
-        if (status === 404) return toast.error("کد تخفیف معتبر نیست.");
-
-        if (status === 400) return toast.error(message);
-
-
-        setDiscount(response?.coupon);
-        setIsApplied(true);
-
-        toast.success("کد تخفیف ثبت و اعمال شد.")
+        try {
+            const { coupon } = await api.post("/coupon/validate-coupon", { code, itemAmount: totalAmount });
+            setDiscount(coupon);
+            setIsApplied(true);
+            toast.success("کد تخفیف ثبت و اعمال شد.");
+        } catch (err) {
+            if (err.status === 404) return toast.error("کد تخفیف معتبر نیست.");
+            if (err.status === 400) return toast.error(err.message);
+            toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
+        }
     };
 
 

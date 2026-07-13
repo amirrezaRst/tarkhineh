@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import PopAlert from "./PopAlert";
 import { SquareCheckIcon } from "@/assets/Icons";
 import PreserveQueryLink from "@/hooks/PreserveQueryLink";
+import { api } from "@/utils/apiClient";
 
 const CartPage = () => {
     const [step, setStep] = useState(1);
@@ -21,10 +22,10 @@ const CartPage = () => {
     const [alertOpened, setAlertOpened] = useState(false);
 
     const handlePayment = async (amount, discount) => {
-        var body = {
-            // amount/discount/deliveryFee/branch are no longer trusted by the
-            // backend (it recomputes everything from the server-side cart) -
-            // couponCode is what actually drives the discount now.
+        // amount/discount/deliveryFee/branch are no longer trusted by the
+        // backend (it recomputes everything from the server-side cart) -
+        // couponCode is what actually drives the discount now.
+        const body = {
             amount,
             discount: discount || 0,
             deliveryFee: deliveryType == "courier" ? 26000 : undefined,
@@ -35,112 +36,32 @@ const CartPage = () => {
             couponCode: appliedCoupon?.code,
         };
 
-        // console.log(amount)
-
-        setLoading(true)
         if (deliveryType == "courier") {
             body.deliveryAddress = {
                 addressLine: user?.addresses?.[selectedAddress].addressLine,
                 recipientPhoneNumber: user?.addresses?.[selectedAddress].recipientPhoneNumber,
                 recipientFullName: user?.addresses?.[selectedAddress].recipientFullName,
             };
-
-            if (paymentMethod == "online") {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: "include",
-                    body: JSON.stringify(body)
-                }).then(res => res.json());
-
-                const { status, url } = response;
-
-                setLoading(false);
-                if (status !== 200 && status !== 201) {
-                    return toast.error("خطایی از سمت سرور رخ داده، لطفا دوباره امتحان کنید.")
-                }
-
-                toast.info("درحال ارسال به درگاه پرداخت")
-                window.location.href = url;
-
-                console.log(response);
-            } else {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: "include",
-                    body: JSON.stringify(body)
-                }).then(res => res.json());
-
-                const { status, url } = response;
-                setLoading(false);
-
-                if (status !== 200 && status !== 201) {
-                    return toast.error("خطایی از سمت سرور رخ داده، لطفا دوباره امتحان کنید.")
-                };
-
-                //! Clear user Cart after Submit order
-                clearCart();
-                setAlertOpened(true)
-                setStep(1);
-
-
-                toast.success("سفارش شما با موفقیت ثبت شد. پرداخت به صورت نقدی در هنگام تحویل انجام خواهد شد.")
-            }
         }
-        else if (deliveryType == "person") {
+
+        setLoading(true);
+        try {
+            const { url } = await api.post("/order", body);
 
             if (paymentMethod == "online") {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: "include",
-                    body: JSON.stringify(body)
-                }).then(res => res.json());
-
-                const { status, url } = response;
-
-                setLoading(false);
-                if (status !== 200 && status !== 201) {
-                    return toast.error("خطایی از سمت سرور رخ داده، لطفا دوباره امتحان کنید.")
-                }
-
-                toast.info("درحال ارسال به درگاه پرداخت")
+                toast.info("درحال ارسال به درگاه پرداخت");
                 window.location.href = url;
-
-                console.log(response);
-            } else {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: "include",
-                    body: JSON.stringify(body)
-                }).then(res => res.json());
-
-                const { status, url } = response;
-                setLoading(false);
-
-                if (status !== 200 && status !== 201) {
-                    return toast.error("خطایی از سمت سرور رخ داده، لطفا دوباره امتحان کنید.")
-                }
-
-                console.log(response);
-
-                //! Clear user Cart after Submit order
-                clearCart();
-                setAlertOpened(true);
-                setStep(1);
-
-                // toast.success("سفارش شما با موفقیت ثبت شد. پرداخت به صورت نقدی در هنگام تحویل انجام خواهد شد.")
+                return;
             }
+
+            clearCart();
+            setAlertOpened(true);
+            setStep(1);
+            toast.success("سفارش شما با موفقیت ثبت شد. پرداخت به صورت نقدی در هنگام تحویل انجام خواهد شد.");
+        } catch {
+            toast.error("خطایی از سمت سرور رخ داده، لطفا دوباره امتحان کنید.");
+        } finally {
+            setLoading(false);
         }
     }
 

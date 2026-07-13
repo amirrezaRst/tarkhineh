@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { create } from "zustand";
+import { api } from "@/utils/apiClient";
 
 const useCartStore = create((set) => ({
     cart: null,
@@ -25,22 +26,13 @@ const useCartStore = create((set) => ({
     fetchCart: async () => {
         set({ loading: true, error: null });
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/`, {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include'
-            }).then(res => res.json());
-
-            const { status, cart, cartBranch } = response;
-            
-            if (status === 500) toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
-
+            const { cart, cartBranch } = await api.get('/cart/');
             set({ cart: cart?.items || [], cartBranch, loading: false, error: null });
-        } catch (error) {
-            toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
-            set({ error: error.message, loading: false });
+        } catch (err) {
+            if (err.status !== 401 && err.status !== 404) {
+                toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
+            }
+            set({ cart: [], error: err.status ? null : err.message, loading: false });
         }
     },
 
