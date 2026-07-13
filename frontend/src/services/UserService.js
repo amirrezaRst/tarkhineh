@@ -59,8 +59,6 @@ export const handleSendOtp = async (otp, setOtp, phoneNumber, setLoading, setErr
 
     const { status, message, user } = response;
 
-    document.cookie = `role=${user.role}; path=/`;
-
     switch (status) {
         case 200:
             fetchUser();
@@ -92,6 +90,7 @@ export const handleEditUser = async (body, user, setUser, setLoading) => {
         headers: {
             'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(body),
     }).then(response => response.json());
 
