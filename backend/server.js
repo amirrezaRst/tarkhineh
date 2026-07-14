@@ -3,8 +3,11 @@ const dotEnv = require('dotenv');
 const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const connectDb = require('./config/db');
+const { globalLimiter } = require('./middleware/rateLimiters');
 
 //! Config Env
 dotEnv.config({ path: './config/config.env' });
@@ -17,14 +20,29 @@ connectDb();
 
 //! cors options
 const corsOptions = {
-    origin: ["http://localhost:3000",],
+    origin: (process.env.CORS_ORIGINS || "http://localhost:3000").split(","),
     credentials: true,
 };
 
-const app = express().use(express.json())
-    .use(cors(corsOptions))
-    .use(express.urlencoded({ extended: true }))
-    .use(cookieParser());
+const app = express();
+
+//! Security headers.
+//! The frontend loads menu images cross-origin from /public, which helmet's
+//! default same-origin Cross-Origin-Resource-Policy would block.
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+}));
+
+app.use(express.json());
+app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+//! Strip $-prefixed/dotted keys so user input can't smuggle Mongo operators
+//! into a query. Must run after the body parsers.
+app.use(mongoSanitize());
+
+app.use("/api", globalLimiter);
 
 //! Static Folder
 app.use("/public", express.static(path.join(__dirname, "public", "menu-images")));
