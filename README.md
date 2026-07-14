@@ -17,16 +17,17 @@
 1. [Overview](#overview)
 2. [Highlights](#highlights)
 3. [Key Features](#features)
-4. [Tech Stack](#tech-stack)
-5. [Screenshots](#screenshots)
-6. [Installation](#installation)
-7. [Environment Variables](#environment-variables)
-8. [Database Seeding (Important)](#database-seeding)
-9. [Project Structure](#project-structure)
-10. [Security Notes](#security-notes)
-11. [Contributing](#contributing)
-12. [License](#license)
-13. [Contact](#contact)
+4. [Roadmap](#roadmap)
+5. [Tech Stack](#tech-stack)
+6. [Screenshots](#screenshots)
+7. [Installation](#installation)
+8. [Environment Variables](#environment-variables)
+9. [Database Seeding (Important)](#database-seeding)
+10. [Project Structure](#project-structure)
+11. [Security Notes](#security-notes)
+12. [Contributing](#contributing)
+13. [License](#license)
+14. [Contact](#contact)
 
 ---
 
@@ -45,13 +46,14 @@ A core focus of this project is building a reliable **courier assignment (dispat
 
 ## Highlights <a name="highlights"></a>
 
-- Built a **multi-branch architecture (4 branches)** with dedicated dashboards for managers and couriers.
-- Implemented the **full order lifecycle**: in-person/online orders → preparation → courier assignment → pickup/delivery.
-- Designed a **smart dispatch strategy** (branch, courier status, workload/capacity, priority).
-- Used **Redis** concepts to optimize dispatch flow and reduce concurrency contention during assignment updates.
-- Implemented **RBAC + branch-scoped authorization** to prevent unauthorized access to orders/admin actions.
-- Hardened backend security with best practices (**Helmet**, input validation, rate limiting, secure headers).
+- Built a **multi-branch architecture (4 branches)** with branch-scoped data isolation.
+- Implemented the **order lifecycle**: in-person/online orders → preparation → pickup/delivery, with order status tracking.
+- Implemented **RBAC + branch-scoped authorization** (a central role model plus owner/branch guards) to prevent unauthorized access to orders and admin actions.
+- **Server-side price integrity**: order totals, per-item discounts, and coupons are recomputed on the server from the cart — client-supplied amounts are never trusted.
+- Hardened backend security: **Helmet** secure headers, **rate limiting** (global + strict on OTP endpoints), **NoSQL-injection sanitization**, Joi input validation, and JWT in **HttpOnly cookies**.
 - Integrated **Zarinpal payment gateway** for checkout.
+
+> Some originally-planned headline features (a smart courier **dispatch** strategy, Redis-backed dispatch concurrency control, full SEO metadata, and SMS delivery of OTP codes) are **not yet implemented** — see [Roadmap](#roadmap).
 
 ---
 
@@ -60,11 +62,22 @@ A core focus of this project is building a reliable **courier assignment (dispat
 - ✅ Multi-branch ordering (4 branches) + branch-scoped data isolation
 - 🔎 Search & filtering (menu / products)
 - 🛒 Cart & Checkout flow
-- 💳 Zarinpal payment integration
-- 🔐 Authentication with JWT stored in **HttpOnly cookies**
-- 🧭 Role-based access (Super Admin / Branch Manager / Courier)
-- ⚡ SEO & performance optimizations (Next.js)
-- 🧰 Admin dashboards (in progress)
+- 💳 Zarinpal payment integration (server-side amount verification)
+- 🔐 Authentication via **phone number + OTP**, JWT stored in **HttpOnly cookies**
+- 🧭 Role-based route access (Super Admin / Branch Manager / Courier)
+- 🧰 Admin & panel dashboards *(in progress)*
+
+---
+
+## Roadmap <a name="roadmap"></a>
+
+Planned / partially-built work, tracked honestly so the docs match the code:
+
+- 🚚 **Courier dispatch strategy** (assign orders to couriers by branch, status, workload/capacity) — not yet implemented.
+- ⚡ **Redis-backed** dispatch concurrency control — Redis is connected but not yet used by application logic.
+- 📱 **SMS delivery of OTP codes** — codes are currently generated and stored server-side but not sent to a real SMS gateway.
+- 🔎 **SEO metadata** per route (Next.js Metadata API) — not yet added.
+- 🧰 **Admin / branch / courier dashboards** — routing and guards exist; most panels are still stubs.
 
 ---
 
@@ -82,9 +95,10 @@ A core focus of this project is building a reliable **courier assignment (dispat
 - **Node.js**
 - **Express.js**
 - **MongoDB (Mongoose)**
-- **Redis**
+- **Redis** *(connected; not yet used by app logic — see [Roadmap](#roadmap))*
 - **JWT Auth (HttpOnly Cookies)**
 - **Joi Validation**
+- **Helmet** (secure headers), **express-rate-limit**, **express-mongo-sanitize**
 - **Multer + Sharp** (uploads & image processing)
 - **node-cron** (scheduled jobs)
 - **Zarinpal (Checkout/Pay)**
@@ -170,41 +184,34 @@ Frontend default:
 ---
 
 ## Environment Variables <a name="environment-variables"></a>
-<!-- 
-> Best practice: add these files to your repo:
-- `backend/.env.example`
-- `frontend/.env.local.example`
--->
 
-### Backend: `backend/.env`
-Below is a **template**. Replace variable names with the exact ones used in your codebase if they differ.
+Templates are checked into the repo — copy them and fill in your values:
+
+- Backend: copy `backend/config/config.env.example` → `backend/config/config.env`
+- Frontend: copy `frontend/.env.example` → `frontend/.env`
+
+### Backend: `backend/config/config.env`
+These are the variables the code actually reads:
 
 ```env
-NODE_ENV=development
 PORT=5000
+MONGO_URI="mongodb://localhost:27017/tarkhineh"
 
-# Mongo
-MONGO_URI=mongodb://127.0.0.1:27017/tarkhineh
-
-# Redis
-REDIS_URL=redis://localhost:6379
-
-# Auth (JWT)
+# Generate each with: node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 JWT_SECRET=your_access_secret
-REFRESH_TOKEN_SECRET=your_refresh_token
+REFRESH_TOKEN_SECRET=your_refresh_secret
 
-# Cookies / Security
-COOKIE_SECRET=your_cookie_secret
-FRONT_ADDRESS=http://localhost:3000
+FRONT_ADDRESS="http://localhost:3000/"
 
-# Zarinpal
-ZARINPAL_MERCHANT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-ZARINPAL_CALLBACK_URL=http://localhost:3000/payment/verify
+# Comma-separated list of allowed CORS origins
+CORS_ORIGINS=http://localhost:3000
 
-
+# Zarinpal (sandbox test id: eaa46b01-819e-42ef-8a67-ba2bb7f69a32)
+ZARINPAL_MERCHANT_ID=your_zarinpal_merchant_id
+ZARINPAL_SANDBOX=true
 ```
 
-### Frontend: `frontend/.env.local`
+### Frontend: `frontend/.env`
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 NEXT_PUBLIC_IMAGE_URL=http://localhost:5000/public
@@ -271,15 +278,18 @@ tarkhineh/
 
 ## Security Notes <a name="security-notes"></a>
 
-- Authentication uses **JWT in HttpOnly cookies** (reduces XSS token theft risk compared to localStorage).
+- Authentication uses **JWT in HttpOnly cookies** (reduces XSS token theft risk compared to localStorage). Logout invalidates the refresh token server-side, not just client-side.
 - Authorization is enforced server-side via:
-  - **RBAC** (role checks)
-  - **Branch-scoped** constraints (manager/courier can only access their branch data)
-- Backend hardening includes:
-  - Helmet
-  - Input validation (Joi)
-  - Rate limiting in progress
-  - Secure headers
+  - **RBAC** — a central role model with reusable `Authenticate` / `Authorize` middleware.
+  - **Ownership** guards — users can only act on their own cart / orders / addresses / reviews (identity is taken from the session, never from the request body).
+  - **Branch-scoped** guards — a manager/courier can only access their own branch's data.
+- **Price integrity** — order totals, per-item discounts, and coupons are recomputed server-side from the cart; client-supplied amounts are ignored.
+- Backend hardening:
+  - **Helmet** — secure HTTP headers (CSP, HSTS, `X-Content-Type-Options`, etc.).
+  - **Rate limiting** — a global limiter plus a strict limiter on the OTP request/verify endpoints.
+  - **express-mongo-sanitize** — strips `$`/`.` operators from user input to block NoSQL injection.
+  - **Joi** input validation on request bodies.
+- Secrets (`config.env`) are git-ignored; `.env.example` templates are provided instead.
 
 ---
 

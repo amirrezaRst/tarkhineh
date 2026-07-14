@@ -4,6 +4,7 @@ const ValidateObjectId = require('../middleware/ValidateObjectId');
 const Authenticate = require('../middleware/Authenticate');
 const Authorize = require('../middleware/Authorize');
 const AuthorizeOwner = require('../middleware/AuthorizeOwner');
+const { otpLimiter } = require('../middleware/rateLimiters');
 const { ROLES } = require('../config/roles');
 const { allUser, singleUser, deleteUser, registerUser, logout, refreshToken, verifyOtp, newAddress, deleteAddress, editAddress, editUser } = require('../controllers/userController');
 const { registerValidation, verifyOtpValidation, newAddressValidation, editAddressValidation, editUserValidation } = require('../validation/userValidation');
@@ -19,8 +20,8 @@ router.route("/user/:id")
     .delete(Authenticate, Authorize([ROLES.ADMIN]), ValidateObjectId, deleteUser);
 //! must add edit user route here
 
-router.post("/register", registerValidation, registerUser);
-router.post("/verifyOtp", verifyOtpValidation, verifyOtp);
+router.post("/register", otpLimiter, registerValidation, registerUser);
+router.post("/verifyOtp", otpLimiter, verifyOtpValidation, verifyOtp);
 router.delete('/logout', logout);
 router.get("/refreshToken", refreshToken);
 router.patch("/editUser/:id", Authenticate, AuthorizeOwner('id'), [ValidateObjectId, editUserValidation], editUser);
