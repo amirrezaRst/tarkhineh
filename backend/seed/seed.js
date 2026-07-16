@@ -357,8 +357,6 @@ async function seed() {
       totalDiscount: 0,
       reportType: "daily",
       date: new Date(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
     }))
   );
 

@@ -2,18 +2,13 @@
 
 import useUserStore from "@/stores/useUserStore";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const MenusSection = () => {
     const [items, setItems] = useState([]);
 
     const user = useUserStore((state) => state.user);
 
-
-
-    useEffect(() => {
-        console.log("user: ", user)
-    }, [])
     const getBranchMenus = async () => {
 
     }

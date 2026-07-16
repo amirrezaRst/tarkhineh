@@ -41,23 +41,6 @@ exports.getOrderById = async (req, res) => {
     }
 };
 
-// exports.getOrdersByUser = async (req, res) => {
-//     try {
-//         const { userId } = req.params;
-//         const status = req.query.status || "all";
-
-//         const orders = await Order.find({ user: userId })
-//             .populate('items.menuItem', 'name price')
-//             .sort({ createdAt: -1 });
-
-//         res.status(200).json({ status: 200, orders });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ status: 500, message: "Error fetching user's orders", error: error.message });
-//     }
-// };
-
-
 exports.getOrdersByUser = async (req, res) => {
     try {
         const { userId } = req.params;

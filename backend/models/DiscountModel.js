@@ -7,33 +7,6 @@ const DiscountSchema = new mongoose.Schema({
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     active: { type: Boolean, default: true }
-}); 
+});
 
 module.exports = mongoose.model('Discount', DiscountSchema);
-
-
-// const getMenuWithDiscount = async (menuId) => {
-//     const menuItem = await Menu.findById(menuId);
-//     const discount = await MenuDiscount.findOne({ 
-//         menuItem: menuId, 
-//         active: true, 
-//         startDate: { $lte: new Date() }, 
-//         endDate: { $gte: new Date() } 
-//     });
-
-//     if (!discount) {
-//         return menuItem; // بدون تخفیف
-//     }
-
-//     let discountedPrice;
-//     if (discount.discountType === 'percentage') {
-//         discountedPrice = menuItem.price - (menuItem.price * (discount.discountValue / 100));
-//     } else {
-//         discountedPrice = menuItem.price - discount.discountValue;
-//     }
-
-//     return {
-//         ...menuItem.toObject(),
-//         discountedPrice: discountedPrice > 0 ? discountedPrice : 0
-//     };
-// };

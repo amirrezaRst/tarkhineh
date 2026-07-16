@@ -15,23 +15,3 @@ const CouponSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Coupon', CouponSchema);
-
-
-
-// const isValidCoupon = async (code, userId) => {
-//     const coupon = await Coupon.findOne({ code, user: userId, active: true });
-
-//     if (!coupon) {
-//         return { valid: false, message: 'Invalid or expired coupon' };
-//     }
-
-//     if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
-//         return { valid: false, message: 'Coupon usage limit reached' };
-//     }
-
-//     if (new Date() > coupon.validTo) {
-//         return { valid: false, message: 'Coupon has expired' };
-//     }
-
-//     return { valid: true, discountType: coupon.discountType, discountValue: coupon.discountValue, maxDiscount: coupon.maxDiscountAmount };
-// };
