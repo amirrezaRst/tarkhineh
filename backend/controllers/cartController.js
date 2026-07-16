@@ -178,28 +178,6 @@ exports.decreaseItemQuantity = async (req, res) => {
 
         res.status(200).json({ status: 201, message: 'Item quantity decreased.', cart });
     }
-
-
-    // Cart.findOne({ user: userId }).then(cart => {
-    //     if (!cart) {
-    //         return res.status(404).json({ status: 404, message: 'User not found.' });
-    //     }
-
-    //     const itemIndex = cart.items.findIndex(item => item.menuItem._id.toString() === menuItemId);
-
-    //     if (itemIndex === -1) return res.status(400).json({ status: 400, message: "there is no item with this menuItemId" });
-
-    //     if (cart.items[itemIndex].quantity === 1) {
-    //         cart.items = cart.items.filter(item => item.menuItem._id.toString() !== menuItemId);
-    //     } else {
-    //         cart.items[itemIndex].quantity -= 1;
-    //     }
-
-    //     cart.save()
-    //         .then(() => res.status(200).json({ status: 200, message: 'Item quantity decreased.', cart }))
-    //         .catch(err => res.status(500).json({ status: 500, message: 'An error occurred while decreasing item quantity.' }));
-    // })
-    //     .catch(err => res.status(500).json({ status: 500, message: 'An error occurred while decreasing item quantity.' }));
 }
 
 //! Delete Request

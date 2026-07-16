@@ -13,7 +13,6 @@
   "author": "amirreza rostami",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -27,12 +26,10 @@
     "mongoose": "^8.8.4",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.3",
-    "path": "^0.12.7",
     "redis": "^5.11.0",
     "sharp": "^0.33.5",
     "shortid": "^2.2.16",
-    "zarinpal-checkout": "^0.3.0",
-    "zarinpal-pay": "^2.0.1"
+    "zarinpal-checkout": "^0.3.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

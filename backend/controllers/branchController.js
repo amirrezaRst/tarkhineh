@@ -16,21 +16,6 @@ exports.getAllBranches = async (req, res) => {
 };
 
 //? Get a single branch by ID
-// exports.getBranchById = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         const branch = await Branch.findById(id).populate('manager', 'fullName email').populate("menus", "name price category images available foodType isPersian");
-//         if (!branch) {
-//             return res.status(404).json({ status: 404, message: "Branch not found." });
-//         }
-//         res.status(200).json({ status: 200, message: "fetch data successfully", branch });
-//     } catch (error) {
-//         res.status(500).json({ status: 500, message: "Error fetching branch.", error: error.message });
-//     }
-// };
-
-
-
 exports.getBranchById = async (req, res) => {
     try {
         const { id } = req.params;
