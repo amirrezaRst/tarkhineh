@@ -19,23 +19,23 @@ const AddressCard = ({ index, title, addressLine, recipientPhoneNumber, recipien
     return (
         <>
             <div
-                className={`bg-[#F9F9F9] border rounded-lg py-5 px-4 hover:shadow-md duration-300 ${selectedAddress != null && "cursor-pointer"}  ${selectedAddress == index ? "border-[#417F56] ring-1 ring-[#417F56] shadow-sm" : "border-[#CBCBCB]"}`}
+                className={`bg-background border rounded-lg py-5 px-4 hover:shadow-md duration-300 ${selectedAddress != null && "cursor-pointer"}  ${selectedAddress == index ? "border-primary ring-1 ring-primary shadow-sm" : "border-border"}`}
                 onClick={handleSelect}
             >
 
                 <div className="flex items-start justify-between gap-2.5">
-                    <p className="text-[#353535] xl:text-base text-super-sm line-clamp-2">{addressLine}</p>
+                    <p className="text-foreground xl:text-base text-super-sm line-clamp-2">{addressLine}</p>
                     <div className="flex gap-1.5">
                         <button className="p-0.5" onClick={() => setIsEditOpen(true)}>
-                            <PenIcon className="w-[21px] h-[21px] fill-[#353535]" />
+                            <PenIcon className="w-[21px] h-[21px] fill-foreground" />
                         </button>
                         <button className="p-0.5" onClick={() => setIsDeleteOpen(true)}>
-                            <TrashIcon className="w-[21px] h-[21px] fill-[#353535]" />
+                            <TrashIcon className="w-[21px] h-[21px] fill-foreground" />
                         </button>
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between gap-3 text-[#717171] xl:text-base md:text-super-sm text-sm capitalize mt-4">
+                <div className="flex items-center justify-between gap-3 text-muted-fg xl:text-base md:text-super-sm text-sm capitalize mt-4">
 
                     <p>{title}</p>
                     <p>{recipientFullName}</p>

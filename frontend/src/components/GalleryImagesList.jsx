@@ -2,7 +2,7 @@ const GalleryItem = ({ index, name, image, selectedImage, setSelectedImage, isBr
     return (
         <div
             className={`md:w-[4.5rem] md:h-[4.5rem] w-10 h-10 border-2 rounded-md overflow-hidden transition-all cursor-pointer
-                ${index == selectedImage ? "scale-110 border-2 border-[#e1e1e1]" : "scale-100 border-transparent"}`
+                ${index == selectedImage ? "scale-110 border-2 border-border" : "scale-100 border-transparent"}`
             }
             onClick={() => setSelectedImage(index)}
         >

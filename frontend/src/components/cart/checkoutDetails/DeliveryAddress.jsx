@@ -16,16 +16,16 @@ const DeliveryAddress = () => {
         }
     }, [user?.addresses, setSelectedAddress]);
     if (deliveryType == "courier") return (
-        <div className="border border-[#CBCBCB] rounded-lg xl:px-9 px-4 xl:py-10 md:py-8 py-4">
-            <div className="flex items-center justify-between border-b border-b-[#CBCBCB] pb-3.5 mb-7">
+        <div className="border border-border rounded-lg xl:px-9 px-4 xl:py-10 md:py-8 py-4">
+            <div className="flex items-center justify-between border-b border-b-border pb-3.5 mb-7">
                 <div className="flex items-center gap-1">
-                    <LocationIcon className="w-5 h-5 fill-[#353535]" />
-                    <p className="md:text-lg text-super-base text-[#353535]">آدرس ها</p>
+                    <LocationIcon className="w-5 h-5 fill-foreground" />
+                    <p className="md:text-lg text-super-base text-foreground">آدرس ها</p>
                 </div>
 
                 <div className="flex items-center gap-0.5 cursor-pointer" onClick={() => setIsOpen(true)}>
                     <CirclePlusIcon className="w-6 h-6" />
-                    <p className="md:text-base text-super-sm text-[#417F56]">افزودن آدرس</p>
+                    <p className="md:text-base text-super-sm text-primary">افزودن آدرس</p>
                 </div>
             </div>
 

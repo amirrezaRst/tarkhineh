@@ -13,7 +13,7 @@ const BranchCard = ({ images, name, address, path }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="bg-white md:h-[410px] h-[140px] md:block flex group border border-[#CBCBCB] hover:border-[#417F56] rounded-lg transition-all duration-300 overflow-hidden">
+        <div className="bg-white md:h-[410px] h-[140px] md:block flex group border border-border hover:border-primary rounded-lg transition-all duration-300 overflow-hidden">
             <div className="relative md:w-full w-[45%] md:h-[280px] group-hover:md:h-[230px] transition-all duration-500">
                 <Image
                     src={`/images/${images[0]}`}
@@ -35,11 +35,11 @@ const BranchCard = ({ images, name, address, path }) => {
                 </div>
             </div>
             <div className="relative md:block flex flex-col justify-center px-4 md:pb-8 pb-5 pt-5 flex-1 text-center">
-                <h3 className="md:text-xl font-medium text-[#353535] md:mb-3.5 mb-2">{name}</h3>
-                <p className="text-[#717171] md:text-base text-sm md:mb-4">{address}</p>
+                <h3 className="md:text-xl font-medium text-foreground md:mb-3.5 mb-2">{name}</h3>
+                <p className="text-muted-fg md:text-base text-sm md:mb-4">{address}</p>
                 <Link href={`/branches?branch=${path}`}>
-                    <button className="md:flex items-center flex-nowrap hidden absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-[#315F41] rounded-md text-[#315F41] text-super-sm py-1 px-4 leading-6 transition-all duration-600">
-                        صفحه شعبه <ChevronIcon className="fill-[#315F41] rotate-90 inline" />
+                    <button className="md:flex items-center flex-nowrap hidden absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-primary-hover rounded-md text-primary-hover text-super-sm py-1 px-4 leading-6 transition-all duration-600">
+                        صفحه شعبه <ChevronIcon className="fill-primary-hover rotate-90 inline" />
                     </button>
                 </Link>
             </div>

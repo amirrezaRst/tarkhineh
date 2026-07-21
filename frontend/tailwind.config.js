@@ -20,7 +20,6 @@ module.exports = {
           sunken: "hsl(var(--surface-sunken) / <alpha-value>)",
         },
         foreground: "hsl(var(--foreground) / <alpha-value>)",
-        "muted-fg": "hsl(var(--muted-fg) / <alpha-value>)",
         "subtle-fg": "hsl(var(--subtle-fg) / <alpha-value>)",
 
         primary: {
@@ -29,9 +28,15 @@ module.exports = {
           fg: "hsl(var(--primary-fg) / <alpha-value>)",
           subtle: "hsl(var(--primary-subtle) / <alpha-value>)",
         },
+        accent: "hsl(var(--accent) / <alpha-value>)",
+        muted: {
+          DEFAULT: "hsl(var(--muted) / <alpha-value>)",
+          fg: "hsl(var(--muted-fg) / <alpha-value>)",
+        },
 
         border: {
           DEFAULT: "hsl(var(--border) / <alpha-value>)",
+          subtle: "hsl(var(--border-subtle) / <alpha-value>)",
           strong: "hsl(var(--border-strong) / <alpha-value>)",
         },
         ring: "hsl(var(--ring) / <alpha-value>)",

@@ -8,9 +8,9 @@ import OrderActionButton from "./OrderActionButton";
 const OrderCard = ({ _id: orderId, branch, finalPrice, discount, deliveryType, items, status, onStatusUpdate }) => {
 
     return (
-        <div className="bg-white border border-[#CBCBCB] rounded-md md:py-7 md:px-6 py-6 px-4 space-y-6">
+        <div className="bg-white border border-border rounded-md md:py-7 md:px-6 py-6 px-4 space-y-6">
             <OrderCardHeader branch={branch} status={status} deliveryType={deliveryType} />
-            <div className="flex md:flex-row flex-col-reverse items-start justify-between gap-3 mt-4 text-[#717171] md:text-super-sm text-super-xs">
+            <div className="flex md:flex-row flex-col-reverse items-start justify-between gap-3 mt-4 text-muted-fg md:text-super-sm text-super-xs">
                 <OrderCardMeta finalPrice={finalPrice} discount={discount} />
                 <OrderDeliveryTime />
             </div>

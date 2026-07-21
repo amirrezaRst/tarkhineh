@@ -52,21 +52,21 @@ const AboutBranchSection = ({ branch }) => {
                     className="h-full w-full object-cover object-center"
                 />
                 <div
-                    className="xl:w-[800px] w-[90%] bg-white absolute md:bottom-[-100px] bottom-[-50px] right-[50%] translate-x-[50%] md:border-[3px] border border-[#417F56] rounded-lg grid grid-cols-3 md:gap-8 gap-4 lg:py-11 lg:px-8 md:py-7 md:px-6 px-2.5 py-4"
+                    className="xl:w-[800px] w-[90%] bg-white absolute md:bottom-[-100px] bottom-[-50px] right-[50%] translate-x-[50%] md:border-[3px] border border-primary rounded-lg grid grid-cols-3 md:gap-8 gap-4 lg:py-11 lg:px-8 md:py-7 md:px-6 px-2.5 py-4"
                 >
 
                     <ContactInfo
-                        icon={<PhoneIcon className="md:w-8 md:h-8 w-6 h-6 fill-[#353535]" />}
+                        icon={<PhoneIcon className="md:w-8 md:h-8 w-6 h-6 fill-foreground" />}
                         title="تماس"
                         content={branches.find(b => b.branch === branch).phone}
                     />
                     <ContactInfo
-                        icon={<LocationIcon className="md:w-8 md:h-8 w-6 h-6 fill-[#353535]" />}
+                        icon={<LocationIcon className="md:w-8 md:h-8 w-6 h-6 fill-foreground" />}
                         title="آدرس"
                         content={[branches.find(b => b.branch === branch).address]}
                     />
                     <ContactInfo
-                        icon={<ClockIcon className="md:w-8 md:h-8 w-6 h-6 fill-[#353535]" />}
+                        icon={<ClockIcon className="md:w-8 md:h-8 w-6 h-6 fill-foreground" />}
                         title="ساعات کاری"
                         content={[branches.find(b => b.branch === branch).hours]}
                     />
@@ -80,7 +80,7 @@ const AboutBranchSection = ({ branch }) => {
 const ContactInfo = ({ icon, title, content }) => (
     <div className="flex flex-col items-center justify-start md:gap-4 gap-2.5">
         {icon}
-        <div className="flex flex-col gap-2.5 text-[#353535] md:text-base text-xs text-center">
+        <div className="flex flex-col gap-2.5 text-foreground md:text-base text-xs text-center">
             {content.map((line, index) => (
                 <p key={index}>{line}</p>
             ))}

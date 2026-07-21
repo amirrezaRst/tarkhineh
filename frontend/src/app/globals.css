@@ -94,8 +94,19 @@
         --primary-fg: var(--neutral-0);
         --primary-subtle: var(--brand-50);
 
+        /* Accent — a lighter brand highlight for active/selected states
+           (e.g. the active tab underline) that aren't "primary" (a button)
+           or "success" (a completed state), just emphasis. */
+        --accent: var(--brand-400);
+
+        /* Muted — a dim surface for disabled controls. Paired with
+           --muted-fg below; shares its primitive with --border on purpose,
+           the same grey serves both a line and a disabled fill. */
+        --muted: var(--neutral-200);
+
         /* Lines */
         --border: var(--neutral-200);
+        --border-subtle: var(--neutral-100);
         --border-strong: var(--neutral-300);
         --ring: var(--brand-500);
 
@@ -163,7 +174,11 @@
         --primary-subtle: var(--brand-700);
 
         --border: var(--neutral-700);
+        --border-subtle: var(--neutral-800);
         --border-strong: var(--neutral-500);
+
+        --accent: var(--brand-200);
+        --muted: var(--neutral-800);
 
         --destructive-subtle: var(--neutral-800);
         --warning-subtle: var(--neutral-800);

@@ -9,7 +9,7 @@ const AddressForm = ({ register, errors, isMyself, setIsMyself, editPage }) => {
             <FormField
                 placeholder="عنوان آدرس"
                 id="title"
-                className="w-full mt-3.5 border-[#757575] text-[#353535] placeholder:text-[#717171]"
+                className="w-full mt-3.5 border-muted-fg text-foreground placeholder:text-muted-fg"
                 register={register}
                 validation={{
                     required: "عنوان آدرس الزامی است.",
@@ -30,7 +30,7 @@ const AddressForm = ({ register, errors, isMyself, setIsMyself, editPage }) => {
                 />
                 <label
                     htmlFor={editPage ? "recipient-is-myself" : "recipient-is-myself2"}
-                    className="text-[#353535] text-super-sm select-none cursor-pointer"
+                    className="text-foreground text-super-sm select-none cursor-pointer"
                 >تحویل گیرنده خودم هستم</label>
             </div>
 
@@ -40,7 +40,7 @@ const AddressForm = ({ register, errors, isMyself, setIsMyself, editPage }) => {
                         <FormField
                             placeholder="نام و نام خانوادگی تحویل گیرنده"
                             id="recipientFullName"
-                            className="w-full mt-3.5 border-[#757575] text-[#353535] placeholder:text-[#717171]"
+                            className="w-full mt-3.5 border-muted-fg text-foreground placeholder:text-muted-fg"
                             register={register}
                             validation={{
                                 required: "نام و نام خانوادگی تحویل گیرنده الزامی است.",
@@ -57,7 +57,7 @@ const AddressForm = ({ register, errors, isMyself, setIsMyself, editPage }) => {
                             <FormField
                                 placeholder="نام و نام خانوادگی تحویل گیرنده"
                                 id="recipientFullName"
-                                className="w-full mt-3.5 border-[#757575] text-[#353535] placeholder:text-[#717171]"
+                                className="w-full mt-3.5 border-muted-fg text-foreground placeholder:text-muted-fg"
                                 register={register}
                                 validation={{
                                     required: "نام و نام خانوادگی تحویل گیرنده الزامی است.",
@@ -72,7 +72,7 @@ const AddressForm = ({ register, errors, isMyself, setIsMyself, editPage }) => {
                                 placeholder="شماره همراه تحویل گیرنده"
                                 id="recipientPhoneNumber"
                                 type="text"
-                                className="w-full mt-3.5 border-[#757575] text-[#353535] placeholder:text-[#717171]"
+                                className="w-full mt-3.5 border-muted-fg text-foreground placeholder:text-muted-fg"
                                 register={register}
                                 validation={{
                                     required: "شماره همراه تحویل گیرنده الزامی است.",
@@ -99,7 +99,7 @@ const AddressForm = ({ register, errors, isMyself, setIsMyself, editPage }) => {
             <FormField
                 placeholder="آدرس"
                 id="addressLine"
-                className="w-full mt-3.5 border-[#757575] text-[#353535] placeholder:text-[#717171]"
+                className="w-full mt-3.5 border-muted-fg text-foreground placeholder:text-muted-fg"
                 register={register}
                 validation={{
                     required: "آدرس الزامی است.",

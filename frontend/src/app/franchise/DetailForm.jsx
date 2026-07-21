@@ -3,7 +3,7 @@ import FormField from "@/components/FormField";
 const DetailForm = () => {
     return (
         <>
-            <p className="lg:text-xl md:text-lg md:font-normal font-medium text-[#353535] md:mb-4 mb-6">
+            <p className="lg:text-xl md:text-lg md:font-normal font-medium text-foreground md:mb-4 mb-6">
                 مشخصات ملک متقاضی
             </p>
 

@@ -34,7 +34,7 @@ const OrderItemsList = ({ items }) => {
             {shouldShowToggle && (
                 <button
                     onClick={() => setShowAll(!showAll)}
-                    className="text-[#717171] text-center text-super-xs mb-6 cursor-pointer transition-colors hover:text-black"
+                    className="text-muted-fg text-center text-super-xs mb-6 cursor-pointer transition-colors hover:text-black"
                 >
                     {showAll ? "بستن سفارشات" : "مشاهده همه سفارشات"}
                 </button>

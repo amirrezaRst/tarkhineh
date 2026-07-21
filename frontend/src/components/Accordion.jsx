@@ -20,7 +20,7 @@ const Accordion = ({ title, description, index, isOpen, setIsOpen }) => {
     };
 
     return (
-        <div className="py-4 px-6 text-[#353535] lg:text-super-base md:text-base text-super-sm md:font-normal font-medium">
+        <div className="py-4 px-6 text-foreground lg:text-super-base md:text-base text-super-sm md:font-normal font-medium">
             <div
                 className="flex items-center justify-between md:gap-4 gap-2 cursor-pointer"
                 onClick={() => {
@@ -28,10 +28,10 @@ const Accordion = ({ title, description, index, isOpen, setIsOpen }) => {
                     updateHeight();
                 }}
             >
-                <h6 className={`${isOpen === index ? "text-[#417F56]" : ""} duration-300`}>{title}</h6>
+                <h6 className={`${isOpen === index ? "text-primary" : ""} duration-300`}>{title}</h6>
                 <button>
                     <ChevronIcon
-                        className={`md:w-[22px] md:h-[22px] w-[18px] h-[18px] ${isOpen === index ? "fill-[#417F56]" : "fill-[#353535]"} transform transition-transform duration-300 ${isOpen === index ? "rotate-180" : "rotate-0"}`}
+                        className={`md:w-[22px] md:h-[22px] w-[18px] h-[18px] ${isOpen === index ? "fill-primary" : "fill-foreground"} transform transition-transform duration-300 ${isOpen === index ? "rotate-180" : "rotate-0"}`}
                     />
                 </button>
             </div>
@@ -42,7 +42,7 @@ const Accordion = ({ title, description, index, isOpen, setIsOpen }) => {
                     maxHeight: isOpen === index ? `${height}px` : "0px",
                 }}
             >
-                <div ref={contentRef} className="md:text-super-sm text-sm text-[#717171] pt-3.5 pb-1">
+                <div ref={contentRef} className="md:text-super-sm text-sm text-muted-fg pt-3.5 pb-1">
                     {description}
                 </div>
             </div>

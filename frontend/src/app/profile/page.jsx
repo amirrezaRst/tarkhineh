@@ -66,7 +66,7 @@ const ProfilePage = () => {
                     {[...Array(4)].map((_, index) => (
                         <div
                             key={index}
-                            className={`animate-pulse bg-[#CCCCCC] py-[0.57rem] px-4 rounded-md md:text-base text-super-sm h-12`}
+                            className={`animate-pulse bg-subtle-fg py-[0.57rem] px-4 rounded-md md:text-base text-super-sm h-12`}
                         />
                     ))}
                 </div>
@@ -76,14 +76,14 @@ const ProfilePage = () => {
                 isEdit ? (
                     <div className="">
                         <button
-                            className={`bg-[#417F56] flex items-center justify-center gap-2 md:py-2 py-2.5 px-7 border border-[#417F56] rounded-md text-white lg:text-base text-super-sm mx-auto md:mt-6 mt-8 float-left mr-5 disabled:bg-[#CCCCCC]`}
+                            className={`bg-primary flex items-center justify-center gap-2 md:py-2 py-2.5 px-7 border border-primary rounded-md text-white lg:text-base text-super-sm mx-auto md:mt-6 mt-8 float-left mr-5 disabled:bg-subtle-fg`}
                             disabled={loading}
                             type="submit"
                         >
                             {loading ? "در حال ویرایش..." : "ثبت تغییرات"}
                         </button>
                         <button
-                            className=" flex items-center justify-center gap-2 md:py-2 py-2.5 px-7 border border-[#417F56] rounded-md text-[#417F56] lg:text-base text-super-sm mx-auto md:mt-6 mt-8 float-left"
+                            className=" flex items-center justify-center gap-2 md:py-2 py-2.5 px-7 border border-primary rounded-md text-primary lg:text-base text-super-sm mx-auto md:mt-6 mt-8 float-left"
                             onClick={cancelHandler}
                         >
                             انصراف
@@ -92,10 +92,10 @@ const ProfilePage = () => {
                 )
                     :
                     <button
-                        className="md:w-fit w-full flex items-center justify-center gap-2 md:py-2 py-2.5 px-7 border border-[#417F56] rounded-md text-[#417F56] lg:text-base text-super-sm mx-auto md:mt-6 mt-8"
+                        className="md:w-fit w-full flex items-center justify-center gap-2 md:py-2 py-2.5 px-7 border border-primary rounded-md text-primary lg:text-base text-super-sm mx-auto md:mt-6 mt-8"
                         onClick={() => setIsEdit(true)}
                     >
-                        <PenIcon className="w-5 h-5 fill-[#417F56]" />
+                        <PenIcon className="w-5 h-5 fill-primary" />
                         ویرایش اطلاعات شخصی
                     </button>
             }

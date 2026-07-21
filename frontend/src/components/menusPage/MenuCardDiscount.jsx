@@ -5,10 +5,10 @@ const MenuCardDiscount = ({ discount, price }) => {
     return (
         <div className={`${discount ? "flex" : "hidden"} items-center justify-center gap-2`}>
             <span
-                className="3xl:text-lg text-base text-[#ADADAD] line-through"
+                className="3xl:text-lg text-base text-subtle-fg line-through"
             >{FormatPrice(price)}</span>
             <span
-                className="bg-[#FFF2F2] 3xl:text-base md:text-sm text-xs text-[#C30000] rounded-full pt-0.5 px-2"
+                className="bg-destructive-subtle 3xl:text-base md:text-sm text-xs text-destructive rounded-full pt-0.5 px-2"
             >
                 {discount?.discountType === "percentage" ?
                     `%${PersianNumber(discount?.discountValue || 0)}` :

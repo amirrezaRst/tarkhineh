@@ -17,7 +17,7 @@ const InterestCard = ({ id, name, price, images, discount, reviews }) => {
 
     return (
         <div
-            className="bg-white border border-[#CBCBCB] rounded-lg overflow-hidden flex flex-col"
+            className="bg-white border border-border rounded-lg overflow-hidden flex flex-col"
         >
 
             <img
@@ -30,7 +30,7 @@ const InterestCard = ({ id, name, price, images, discount, reviews }) => {
             <div className="md:py-5 md:px-4 p-3.5 flex flex-col justify-between flex-1">
 
                 <div className="flex items-center justify-between mb-2.5">
-                    <h3 className="text-[#353535] text-xl font-semibold text-wrap">
+                    <h3 className="text-foreground text-xl font-semibold text-wrap">
                         {name}
                     </h3>
                     <InterestCardLike id={id} user={user?._id} />
@@ -43,7 +43,7 @@ const InterestCard = ({ id, name, price, images, discount, reviews }) => {
 
                     <div className="flex flex-col justify-between gap-1">
                         <MenuCardDiscount discount={discount} price={price} />
-                        <h4 className="text-[#353535] text-super-base">
+                        <h4 className="text-foreground text-super-base">
                             {FormatPrice(finalPrice)} تومان
                         </h4>
                     </div>
@@ -51,7 +51,7 @@ const InterestCard = ({ id, name, price, images, discount, reviews }) => {
                 </div>
 
                 <button
-                    className="w-full bg-[#417F56] flex items-center justify-center gap-1.5 text-white py-2 px-3 rounded-md"
+                    className="w-full bg-primary flex items-center justify-center gap-1.5 text-white py-2 px-3 rounded-md"
                 >
                     افزودن به سبد خرید <ShoppingCartIcon className="w-[21px] h-[21px] fill-white" />
                 </button>

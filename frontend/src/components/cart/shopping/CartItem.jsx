@@ -32,7 +32,7 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
     };
 
     return (
-        <div className="flex border border-[#CBCBCB] rounded-lg overflow-hidden">
+        <div className="flex border border-border rounded-lg overflow-hidden">
             <img src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images?.[0]}`}
                 alt={`ترخینه ${name}`}
                 className="xl:w-40 w-[8.5rem] object-cover"
@@ -42,26 +42,26 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
             <div className="py-5 px-6 flex-1 flex flex-col justify-between gap-5">
 
                 <div className="flex items-center justify-between">
-                    <h3 className="xl:text-1.5xl text-lg text-[#353535] font-medium">{name}</h3>
+                    <h3 className="xl:text-1.5xl text-lg text-foreground font-medium">{name}</h3>
                     <button
                         className="p-1.5"
                         onClick={() => setIsOpen(true)}
                     >
-                        <TrashIcon className="xl:w-6 xl:h-6 w-5 h-5 fill-[#353535]" />
+                        <TrashIcon className="xl:w-6 xl:h-6 w-5 h-5 fill-foreground" />
                     </button>
                 </div>
 
                 <div className="flex items-center justify-between gap-3">
-                    <p className="text-[#353535] xl:text-base text-super-xs font-light text-wrap">
+                    <p className="text-foreground xl:text-base text-super-xs font-light text-wrap">
                         {ingredients?.map(item => `${item}، `)}
                     </p>
                     {discount &&
                         <div className="flex gap-1.5">
-                            <p className="text-[#ADADAD] xl:text-super-base line-through">
+                            <p className="text-subtle-fg xl:text-super-base line-through">
                                 {PersianNumber(FormatPrice(price || 0))}
                             </p>
                             <span
-                                className="bg-[#FFF2F2] xl:text-super-xs text-xs text-[#C30000] leading-4 flex items-center text-nowrap rounded-full px-2"
+                                className="bg-destructive-subtle xl:text-super-xs text-xs text-destructive leading-4 flex items-center text-nowrap rounded-full px-2"
                             >
                                 {discount?.discountValue} {discount.discountType == "percentage" ? "%" : "$"}
                             </span>
@@ -72,12 +72,12 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
                 <div className="flex items-center justify-between gap-3">
 
                     <div className="flex items-center xl:gap-8 gap-4">
-                        <div className="bg-[#E5F2E9] text-[#417F56] flex items-center gap-2 rounded-md  px-4">
+                        <div className="bg-primary-subtle text-primary flex items-center gap-2 rounded-md  px-4">
                             <button
                                 className="p-1.5"
                                 onClick={handelIncreaseQuantity}
                             >
-                                <PlusIcon className="w-6 h-6 stroke-[#417F56]" />
+                                <PlusIcon className="w-6 h-6 stroke-primary" />
                             </button>
                             <p className="text-super-base">{quantity}</p>
                             {quantity > 1 ?
@@ -85,19 +85,19 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
                                     className="p-1.5"
                                     onClick={handleDecreaseQuantity}
                                 >
-                                    <MinusIcon className="w-6 h-6 stroke-[#417F56]" />
+                                    <MinusIcon className="w-6 h-6 stroke-primary" />
                                 </button> :
                                 <button
                                     className="p-1.5"
                                     onClick={() => setIsOpen(true)}
                                 >
-                                    <TrashIcon className="w-5 h-5 fill-[#417F56]" />
+                                    <TrashIcon className="w-5 h-5 fill-primary" />
                                 </button>
                             }
                         </div>
                     </div>
 
-                    <p className="text-[#353535] xl:text-lg">
+                    <p className="text-foreground xl:text-lg">
                         {PersianNumber(FormatPrice(finalPrice))} تومان
                     </p>
 

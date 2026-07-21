@@ -35,7 +35,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
     return (
         <div
-            className="w-[250px] bg-white flex-shrink-0 border border-[#cbcbcb] rounded-lg overflow-hidden"
+            className="w-[250px] bg-white flex-shrink-0 border border-border rounded-lg overflow-hidden"
         >
 
             <img
@@ -48,7 +48,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
             {/*//TODO Card Content */}
             <div className="pt-2 pb-3.5 px-3">
                 <h3
-                    className="text-[#353535] text-lg text-center font-semibold mb-2.5 cursor-pointer"
+                    className="text-foreground text-lg text-center font-semibold mb-2.5 cursor-pointer"
                     onClick={() => setIsOpen(true)}
                 >
                     {name}
@@ -64,7 +64,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
                 <div className="flex items-center justify-between gap-2 mt-2">
 
                     <MenuCardRate reviews={reviews} />
-                    <p className="text-[#353535] ">{FormatPrice(finalPrice)} تومان</p>
+                    <p className="text-foreground ">{FormatPrice(finalPrice)} تومان</p>
 
                 </div>
 

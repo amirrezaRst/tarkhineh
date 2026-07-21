@@ -5,7 +5,7 @@ const FormField = ({ id, type = "text", className, placeholder, register, valida
                 <div className="w-full">
                     <input
                         type={type}
-                        className={`bg-transparent py-[0.57rem] px-4 border border-[#CBCBCB] disabled:border-[#CBCBCB]/60 rounded-md md:text-base text-super-sm text-[#717171] placeholder:text-[#717171] disabled:placeholder:text-[#CBCBCB] w-full h-fit ${className}`}
+                        className={`bg-transparent py-[0.57rem] px-4 border border-border disabled:border-border/60 rounded-md md:text-base text-super-sm text-muted-fg placeholder:text-muted-fg disabled:placeholder:text-border w-full h-fit ${className}`}
                         placeholder={placeholder}
                         disabled={disabled}
                         {...register(id, validation)}
@@ -17,7 +17,7 @@ const FormField = ({ id, type = "text", className, placeholder, register, valida
                 <>
                     <input
                         type={type}
-                        className={`bg-transparent py-[0.57rem] px-4 border border-[#CBCBCB] disabled:border-[#CBCBCB]/60 rounded-md md:text-base text-super-sm text-[#717171] placeholder:text-[#717171] disabled:placeholder:text-[#CBCBCB] w-full h-fit ${className}`}
+                        className={`bg-transparent py-[0.57rem] px-4 border border-border disabled:border-border/60 rounded-md md:text-base text-super-sm text-muted-fg placeholder:text-muted-fg disabled:placeholder:text-border w-full h-fit ${className}`}
                         placeholder={placeholder}
                         disabled={disabled}
                     />
@@ -25,7 +25,7 @@ const FormField = ({ id, type = "text", className, placeholder, register, valida
             <>
                 <textarea
                     type={type}
-                    className={`bg-transparent py-[0.57rem] px-4 border border-[#CBCBCB] disabled:border-[#CBCBCB]/60 rounded-md md:text-base text-super-sm text-[#717171] placeholder:text-[#717171] disabled:placeholder:text-[#CBCBCB] ${className}`}
+                    className={`bg-transparent py-[0.57rem] px-4 border border-border disabled:border-border/60 rounded-md md:text-base text-super-sm text-muted-fg placeholder:text-muted-fg disabled:placeholder:text-border ${className}`}
                     placeholder={placeholder}
                     disabled={disabled}
                     {...register(id, validation)}

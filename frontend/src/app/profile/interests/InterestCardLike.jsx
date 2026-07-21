@@ -22,7 +22,7 @@ const InterestCardLike = ({ id, user }) => {
                 className={`${isLiked === null ? "opacity-0" : isLiked === true ? "block" : "hidden"} fill-red-500 stroke-red-500`}
             />
             <HeartIcon
-                className={`${isLiked === null ? "opacity-0" : isLiked === false ? "block" : "hidden"} stroke-[#717171]`}
+                className={`${isLiked === null ? "opacity-0" : isLiked === false ? "block" : "hidden"} stroke-muted-fg`}
             />
         </button>
     );

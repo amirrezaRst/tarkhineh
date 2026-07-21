@@ -12,26 +12,26 @@ import useCartStore from "@/stores/useCartStore";
 
 const links = [
     {
-        outlineIcon: <UserIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#353535]" />,
-        solidIcon: <SolidUserIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#417F56]" />,
+        outlineIcon: <UserIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-foreground" />,
+        solidIcon: <SolidUserIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-primary" />,
         text: "پروفایل",
         path: "/profile"
     },
     {
-        outlineIcon: <PersonalWalletIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#353535]" />,
-        solidIcon: <SolidPersonalWalletIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#417F56]" />,
+        outlineIcon: <PersonalWalletIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-foreground" />,
+        solidIcon: <SolidPersonalWalletIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-primary" />,
         text: "پیگیری سفارشات",
         path: "/profile/orders"
     },
     {
-        outlineIcon: <HeartIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 stroke-[#353535]" />,
-        solidIcon: <SolidHeartIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#417F56]" />,
+        outlineIcon: <HeartIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 stroke-foreground" />,
+        solidIcon: <SolidHeartIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-primary" />,
         text: "علاقمندی‌ها",
         path: "/profile/interests"
     },
     {
-        outlineIcon: <LocationIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#353535]" />,
-        solidIcon: <SolidLocationIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-[#417F56]" />,
+        outlineIcon: <LocationIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-foreground" />,
+        solidIcon: <SolidLocationIcon className="lg:w-6 lg:h-6 md:w-[1.84rem] md:h-[1.84rem] w-7 h-7 fill-primary" />,
         text: "آدرس های من",
         path: "/profile/address"
     },
@@ -65,19 +65,19 @@ const SidebarNav = () => {
 
                 {/*//! Content */}
                 <div className="min-h-36 flex flex-col justify-center gap-6 px-6">
-                    <p className="text-super-base text-[#353535] text-center">
+                    <p className="text-super-base text-foreground text-center">
                         آیا مطمئن هستید که می‌خواهید خارج شوید؟
                     </p>
 
                     <div className="flex gap-3">
                         <button
-                            className="rounded-md bg-[#717171]/10 border border-[#717171] text-[#717171] text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
+                            className="rounded-md bg-muted-fg/10 border border-muted-fg text-muted-fg text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
                             onClick={() => setIsOpenPopup(false)}
                         >
                             انصراف
                         </button>
                         <button
-                            className="bg-[#FFF2F2] rounded-md border border-transparent text-[#C30000] text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
+                            className="bg-destructive-subtle rounded-md border border-transparent text-destructive text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
                             onClick={() => handleLogout(clearUser, clearCart, setIsOpenPopup, router)}
                         >
                             خروج از حساب

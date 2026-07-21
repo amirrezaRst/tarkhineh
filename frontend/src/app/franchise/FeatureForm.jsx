@@ -12,7 +12,7 @@ const features = [
 const FeatureForm = () => {
     return (
         <>
-            <p className="lg:text-xl md:text-lg md:font-normal font-medium text-[#353535] md:mb-8 mb-10">
+            <p className="lg:text-xl md:text-lg md:font-normal font-medium text-foreground md:mb-8 mb-10">
                 امکانات ملک متقاضی
             </p>
 
@@ -20,7 +20,7 @@ const FeatureForm = () => {
 
                 <div>
 
-                    <p className="text-[#717171] text-super-base mb-5">
+                    <p className="text-muted-fg text-super-base mb-5">
                         ملک متقاضی:
                     </p>
 
@@ -36,7 +36,7 @@ const FeatureForm = () => {
 
                 <div className="">
 
-                    <p className="text-[#717171] text-super-base md:mb-5 mb-3.5">
+                    <p className="text-muted-fg text-super-base md:mb-5 mb-3.5">
                         تصاویر ملک
                     </p>
 

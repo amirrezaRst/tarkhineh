@@ -36,9 +36,9 @@ const Popup = ({ children, isOpen, setIsOpen, title }) => {
 
                     {/*//! Title */}
                     <div className="relative w-full mb-4">
-                        <h6 className="text-center text-[#353535] font-medium md:text-xl text-lg">{title ? title : "حذف آدرس"}</h6>
+                        <h6 className="text-center text-foreground font-medium md:text-xl text-lg">{title ? title : "حذف آدرس"}</h6>
                         <button className="absolute left-0 -top-1 p-1" onClick={() => setIsOpen(false)}>
-                            <XmarkIcon className="fill-[#717171] w-7 h-7" />
+                            <XmarkIcon className="fill-muted-fg w-7 h-7" />
                         </button>
                     </div>
 

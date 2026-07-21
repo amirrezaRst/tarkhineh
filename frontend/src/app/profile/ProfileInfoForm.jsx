@@ -13,7 +13,7 @@ const ProfileInfoForm = ({ isEdit, register, errors }) => {
                 id="fullName"
                 disabled={!isEdit}
                 register={register}
-                className="disabled:text-[#CCCCCC] disabled:placeholder:text-[#CCCCCC]"
+                className="disabled:text-subtle-fg disabled:placeholder:text-subtle-fg"
                 validation={{
                     required: "وارد کردن نام و نام خانوادگی الزامی است.",
                     minLength: {
@@ -34,7 +34,7 @@ const ProfileInfoForm = ({ isEdit, register, errors }) => {
                 type="email"
                 disabled={!isEdit}
                 register={register}
-                className="disabled:text-[#CCCCCC] disabled:placeholder:text-[#CCCCCC]"
+                className="disabled:text-subtle-fg disabled:placeholder:text-subtle-fg"
                 validation={{
                     // required: "وارد کردن ایمیل الزامی است.",
                     pattern: {
@@ -50,7 +50,7 @@ const ProfileInfoForm = ({ isEdit, register, errors }) => {
                 id="phone"
                 disabled={true}
                 register={register}
-                className="disabled:text-[#CCCCCC] disabled:placeholder:text-[#CCCCCC]"
+                className="disabled:text-subtle-fg disabled:placeholder:text-subtle-fg"
                 validation={{
                     // required: "وارد کردن شماره موبایل الزامی است.",
                     pattern: {
@@ -74,7 +74,7 @@ const ProfileInfoForm = ({ isEdit, register, errors }) => {
                 id="userName"
                 disabled={!isEdit}
                 register={register}
-                className="disabled:text-[#CCCCCC] disabled:placeholder:text-[#CCCCCC]"
+                className="disabled:text-subtle-fg disabled:placeholder:text-subtle-fg"
                 validation={{
                     // required: "وارد کردن نام نمایشی الزامی است.",
                     minLength: {

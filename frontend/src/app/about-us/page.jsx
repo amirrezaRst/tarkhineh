@@ -11,7 +11,7 @@ const AboutUsPage = () => {
 
             <section className="container md:py-20 py-16">
 
-                <h2 className="text-2xl text-[#353535] mb-6">
+                <h2 className="text-2xl text-foreground mb-6">
                     درباره ما
                 </h2>
 

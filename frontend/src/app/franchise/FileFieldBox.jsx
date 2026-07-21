@@ -2,10 +2,10 @@ import { FolderAdd } from "@/assets/Icons";
 
 const FileFieldBox = () => {
     return (
-        <div className="lg:h-[235px] h-48 relative border border-[#CBCBCB] rounded-md flex items-center justify-center">
+        <div className="lg:h-[235px] h-48 relative border border-border rounded-md flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
                 <FolderAdd className="lg:w-[60px] lg:h-[60px] w-12 h-12" />
-                <p className="lg:text-base text-super-sm text-[#717171]">
+                <p className="lg:text-base text-super-sm text-muted-fg">
                     تصاویری از ملک را بارگذاری کنید...
                 </p>
             </div>

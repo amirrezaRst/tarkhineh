@@ -17,7 +17,7 @@ const Footer = () => {
                         <h6 className="text-white md:text-lg font-semibold mb-6">
                             دسترسی آسان
                         </h6>
-                        <ul className="space-y-4 text-[#EDEDED] md:text-super-sm text-sm font-light">
+                        <ul className="space-y-4 text-border-subtle md:text-super-sm text-sm font-light">
                             <li><PreserveQueryLink href="/faq">پرسش های متداول</PreserveQueryLink></li>
                             <li><PreserveQueryLink href="/rules">قوانین ترخینه</PreserveQueryLink></li>
                             <li><PreserveQueryLink href="/privacy">حریم خصوصی</PreserveQueryLink></li>
@@ -34,7 +34,7 @@ const Footer = () => {
                         <h6 className="text-white md:text-lg font-semibold mb-6">
                             شعبه های ترخینه
                         </h6>
-                        <ul className="space-y-4 text-[#EDEDED] md:text-super-sm text-sm font-light">
+                        <ul className="space-y-4 text-border-subtle md:text-super-sm text-sm font-light">
                             <li><Link href={{ pathname: "/branches", query: { branch: "tehranpars" } }}>شهبه تهرانپارس</Link></li>
                             <li><Link href={{ pathname: "/branches", query: { branch: "chalous" } }}>شعبه چالوس</Link></li>
                             <li><Link href={{ pathname: "/branches", query: { branch: "aghdasiyeh" } }}>شعبه اقدسیه</Link></li>
@@ -57,17 +57,17 @@ const Footer = () => {
                                 <input
                                     type="text"
                                     placeholder="نام و نام خانوادگی"
-                                    className="bg-transparent w-full backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
+                                    className="bg-transparent w-full backdrop-blur-sm border border-muted-fg rounded-lg py-2.5 px-5 text-sm placeholder:text-background text-background"
                                 />
                                 <input
                                     type="text"
                                     placeholder="شماره تماس"
-                                    className="bg-transparent w-full backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
+                                    className="bg-transparent w-full backdrop-blur-sm border border-muted-fg rounded-lg py-2.5 px-5 text-sm placeholder:text-background text-background"
                                 />
                                 <input
                                     type="text"
                                     placeholder="آدرس ایمیل (اختیاری)"
-                                    className="bg-transparent w-full backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
+                                    className="bg-transparent w-full backdrop-blur-sm border border-muted-fg rounded-lg py-2.5 px-5 text-sm placeholder:text-background text-background"
                                 />
                             </div>
 
@@ -75,13 +75,13 @@ const Footer = () => {
                                 name=""
                                 id=""
                                 placeholder="پیام شما"
-                                className="bg-transparent w-full md:h-full h-40 backdrop-blur-sm border border-[#717171] rounded-lg py-2.5 px-5 text-sm placeholder:text-[#F9F9F9] text-[#F9F9F9]"
+                                className="bg-transparent w-full md:h-full h-40 backdrop-blur-sm border border-muted-fg rounded-lg py-2.5 px-5 text-sm placeholder:text-background text-background"
                             />
 
                         </div>
 
-                        <p className="text-sm text-[#CBCBCB] mt-2 text-left">۰/۲۰۰</p>
-                        <button className="text-[#F9F9F9] text-super-sm border border-[#717171] rounded-lg float-left mt-2 py-2.5 px-16">
+                        <p className="text-sm text-border mt-2 text-left">۰/۲۰۰</p>
+                        <button className="text-background text-super-sm border border-muted-fg rounded-lg float-left mt-2 py-2.5 px-16">
                             ارسال پیام
                         </button>
                     </form>

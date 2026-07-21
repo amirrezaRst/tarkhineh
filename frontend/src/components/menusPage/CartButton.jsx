@@ -27,14 +27,14 @@ const CartButton = ({ id, handleAddToCart, handleDecrease, setLoading, loading }
         <>
             {quantity === null ?
                 <div className="w-full py-3" /> : quantity > 0 ? <div
-                    className="bg-[#E5F2E9] w-full text-[#417F56] flex items-center justify-around rounded-md mt-4 px-3"
+                    className="bg-primary-subtle w-full text-primary flex items-center justify-around rounded-md mt-4 px-3"
                 >
 
                     <button
                         className="p-1.5"
                         onClick={handleAddToCart}
                     >
-                        <PlusIcon className="w-6 h-6 stroke-[#417F56]" />
+                        <PlusIcon className="w-6 h-6 stroke-primary" />
                     </button>
                     <p>
                         {quantity}
@@ -44,19 +44,19 @@ const CartButton = ({ id, handleAddToCart, handleDecrease, setLoading, loading }
                             className="p-1.5"
                             onClick={handleDecrease}
                         >
-                            <TrashIcon className="w-[22px] h-[22px] fill-[#417F56]" />
+                            <TrashIcon className="w-[22px] h-[22px] fill-primary" />
                         </button> :
                         <button
                             className="p-1.5"
                             onClick={handleDecrease}
                         >
-                            <MinusIcon className="w-6 h-6 stroke-[#417F56]" />
+                            <MinusIcon className="w-6 h-6 stroke-primary" />
                         </button>
                     }
 
                 </div> :
                     <button
-                        className="w-full bg-[#417F56] text-white rounded-md py-1.5 text-super-sm leading-6 mt-4"
+                        className="w-full bg-primary text-white rounded-md py-1.5 text-super-sm leading-6 mt-4"
                         onClick={handleAddToCart}
                     >
                         {loading ?

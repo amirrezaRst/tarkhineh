@@ -5,14 +5,14 @@ const OrderCategoryItem = ({ label, active, icon, category }) => {
     return (
         <PreserveQueryLink
             className={`flex items-center flex-none gap-1.5 py-0.5 md:px-4 px-2.5 md:leading-7 leading-6 md:text-super-sm text-sm cursor-pointer rounded-full
-            ${active ? "bg-[#E5F2E9] text-[#353535]" : "bg-[#EDEDED] text-[#353535]"}`}
+            ${active ? "bg-primary-subtle text-foreground" : "bg-surface-sunken text-foreground"}`}
             query={{ category }}
         >
             <span>{label}</span>
             {icon}
             {active ?
-                <CheckmarkIcon className="fill-[#417F56]" /> :
-                <ChevronIcon className="fill-[#717171] rotate-90" />
+                <CheckmarkIcon className="fill-primary" /> :
+                <ChevronIcon className="fill-muted-fg rotate-90" />
             }
         </PreserveQueryLink>
     );

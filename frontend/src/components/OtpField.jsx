@@ -18,8 +18,8 @@ const OtpField = ({ value, setValue, error }) => {
                 inputStyle={{
                     width: '60px',
                     height: '50px',
-                    border: `1px solid #717171`,
-                    color: '#353535',
+                    border: `1px solid hsl(var(--muted-fg))`,
+                    color: 'hsl(var(--foreground))',
                     borderRadius: '8px',
                     textAlign: 'center',
                 }}

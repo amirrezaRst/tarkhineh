@@ -98,17 +98,17 @@ const CartPage = () => {
                             className="mx-auto relative md:w-[150px] md:h-[140px] w-[130] h-[110px] md:left-4"
                         />
 
-                        <h3 className="text-1.5xl font-medium text-[#417F56] text-center mt-6">
+                        <h3 className="text-1.5xl font-medium text-primary text-center mt-6">
                             سفارش با موفقیت ثبت شد
                         </h3>
-                        <p className="text-super-sm text-[#717171] text-center mt-2.5">
+                        <p className="text-super-sm text-muted-fg text-center mt-2.5">
                             سفارش شما با موفقیت ثبت شد. لطفا هنگام دریافت سفارش، مبلغ را به صورت نقدی پرداخت نمایید.
                         </p>
 
                         <div className="flex items-center gap-3 mt-6">
                             <PreserveQueryLink
                                 href="/"
-                                className="w-full flex justify-center bg-white border border-[#417F56] text-[#417F56] rounded py-2 px-3"
+                                className="w-full flex justify-center bg-white border border-primary text-primary rounded py-2 px-3"
                             >
                                 <button>
                                     بازگشت به صفحه اصلی
@@ -116,7 +116,7 @@ const CartPage = () => {
                             </PreserveQueryLink>
                             <PreserveQueryLink
                                 href="/profile/orders"
-                                className="w-full flex justify-center bg-[#417F56] border border-[#417F56] text-white rounded py-2 px-3"
+                                className="w-full flex justify-center bg-primary border border-primary text-white rounded py-2 px-3"
                             >
                                 <button>
                                     مشاهده سفارشات

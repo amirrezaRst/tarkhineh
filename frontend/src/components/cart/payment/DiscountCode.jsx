@@ -52,20 +52,20 @@ const DiscountCode = () => {
 
     return (
         <div
-            className="border border-[#CBCBCB] rounded-lg xl:px-9 px-4 xl:py-10 md:py-8 py-4"
+            className="border border-border rounded-lg xl:px-9 px-4 xl:py-10 md:py-8 py-4"
         >
             <form
                 className="flex md:flex-row flex-col md:items-center gap-3.5"
                 onSubmit={handleValidateCoupon}
             >
-                <div className="flex items-center gap-1.5 ml-1.5 md:border-b-0 border-b border-b-[#CBCBCB] md:pb-0 pb-4 md:mb-0 mb-1">
+                <div className="flex items-center gap-1.5 ml-1.5 md:border-b-0 border-b border-b-border md:pb-0 pb-4 md:mb-0 mb-1">
                     <DiscountIcon className="md:w-8 md:h-8" />
-                    <p className="text-[#353535] lg:text-lg md:text-base text-super-sm">ثبت کد تخفیف</p>
+                    <p className="text-foreground lg:text-lg md:text-base text-super-sm">ثبت کد تخفیف</p>
                 </div>
                 <div className="flex-1 w-full flex gap-3.5">
                     <input
                         type="text"
-                        className={`flex-1 md:text-base text-sm text-[#717171] read-only:text-[#417F56] border border-[#CBCBCB] read-only:border-[#417F56] read-only:focus:outline-none rounded-md py-2 md:px-6 px-2.5`}
+                        className={`flex-1 md:text-base text-sm text-muted-fg read-only:text-primary border border-border read-only:border-primary read-only:focus:outline-none rounded-md py-2 md:px-6 px-2.5`}
                         placeholder="کد تخفیف"
                         value={code}
                         readOnly={isApplied}
@@ -73,7 +73,7 @@ const DiscountCode = () => {
                     />
                     <button
                         type="submit"
-                        className={`bg-[#417F56] disabled:bg-[#CBCBCB] md:text-base text-sm  text-white rounded-md py-2 md:px-4 px-2.5 ${isApplied && "cursor-default"}`}
+                        className={`bg-primary disabled:bg-border md:text-base text-sm  text-white rounded-md py-2 md:px-4 px-2.5 ${isApplied && "cursor-default"}`}
                         disabled={code?.length !== 9}
                     >
                         {isApplied ?

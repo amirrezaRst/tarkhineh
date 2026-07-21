@@ -36,7 +36,7 @@ const AddressPage = ({ cartPage, selectedAddress, setSelectedAddress }) => {
                             </div>
                             {!cartPage &&
                                 <button
-                                    className="border border-[#417F56] rounded-md text-[#417F56] text-super-sm px-12 py-2 mx-auto block mt-7"
+                                    className="border border-primary rounded-md text-primary text-super-sm px-12 py-2 mx-auto block mt-7"
                                     onClick={() => setIsOpen(true)}
                                 >
                                     افزودن آدرس جدید
