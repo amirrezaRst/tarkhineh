@@ -25,18 +25,18 @@ const CategoryNavigation = () => {
     const category = useSearchParams().get("category") || "main";
 
     const handleActive = (path) => {
-        if (category === path) return "md:px-4 px-1 md:w-auto w-full text-center py-5 font-medium text-[#417F56] border-b border-b-[#417F56]"
+        if (category === path) return "md:px-4 px-1 md:w-auto w-full text-center py-5 font-medium text-primary border-b border-b-primary"
         return "md:px-4 px-1 md:w-auto w-full text-center py-5"
     };
 
 
     return (
-        <div className="bg-[#EDEDED] w-full ">
+        <div className="bg-surface-sunken w-full ">
             <div className="container">
                 <div className="relative inline-block md:w-auto w-full">
 
                     <ul
-                        className="flex items-center md:text-super-base text-[#717171] md:w-auto"
+                        className="flex items-center md:text-super-base text-muted-fg md:w-auto"
                     >
                         {links.map((item, index) =>
                             <NavigationItem key={index} {...item} handleActive={handleActive} />

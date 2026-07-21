@@ -2,7 +2,200 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   Design Tokens — three layers: primitive -> semantic -> domain
+   --------------------------------------------------------------------------
+   Values are space-separated HSL *channels* (not `hsl(...)`) on purpose:
+   that is the only format that lets Tailwind's opacity modifiers work,
+   e.g. `bg-primary/50` -> `hsl(140 32% 38% / 0.5)`.
 
+   Rules:
+   1. Never use a raw hex in a component. Use a semantic/domain token.
+   2. Never use a primitive (--brand-500) in a component either — primitives
+      have no meaning, so they can't be re-themed. Use --primary.
+   3. Add a new colour to the primitive layer first, then alias it.
+   ========================================================================== */
+
+@layer base {
+    :root {
+        /* ---------- Layer 1: primitives (raw values, no meaning) ---------- */
+
+        /* Brand green — the Tarkhineh identity colour */
+        --brand-50: 138 33% 92%;
+        /* #E5F2E9 */
+        --brand-200: 140 32% 61%;
+        /* #7CBC91 */
+        --brand-400: 140 36% 45%;
+        /* #499B64 */
+        --brand-500: 140 32% 38%;
+        /* #417F56 */
+        --brand-700: 141 32% 28%;
+        /* #315F41 */
+
+        /* Neutrals — higher number = darker */
+        --neutral-0: 0 0% 100%;
+        /* #FFFFFF */
+        --neutral-50: 0 0% 98%;
+        /* #F9F9F9 */
+        --neutral-100: 0 0% 93%;
+        /* #EDEDED */
+        --neutral-200: 0 0% 80%;
+        /* #CBCBCB */
+        --neutral-300: 0 0% 68%;
+        /* #ADADAD */
+        --neutral-500: 0 0% 44%;
+        /* #717171 */
+        --neutral-700: 0 0% 32%;
+        --neutral-800: 0 0% 21%;
+        /* #353535 */
+        --neutral-900: 0 0% 13%;
+        --neutral-950: 0 0% 7%;
+
+        /* Red — errors, destructive actions */
+        --red-50: 0 100% 97%;
+        /* #FFF2F2 */
+        --red-600: 0 100% 38%;
+        /* #C30000 */
+
+        /* Amber — warnings, ratings */
+        --amber-50: 46 100% 94%;
+        /* #FFF8E1 */
+        --amber-400: 40 89% 60%;
+        /* #F4B740 */
+        --amber-700: 40 72% 39%;
+        /* #A9791C */
+
+        /* Blue — informational states. New to the palette: the dashboards
+           need a colour for "preparing" and for the courier role. */
+        --blue-50: 214 85% 96%;
+        --blue-500: 214 84% 56%;
+        --blue-700: 214 84% 36%;
+
+        /* Violet — new, used only to distinguish the admin role. */
+        --violet-50: 250 100% 96%;
+        --violet-500: 250 76% 68%;
+
+        /* ---------- Layer 2: semantic (purpose) ---------- */
+
+        /* Surfaces */
+        --background: var(--neutral-50);
+        --surface: var(--neutral-0);
+        --surface-raised: var(--neutral-0);
+        --surface-sunken: var(--neutral-100);
+
+        /* Text */
+        --foreground: var(--neutral-800);
+        --muted-fg: var(--neutral-500);
+        --subtle-fg: var(--neutral-300);
+
+        /* Primary action */
+        --primary: var(--brand-500);
+        --primary-hover: var(--brand-700);
+        --primary-fg: var(--neutral-0);
+        --primary-subtle: var(--brand-50);
+
+        /* Accent — a lighter brand highlight for active/selected states
+           (e.g. the active tab underline) that aren't "primary" (a button)
+           or "success" (a completed state), just emphasis. */
+        --accent: var(--brand-400);
+
+        /* Muted — a dim surface for disabled controls. Paired with
+           --muted-fg below; shares its primitive with --border on purpose,
+           the same grey serves both a line and a disabled fill. */
+        --muted: var(--neutral-200);
+
+        /* Lines */
+        --border: var(--neutral-200);
+        --border-subtle: var(--neutral-100);
+        --border-strong: var(--neutral-300);
+        --ring: var(--brand-500);
+
+        /* Feedback */
+        --destructive: var(--red-600);
+        --destructive-subtle: var(--red-50);
+        --destructive-fg: var(--neutral-0);
+
+        --warning: var(--amber-400);
+        --warning-subtle: var(--amber-50);
+        --warning-fg: var(--amber-700);
+
+        --success: var(--brand-400);
+        --success-subtle: var(--brand-50);
+        --success-fg: var(--neutral-0);
+
+        --info: var(--blue-500);
+        --info-subtle: var(--blue-50);
+        --info-fg: var(--neutral-0);
+
+        /* ---------- Layer 3: domain (Tarkhineh-specific) ---------- */
+
+        /* Order lifecycle — mirrors the `status` enum on OrderModel.
+           Defined once here so every dashboard renders the same status
+           in the same colour. */
+        --status-pending: var(--amber-400);
+        --status-pending-subtle: var(--amber-50);
+        --status-preparing: var(--blue-500);
+        --status-preparing-subtle: var(--blue-50);
+        --status-on-the-way: var(--brand-400);
+        --status-on-the-way-subtle: var(--brand-50);
+        --status-delivered: var(--brand-500);
+        --status-delivered-subtle: var(--brand-50);
+        --status-cancelled: var(--red-600);
+        --status-cancelled-subtle: var(--red-50);
+
+        /* Role accents — give each dashboard its own identity while
+           keeping the brand green as the shared primary. */
+        --role-admin: var(--violet-500);
+        --role-admin-subtle: var(--violet-50);
+        --role-branch: var(--brand-500);
+        --role-branch-subtle: var(--brand-50);
+        --role-courier: var(--blue-500);
+        --role-courier-subtle: var(--blue-50);
+    }
+
+    /* Dark theme — scaffolding only. The semantic layer is fully re-pointed
+       here, so enabling dark mode is a matter of toggling `.dark` on <html>;
+       no component needs to change. NOT wired to a toggle yet, and the
+       existing public pages have not been reviewed in dark yet. */
+    .dark {
+        --background: var(--neutral-950);
+        --surface: var(--neutral-900);
+        --surface-raised: var(--neutral-800);
+        --surface-sunken: var(--neutral-950);
+
+        --foreground: var(--neutral-50);
+        --muted-fg: var(--neutral-300);
+        --subtle-fg: var(--neutral-500);
+
+        /* The mid-tone green loses contrast on a dark surface; step lighter. */
+        --primary: var(--brand-400);
+        --primary-hover: var(--brand-200);
+        --primary-fg: var(--neutral-950);
+        --primary-subtle: var(--brand-700);
+
+        --border: var(--neutral-700);
+        --border-subtle: var(--neutral-800);
+        --border-strong: var(--neutral-500);
+
+        --accent: var(--brand-200);
+        --muted: var(--neutral-800);
+
+        --destructive-subtle: var(--neutral-800);
+        --warning-subtle: var(--neutral-800);
+        --success-subtle: var(--neutral-800);
+        --info-subtle: var(--neutral-800);
+
+        --status-pending-subtle: var(--neutral-800);
+        --status-preparing-subtle: var(--neutral-800);
+        --status-on-the-way-subtle: var(--neutral-800);
+        --status-delivered-subtle: var(--neutral-800);
+        --status-cancelled-subtle: var(--neutral-800);
+
+        --role-admin-subtle: var(--neutral-800);
+        --role-branch-subtle: var(--neutral-800);
+        --role-courier-subtle: var(--neutral-800);
+    }
+}
 
 
 /*//! Custom Scrollbar */
@@ -15,28 +208,28 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: #F3F6FD;
+    background: hsl(var(--surface-sunken));
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #cbced6;
+    background: hsl(var(--border));
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #bec1ca;
+    background: hsl(var(--border-strong));
 }
 
 /* اسکرول افقی */
 ::-webkit-scrollbar-track:horizontal {
-    background: #F3F6FD;
+    background: hsl(var(--surface-sunken));
 }
 
 /* اسکرول‌بار برای تمام مرورگرها */
 .scrollbar-custom {
     scrollbar-width: thin;
     /* عرض باریک برای فایرفاکس */
-    scrollbar-color: #888 #f0f0f0;
+    scrollbar-color: hsl(var(--border-strong)) hsl(var(--surface-sunken));
     /* رنگ thumb و track */
 }

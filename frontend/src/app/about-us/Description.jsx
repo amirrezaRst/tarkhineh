@@ -2,7 +2,7 @@ const Description = () => {
     return (
         <div className="xl:col-span-1 lg:col-span-7 w-full lg:order-1 order-2">
             <p
-                className="p-4 text-[#717171] md:text-super-base text-super-sm font-light tracking-wide md:leading-9 leading-7 md:text-right text-justify"
+                className="p-4 text-muted-fg md:text-super-base text-super-sm font-light tracking-wide md:leading-9 leading-7 md:text-right text-justify"
             >
                 رستوران‌های زنجیره‌ای
                 ترخینه در سال ۱۳۶۸ افتتاح گردیده‌اند و در طی این سال‌ها همواره با ارائه غذاهای باکیفیت و سرویس سریع و به موقع در تلاش برای جلب

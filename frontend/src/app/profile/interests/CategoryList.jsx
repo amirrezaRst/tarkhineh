@@ -6,10 +6,10 @@ const Item = ({ label, selected, path }) => {
         <PreserveQueryLink
             href={``}
             query={{ category: path }}
-            className={`${selected ? "bg-[#E5F2E9]" : "bg-[#EDEDED]"} flex items-center flex-none gap-1.5 py-0.5 md:px-4 px-2.5 md:leading-7 leading-6 text-[#353535] md:text-super-sm text-sm cursor-pointer rounded-full`}
+            className={`${selected ? "bg-primary-subtle" : "bg-surface-sunken"} flex items-center flex-none gap-1.5 py-0.5 md:px-4 px-2.5 md:leading-7 leading-6 text-foreground md:text-super-sm text-sm cursor-pointer rounded-full`}
         >
             <span>{label}</span>
-            {selected ? <CheckmarkIcon className="fill-[#417F56]" /> : <ChevronIcon className="fill-[#717171] rotate-90" />}
+            {selected ? <CheckmarkIcon className="fill-primary" /> : <ChevronIcon className="fill-muted-fg rotate-90" />}
         </PreserveQueryLink>
     )
 };

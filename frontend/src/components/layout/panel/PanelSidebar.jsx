@@ -55,14 +55,14 @@ const PanelSidebar = () => {
                             <li key={index} className="mt-0.5 w-full">
                                 <Link
                                     href={item.href}
-                                    className={`py-2.5 my-0 mx-4 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold transition-colors ${isActive ? "bg-white shadow-md text-[#417F56]" : "text-[#717171]"
+                                    className={`py-2.5 my-0 mx-4 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold transition-colors ${isActive ? "bg-white shadow-md text-primary" : "text-muted-fg"
                                         }`}
                                 >
                                     <div className={`mr-2 flex h-10 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5 ${isActive
                                         ? "bg-gradient-to-tl from-green-700 to-lime-500 shadow-soft-2xl"
                                         : "bg-white"
                                         }`}>
-                                        <Icon className={`${isActive ? "fill-white stroke-white" : "fill-[#717171]"} w-7 h-7`} />
+                                        <Icon className={`${isActive ? "fill-white stroke-white" : "fill-muted-fg"} w-7 h-7`} />
                                     </div>
                                     <span className="mr-1.5 duration-300 opacity-100 pointer-events-none ease-soft">{item.label}</span>
                                 </Link>

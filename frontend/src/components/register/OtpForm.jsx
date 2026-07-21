@@ -36,10 +36,10 @@ const OtpForm = ({ setPage, phoneNumber, setPhoneNumber, setIsOpen }) => {
             <OtpField value={otp} setValue={setOtp} error={error} />
 
             <div className="flex items-center justify-between mt-3">
-                <div className="text-[#717171] text-super-sm">
+                <div className="text-muted-fg text-super-sm">
                     {timer > 0 ?
                         <p>
-                            <ClockIcon className="fill-[#717171] w-5 h-5 inline" /> {ConvertToPersianNumbers(FormatTime(timer))} تا دریافت مجدد کد
+                            <ClockIcon className="fill-muted-fg w-5 h-5 inline" /> {ConvertToPersianNumbers(FormatTime(timer))} تا دریافت مجدد کد
                         </p> :
                         <p
                             className="cursor-pointer"
@@ -53,13 +53,13 @@ const OtpForm = ({ setPage, phoneNumber, setPhoneNumber, setIsOpen }) => {
                     }
                 </div>
                 <p
-                    className="text-[#417F56] cursor-pointer"
+                    className="text-primary cursor-pointer"
                     onClick={() => setPage(0)}
                 >ویرایش شماره</p>
             </div>
 
             <button
-                className="bg-[#417F56] text-white leading-7 py-2 w-full rounded mt-5 disabled:bg-[#BDBDBD]"
+                className="bg-primary text-white leading-7 py-2 w-full rounded mt-5 disabled:bg-muted"
                 type="submit"
                 disabled={loading}
             >

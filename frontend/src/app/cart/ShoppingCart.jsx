@@ -22,7 +22,7 @@ const ShoppingCart = ({ step, setStep }) => {
 
     return cart.length > 0 ? (
         <CartLayout cart={cart || []} step={step} setStep={setStep}>
-            <div className="border border-[#CBCBCB] rounded-lg px-6 py-7 space-y-6">
+            <div className="border border-border rounded-lg px-6 py-7 space-y-6">
                 {cart.map(({ menuItem, quantity, _id: id }, index) => (
                     <CartItem key={index} id={id} menuItem={menuItem} quantity={quantity} branch={cartBranch} />
                 ))}

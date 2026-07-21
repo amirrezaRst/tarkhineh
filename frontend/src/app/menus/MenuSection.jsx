@@ -28,7 +28,7 @@ const MenuSection = ({ title, category, foodType, isPersian }) => {
     return (
         <section>
             <h2
-                className={`lg:text-2.5xl text-xl text-[#353535] md:font-semibold font-bold`}
+                className={`lg:text-2.5xl text-xl text-foreground md:font-semibold font-bold`}
             >
                 {title}
             </h2>
@@ -39,7 +39,7 @@ const MenuSection = ({ title, category, foodType, isPersian }) => {
                     <MenuCard key={index} {...item} branch={branchId && branchId} />
                 ))}
                 {items?.length === 0 &&
-                    <p className="mt-0 text-[#353535] font-light">
+                    <p className="mt-0 text-foreground font-light">
                         اینجا خالی است، اما ترخینه همیشه در حال آماده کردن بهترین‌هاست.
                     </p>
                 }

@@ -13,19 +13,19 @@ const DeleteAddressPopup = ({ isOpen, setIsOpen, userId, index }) => {
 
             {/*//! Content */}
             <div className="min-h-36 flex flex-col justify-center gap-6 px-6">
-                <p className="text-super-base text-[#353535] text-center">
+                <p className="text-super-base text-foreground text-center">
                     آیا از حذف آدرس مطمئن هستید؟
                 </p>
 
                 <div className="flex gap-3">
                     <button
-                        className="rounded-md border border-[#417F56] text-[#417F56] text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
+                        className="rounded-md border border-primary text-primary text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
                         onClick={() => setIsOpen(false)}
                     >
                         بازگشت
                     </button>
                     <button
-                        className="bg-[#FFF2F2] rounded-md border border-transparent text-[#C30000] text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
+                        className="bg-destructive-subtle rounded-md border border-transparent text-destructive text-super-sm leading-6 font-medium py-1.5 w-full flex-1 block"
                         onClick={handleDelete}
                     >
                         حذف

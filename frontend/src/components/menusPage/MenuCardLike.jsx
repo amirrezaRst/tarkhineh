@@ -24,7 +24,7 @@ const MenuCardLike = ({ id, user, setRegisterModal }) => {
                 className={`${isLiked === null ? "opacity-0" : isLiked === true ? "block" : "hidden"} md:w-6 md:h-6 w-5 h-5 fill-red-500 stroke-red-500`}
             />
             <HeartIcon
-                className={`${isLiked === null ? "opacity-0" : isLiked === false ? "block" : "hidden"} md:w-6 md:h-6 w-5 h-5 stroke-[#717171]`}
+                className={`${isLiked === null ? "opacity-0" : isLiked === false ? "block" : "hidden"} md:w-6 md:h-6 w-5 h-5 stroke-muted-fg`}
             />
         </button>
     );

@@ -24,9 +24,9 @@ const FranchisePage = () => {
             <ConsultationSection />
 
             {/*//! Agency Section */}
-            <section className="container xl:my-24 py-14 border border-[#CBCBCB]/40 rounded-lg">
+            <section className="container xl:my-24 py-14 border border-border/40 rounded-lg">
 
-                <h2 className="xl:text-2.5xl md:text-2xl text-1.5xl text-[#353535] text-center md:font-semibold font-bold md:mb-12 mb-10">
+                <h2 className="xl:text-2.5xl md:text-2xl text-1.5xl text-foreground text-center md:font-semibold font-bold md:mb-12 mb-10">
                     فرم درخواست نمایندگی
                 </h2>
 
@@ -40,7 +40,7 @@ const FranchisePage = () => {
 
                     <FeatureForm />
 
-                    <button className="bg-[#417F56] text-white text-super-sm block mx-auto rounded-md py-3 px-14 mt-7">
+                    <button className="bg-primary text-white text-super-sm block mx-auto rounded-md py-3 px-14 mt-7">
                         ثبت اطلاعات
                     </button>
 

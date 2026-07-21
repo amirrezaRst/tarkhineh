@@ -55,25 +55,25 @@
 //             <article className={`${step == 1 && "lg:block hidden"} flex-1 w-full`}>{children}</article>
 
 //             {/*//! Side Content */}
-//             <aside className="xl:w-[440px] lg:w-[300px] w-full border border-[#CBCBCB] rounded-lg xl:py-8 xl:px-6 lg:py-3 lg:px-3.5 md:p-8 p-4">
-//                 <div className="md:flex hidden items-center justify-between pb-4 mb-4 border-b border-b-[#CBCBCB]">
-//                     <p className="text-[#353535] xl:text-super-base lg:text-super-sm text-super-base">
+//             <aside className="xl:w-[440px] lg:w-[300px] w-full border border-border rounded-lg xl:py-8 xl:px-6 lg:py-3 lg:px-3.5 md:p-8 p-4">
+//                 <div className="md:flex hidden items-center justify-between pb-4 mb-4 border-b border-b-border">
+//                     <p className="text-foreground xl:text-super-base lg:text-super-sm text-super-base">
 //                         سبد خرید ({PersianNumber(cart.length)})
 //                     </p>
 //                     <button
 //                         className="p-1.5"
 //                         onClick={() => setIsOpen(true)}
 //                     >
-//                         <TrashIcon className="xl:w-6 xl:h-6 lg:w-5 lg:h-5 w-6 h-6 fill-[#353535]" />
+//                         <TrashIcon className="xl:w-6 xl:h-6 lg:w-5 lg:h-5 w-6 h-6 fill-foreground" />
 //                     </button>
 //                 </div>
 
 //                 {/*//! Cart Items List */}
 //                 <div
-//                     className={`max-h-56 ${step == 1 ? "lg:hidden block" : "lg:block hidden"}  overflow-hidden pb-4 mb-4 border-b border-b-[#CBCBCB] overflow-y-auto`}
+//                     className={`max-h-56 ${step == 1 ? "lg:hidden block" : "lg:block hidden"}  overflow-hidden pb-4 mb-4 border-b border-b-border overflow-y-auto`}
 //                 >
 
-//                     <div className={`${step == 1 ? "border border-[#CBCBCB] rounded-lg px-3 py-3.5" : " space-y-3"}`}>
+//                     <div className={`${step == 1 ? "border border-border rounded-lg px-3 py-3.5" : " space-y-3"}`}>
 
 //                         {cart?.length == 0 ?
 //                             [...Array(3)].map((item, index) => (
@@ -86,40 +86,40 @@
 //                     </div>
 
 //                 </div>
-//                 <div className="flex items-center justify-between pb-4 mb-4 border-b border-b-[#CBCBCB] xl:text-super-sm lg:text-sm md:text-base text-super-sm">
-//                     <p className="text-[#353535]">تخفیف محصولات</p>
-//                     <p className="text-[#717171]">{PersianNumber(FormatPrice(totalDiscount))} تومان</p>
+//                 <div className="flex items-center justify-between pb-4 mb-4 border-b border-b-border xl:text-super-sm lg:text-sm md:text-base text-super-sm">
+//                     <p className="text-foreground">تخفیف محصولات</p>
+//                     <p className="text-muted-fg">{PersianNumber(FormatPrice(totalDiscount))} تومان</p>
 //                 </div>
-//                 <div className="pb-4 mb-4 border-b border-b-[#CBCBCB]">
+//                 <div className="pb-4 mb-4 border-b border-b-border">
 //                     <div className="flex items-center justify-between mb-2.5 xl:text-super-sm lg:text-sm md:text-base text-super-sm">
-//                         <p className="text-[#353535]">هزینه ارسال</p>
-//                         <p className="text-[#717171]">{PersianNumber(FormatPrice(step > 1 && deliveryType == "courier" ? 29000 : 0))} تومان</p>
+//                         <p className="text-foreground">هزینه ارسال</p>
+//                         <p className="text-muted-fg">{PersianNumber(FormatPrice(step > 1 && deliveryType == "courier" ? 29000 : 0))} تومان</p>
 //                     </div>
-//                     <p className={step == 1 ? "xl:text-super-xs text-xs text-[#A9791C] font-light flex items-center gap-2 text-justify" : "hidden"}>
-//                         <WarningIcon className="fill-[#A9791C] lg:w-11 lg:h-11" />
+//                     <p className={step == 1 ? "xl:text-super-xs text-xs text-warning-fg font-light flex items-center gap-2 text-justify" : "hidden"}>
+//                         <WarningIcon className="fill-warning-fg lg:w-11 lg:h-11" />
 //                         هزینه ارسال در ادامه بر اساس آدرس، زمان و نحوه ارسال انتخابی شما محاسبه و به این مبلغ اضافه خواهد شد.
 //                     </p>
 //                 </div>
 
 //                 <div className="flex items-center justify-between pb-4 md:mb-4 mb-3 xl:text-base md:text-base text-super-sm">
-//                     <p className="text-[#353535]">مبلغ قابل پرداخت</p>
-//                     <p className="text-[#417F56]">{PersianNumber(FormatPrice(amount))} تومان</p>
+//                     <p className="text-foreground">مبلغ قابل پرداخت</p>
+//                     <p className="text-primary">{PersianNumber(FormatPrice(amount))} تومان</p>
 //                 </div>
 
 //                 <button
-//                     className="bg-[#417F56] w-full py-2 rounded-md flex items-center justify-center text-white lg:text-super-sm text-sm font-light"
+//                     className="bg-primary w-full py-2 rounded-md flex items-center justify-center text-white lg:text-super-sm text-sm font-light"
 //                     onClick={step < 3 ? () => setStep(step + 1) : handler}
 //                 >
 //                     {loading ?
 //                         "loading..." : step === 1 ?
 //                             <>
-//                                 تکمیل اطلاعات <ChevronIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] rotate-90" />
+//                                 تکمیل اطلاعات <ChevronIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-primary-fg rotate-90" />
 //                             </> : step === 2 ?
 //                                 <>
-//                                     <CircleCheckmarkIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] ml-1.5" /> ثبت سفارش
+//                                     <CircleCheckmarkIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-primary-fg ml-1.5" /> ثبت سفارش
 //                                 </> :
 //                                 <>
-//                                     <PersonalWalletIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] ml-1.5" /> تایید و پرداخت
+//                                     <PersonalWalletIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-primary-fg ml-1.5" /> تایید و پرداخت
 //                                 </>
 //                     }
 //                 </button>
@@ -214,24 +214,24 @@ const CartLayout = ({ children, cart, step, setStep, handler }) => {
             <article className={`${step == 1 && "lg:block hidden"} flex-1 w-full`}>{children}</article>
 
             {/*//! Side Content */}
-            <aside className="xl:w-[440px] lg:w-[300px] w-full border border-[#CBCBCB] rounded-lg xl:py-8 xl:px-6 lg:py-3 lg:px-3.5 md:p-8 p-4">
-                <div className="md:flex hidden items-center justify-between pb-4 mb-4 border-b border-b-[#CBCBCB]">
-                    <p className="text-[#353535] xl:text-super-base lg:text-super-sm text-super-base">
+            <aside className="xl:w-[440px] lg:w-[300px] w-full border border-border rounded-lg xl:py-8 xl:px-6 lg:py-3 lg:px-3.5 md:p-8 p-4">
+                <div className="md:flex hidden items-center justify-between pb-4 mb-4 border-b border-b-border">
+                    <p className="text-foreground xl:text-super-base lg:text-super-sm text-super-base">
                         سبد خرید ({PersianNumber(cart.length)})
                     </p>
                     <button
                         className="p-1.5"
                         onClick={() => setIsOpen(true)}
                     >
-                        <TrashIcon className="xl:w-6 xl:h-6 lg:w-5 lg:h-5 w-6 h-6 fill-[#353535]" />
+                        <TrashIcon className="xl:w-6 xl:h-6 lg:w-5 lg:h-5 w-6 h-6 fill-foreground" />
                     </button>
                 </div>
 
                 {/*//! Cart Items List */}
                 <div
-                    className={`max-h-56 ${step == 1 ? "lg:hidden block" : "lg:block hidden"} overflow-hidden pb-4 mb-4 border-b border-b-[#CBCBCB] overflow-y-auto`}
+                    className={`max-h-56 ${step == 1 ? "lg:hidden block" : "lg:block hidden"} overflow-hidden pb-4 mb-4 border-b border-b-border overflow-y-auto`}
                 >
-                    <div className={`${step == 1 ? "border border-[#CBCBCB] rounded-lg px-3 py-3.5" : " space-y-3"}`}>
+                    <div className={`${step == 1 ? "border border-border rounded-lg px-3 py-3.5" : " space-y-3"}`}>
                         {cart?.length == 0 ?
                             [...Array(3)].map((item, index) => (
                                 <CartMiniItemSkeleton key={index} />
@@ -243,48 +243,48 @@ const CartLayout = ({ children, cart, step, setStep, handler }) => {
                 </div>
 
                 {/*//! تخفیف محصولات */}
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-b-[#CBCBCB] xl:text-super-sm lg:text-sm md:text-base text-super-sm">
-                    <p className="text-[#353535]">{discount ? "تخفیف کل" : "تخفیف محصولات"}</p>
+                <div className="flex items-center justify-between pb-4 mb-4 border-b border-b-border xl:text-super-sm lg:text-sm md:text-base text-super-sm">
+                    <p className="text-foreground">{discount ? "تخفیف کل" : "تخفیف محصولات"}</p>
                     <div className="flex flex-col">
-                        <p className={`text-[#717171] ${discount && "line-through"}`}>{PersianNumber(FormatPrice(totalDiscount))} تومان</p>
+                        <p className={`text-muted-fg ${discount && "line-through"}`}>{PersianNumber(FormatPrice(totalDiscount))} تومان</p>
                         {discount &&
-                            <p className="text-[#717171]">{PersianNumber(FormatPrice(finalDiscount))} تومان</p>
+                            <p className="text-muted-fg">{PersianNumber(FormatPrice(finalDiscount))} تومان</p>
                         }
                     </div>
                 </div>
 
                 {/*//! هزینه ارسال */}
-                <div className="pb-4 mb-4 border-b border-b-[#CBCBCB]">
+                <div className="pb-4 mb-4 border-b border-b-border">
                     <div className="flex items-center justify-between mb-2.5 xl:text-super-sm lg:text-sm md:text-base text-super-sm">
-                        <p className="text-[#353535]">هزینه ارسال</p>
-                        <p className="text-[#717171]">{PersianNumber(FormatPrice(step > 1 && deliveryType == "courier" ? 26000 : 0))} تومان</p>
+                        <p className="text-foreground">هزینه ارسال</p>
+                        <p className="text-muted-fg">{PersianNumber(FormatPrice(step > 1 && deliveryType == "courier" ? 26000 : 0))} تومان</p>
                     </div>
-                    <p className={step == 1 ? "xl:text-super-xs text-xs text-[#A9791C] font-light flex items-center gap-2 text-justify" : "hidden"}>
-                        <WarningIcon className="fill-[#A9791C] lg:w-11 lg:h-11" />
+                    <p className={step == 1 ? "xl:text-super-xs text-xs text-warning-fg font-light flex items-center gap-2 text-justify" : "hidden"}>
+                        <WarningIcon className="fill-warning-fg lg:w-11 lg:h-11" />
                         هزینه ارسال در ادامه بر اساس آدرس، زمان و نحوه ارسال انتخابی شما محاسبه و به این مبلغ اضافه خواهد شد.
                     </p>
                 </div>
 
                 {/*//! مبلغ قابل پرداخت */}
                 <div className="flex items-center justify-between pb-4 md:mb-4 mb-3 xl:text-base md:text-base text-super-sm">
-                    <p className="text-[#353535]">مبلغ قابل پرداخت</p>
-                    <p className="text-[#417F56]">{PersianNumber(FormatPrice(finalAmount))} تومان</p>
+                    <p className="text-foreground">مبلغ قابل پرداخت</p>
+                    <p className="text-primary">{PersianNumber(FormatPrice(finalAmount))} تومان</p>
                 </div>
 
                 <button
-                    className="bg-[#417F56] w-full py-2 rounded-md flex items-center justify-center text-white lg:text-super-sm text-sm font-light"
+                    className="bg-primary w-full py-2 rounded-md flex items-center justify-center text-white lg:text-super-sm text-sm font-light"
                     onClick={step < 3 ? () => setStep(step + 1) : () => handler(finalAmount, finalDiscount)}
                 >
                     {loading ?
                         "loading..." : step === 1 ?
                             <>
-                                تکمیل اطلاعات <ChevronIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] rotate-90" />
+                                تکمیل اطلاعات <ChevronIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-primary-fg rotate-90" />
                             </> : step === 2 ?
                                 <>
-                                    <CircleCheckmarkIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] ml-1.5" /> ثبت سفارش
+                                    <CircleCheckmarkIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-primary-fg ml-1.5" /> ثبت سفارش
                                 </> :
                                 <>
-                                    <PersonalWalletIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-[#fff] ml-1.5" /> تایید و پرداخت
+                                    <PersonalWalletIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-primary-fg ml-1.5" /> تایید و پرداخت
                                 </>
                     }
                 </button>

@@ -23,7 +23,7 @@ const RegisterForm = ({ setPage, setIsOpen, setPhoneNumber }) => {
                 placeholder="شماره موبایل"
                 id="phone-number"
                 type="tel"
-                className="w-full mt-2 border-[#353535] text-[#353535] placeholder:text-[#353535]"
+                className="w-full mt-2 border-foreground text-foreground placeholder:text-foreground"
                 register={register}
                 validation={{
                     required: "شماره موبایل را وارد کنید.",
@@ -44,15 +44,15 @@ const RegisterForm = ({ setPage, setIsOpen, setPhoneNumber }) => {
             />
 
             <button
-                className="bg-[#417F56] text-white leading-7 py-2 w-full rounded mt-5 mb-4 disabled:bg-[#BDBDBD]"
+                className="bg-primary text-white leading-7 py-2 w-full rounded mt-5 mb-4 disabled:bg-muted"
                 type="submit"
                 disabled={loading}
             >
                 ادامه
             </button>
 
-            <p className="text-sm text-[#353535]">
-                ورود و عضویت در ترخینه به منزله قبول <Link href="/rules" className="text-[#417F56]" onClick={() => setIsOpen(false)}>قوانین و مقررات</Link> است.
+            <p className="text-sm text-foreground">
+                ورود و عضویت در ترخینه به منزله قبول <Link href="/rules" className="text-primary" onClick={() => setIsOpen(false)}>قوانین و مقررات</Link> است.
             </p>
 
 

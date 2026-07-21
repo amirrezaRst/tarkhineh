@@ -1,8 +1,8 @@
 const ConsultationSection = () => {
     return (
-        <section className="container md:py-20 py-16 xl:border-b-2 border-[#CBCBCB]/30">
+        <section className="container md:py-20 py-16 xl:border-b-2 border-border/30">
 
-            <h2 className="xl:text-2.5xl md:text-2xl text-1.5xl text-[#353535] text-center md:font-semibold font-bold md:mb-12 mb-9">
+            <h2 className="xl:text-2.5xl md:text-2xl text-1.5xl text-foreground text-center md:font-semibold font-bold md:mb-12 mb-9">
                 دریافت مشاوره
             </h2>
 
@@ -13,23 +13,23 @@ const ConsultationSection = () => {
 
                     <input
                         type="text"
-                        className="py-2.5 px-4 border border-[#CBCBCB] md:text-base text-super-sm rounded-md text-[#717171] placeholder:text-[#717171]"
+                        className="py-2.5 px-4 border border-border md:text-base text-super-sm rounded-md text-muted-fg placeholder:text-muted-fg"
                         placeholder="نام و نام خانوادگی"
                     />
                     <input
                         type="text"
-                        className="py-2.5 px-4 border border-[#CBCBCB] md:text-base text-super-sm rounded-md text-[#717171] placeholder:text-[#717171]"
+                        className="py-2.5 px-4 border border-border md:text-base text-super-sm rounded-md text-muted-fg placeholder:text-muted-fg"
                         placeholder="شماره تماس"
                     />
                     <input
                         type="text"
-                        className="py-2.5 px-4 border border-[#CBCBCB] md:text-base text-super-sm rounded-md text-[#717171] placeholder:text-[#717171] lg:col-span-1 md:col-span-2"
+                        className="py-2.5 px-4 border border-border md:text-base text-super-sm rounded-md text-muted-fg placeholder:text-muted-fg lg:col-span-1 md:col-span-2"
                         placeholder="ایمیل"
                     />
 
                 </div>
 
-                <button className="bg-[#417F56] text-white text-super-sm block mx-auto rounded-md py-3 px-6 mt-7">
+                <button className="bg-primary text-white text-super-sm block mx-auto rounded-md py-3 px-6 mt-7">
                     درخواست مشاوره
                 </button>
 

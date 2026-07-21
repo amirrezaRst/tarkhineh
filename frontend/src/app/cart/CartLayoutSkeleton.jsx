@@ -5,7 +5,7 @@ const CartLayoutSkeleton = ({ children }) => {
         <section className="flex items-start xl:gap-10 gap-5 animate-pulse">
             {/*//! Main Content Skeleton */}
             <article className="lg:block hidden flex-1">
-                <div className="border border-[#CBCBCB] rounded-lg px-6 py-7 space-y-6">
+                <div className="border border-border rounded-lg px-6 py-7 space-y-6">
 
                     {children}
 

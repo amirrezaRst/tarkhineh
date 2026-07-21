@@ -58,7 +58,7 @@ const PaymentStatus = () => {
 
 
                     <h5
-                        className={`md:text-3xl text-1.5xl ${status == 200 ? "text-[#417F56]" : "text-[#C30000]"} text-center font-bold mt-7`}
+                        className={`md:text-3xl text-1.5xl ${status == 200 ? "text-primary" : "text-destructive"} text-center font-bold mt-7`}
                     >
                         {status == 200 ?
                             "پرداخت شما با موفقیت انجام شد!" :
@@ -66,7 +66,7 @@ const PaymentStatus = () => {
                         }
                     </h5>
                     {status == 200 &&
-                        <p className={`md:text-lg text-super-base text-[#417F56] text-center md:mt-8 mt-5`}>
+                        <p className={`md:text-lg text-super-base text-primary text-center md:mt-8 mt-5`}>
                             کد رهگیری سفارش شما: {refId}
                         </p>
                     }
@@ -75,7 +75,7 @@ const PaymentStatus = () => {
                     <div className="flex items-center md:gap-4 gap-2.5 mt-10">
                         <PreserveQueryLink href="/">
                             <button
-                                className={`${status == 200 ? "bg-[#417F56]" : "bg-[#353535]/80"} border ${status == 200 ? "border-[#417F56]" : "border-[#353535]/80"} text-white md:text-base text-super-sm rounded-md py-2 leading-6 md:px-8 px-5`}
+                                className={`${status == 200 ? "bg-primary" : "bg-foreground/80"} border ${status == 200 ? "border-primary" : "border-foreground/80"} text-white md:text-base text-super-sm rounded-md py-2 leading-6 md:px-8 px-5`}
                             >
                                 بازگشت به صفحه اصلی
                             </button>
@@ -83,14 +83,14 @@ const PaymentStatus = () => {
                         {status == 200 ?
                             <PreserveQueryLink href="/profile/orders">
                                 <button
-                                    className="bg-white border border-[#417F56] text-[#417F56] md:text-base text-super-sm rounded-md py-2 leading-6 md:px-8 px-5"
+                                    className="bg-white border border-primary text-primary md:text-base text-super-sm rounded-md py-2 leading-6 md:px-8 px-5"
                                 >
                                     پیگیری سفارش
                                 </button>
                             </PreserveQueryLink> :
                             <Link href={`https://sandbox.zarinpal.com/pg/StartPay/${authority}`}>
                                 <button
-                                    className="bg-white border border-[#353535] text-[#353535] md:text-base text-super-sm rounded-md py-2 leading-6 md:px-8 px-5"
+                                    className="bg-white border border-foreground text-foreground md:text-base text-super-sm rounded-md py-2 leading-6 md:px-8 px-5"
                                 >
                                     پرداخت مجدد
                                 </button>

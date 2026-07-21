@@ -41,7 +41,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
     return (
         <>
             <div
-                className="bg-white 3xl:h-[230px] xl:h-[210px] md:h-[250px] h-[200px] flex 2xl:gap-2 border border-[#CBCBCB] rounded-lg overflow-hidden hover:shadow-lg duration-300"
+                className="bg-white 3xl:h-[230px] xl:h-[210px] md:h-[250px] h-[200px] flex 2xl:gap-2 border border-border rounded-lg overflow-hidden hover:shadow-lg duration-300"
             >
 
                 <img
@@ -56,7 +56,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
                     <div className="flex items-center justify-between">
                         <h3
-                            className="3xl:text-2xl md:text-1.5xl text-super-base text-[#353535] font-semibold cursor-pointer"
+                            className="3xl:text-2xl md:text-1.5xl text-super-base text-foreground font-semibold cursor-pointer"
                             onClick={() => setIsOpen(true)}
                         >
                             {name}
@@ -65,14 +65,14 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
                     </div>
 
                     <div className="flex xl:flex-row flex-col xl:items-center justify-between gap-2 md:mb-3.5 mb-1.5">
-                        <p className="text-[#353535] 3xl:text-super-base md:text-super-sm text-super-xs leading-5 flex-1 line-clamp-2">
+                        <p className="text-foreground 3xl:text-super-base md:text-super-sm text-super-xs leading-5 flex-1 line-clamp-2">
                             {ingredients?.map(item => `${item}، `)}
                         </p>
                         <div className="flex xl:flex-col flex-row justify-between md:gap-4 gap-1.5">
 
                             <MenuCardDiscount discount={discount} price={price} />
 
-                            <span className="text-[#353535] 3xl:text-lg md:text-super-base text-sm md:font-normal font-semibold">
+                            <span className="text-foreground 3xl:text-lg md:text-super-base text-sm md:font-normal font-semibold">
                                 {FormatPrice(finalPrice)} تومان
                             </span>
 

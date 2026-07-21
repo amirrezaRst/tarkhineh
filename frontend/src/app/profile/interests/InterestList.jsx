@@ -31,7 +31,7 @@ const InterestList = ({ userId, category }) => {
                             <img src="/images/spider-background.png" alt="" className="absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] opacity-35" />
 
                             <div className="flex flex-col items-center gap-7 z-10">
-                                <p className="text-1.5xl text-[#757575]">
+                                <p className="text-1.5xl text-muted-fg">
                                     هنوز هیچ آیتمی به لیست علاقه مندی های شما اضافه نشده!
                                 </p>
                             </div>

@@ -13,7 +13,7 @@ const BottomNavbarItem = ({ sIcon, oIcon, path, text }) => {
                     sIcon :
                     oIcon
                 }
-                <span className={`flex-1 text-sm ${path === pathname ? "text-[#417F56] font-medium" : "text-[#717171] font-normal"}`}>
+                <span className={`flex-1 text-sm ${path === pathname ? "text-primary font-medium" : "text-muted-fg font-normal"}`}>
                     {text}
                 </span>
             </li>

@@ -14,8 +14,8 @@ const benefits = [
 
 const BenefitsSection = () => {
     return (
-        <section className="container md:py-20 py-16 border-b-2 border-[#CBCBCB]/30">
-            <h2 className="xl:text-2.5xl md:text-2xl text-1.5xl text-[#353535] text-center md:font-semibold font-bold md:mb-10 mb-7">
+        <section className="container md:py-20 py-16 border-b-2 border-border/30">
+            <h2 className="xl:text-2.5xl md:text-2xl text-1.5xl text-foreground text-center md:font-semibold font-bold md:mb-10 mb-7">
                 مزیت دریافت نمایندگی
             </h2>
 

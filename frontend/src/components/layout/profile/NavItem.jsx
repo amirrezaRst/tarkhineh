@@ -12,10 +12,10 @@ const NavItem = ({ oIcon, sIcon, text, path, handler }) => {
             onClick={path ? undefined : handler}
         >
             <li
-                className={`h-full flex items-center lg:justify-start justify-center  ${path === pathname ? "text-[#417F56] font-normal" : "text-[#353535] font-light"}
-        ${!path && "text-[#C30000] hover:bg-[#C30000]/5"} hover:bg-[#417F56]/5 text-super-base tracking-wide  rounded-lg`}
+                className={`h-full flex items-center lg:justify-start justify-center  ${path === pathname ? "text-primary font-normal" : "text-foreground font-light"}
+        ${!path && "text-destructive hover:bg-destructive/5"} hover:bg-primary/5 text-super-base tracking-wide  rounded-lg`}
             >
-                <div className={`w-[2.5px] h-11 bg-[#417F56] lg:block hidden rounded-l-full ml-3.5 ${path === pathname ? "opacity-100" : "opacity-0"}`} />
+                <div className={`w-[2.5px] h-11 bg-primary lg:block hidden rounded-l-full ml-3.5 ${path === pathname ? "opacity-100" : "opacity-0"}`} />
 
                 {path === pathname ?
                     sIcon

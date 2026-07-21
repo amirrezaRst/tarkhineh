@@ -31,7 +31,7 @@ const Slider = () => {
 
                 <div className="justify-items-end self-center md:mt-8 mt-5">
                     <PreserveQueryLink href="/menus">
-                        <button className="bg-[#417F56] rounded-lg py-2 px-8 text-white lg:text-base text-super-sm">
+                        <button className="bg-primary rounded-lg py-2 px-8 text-white lg:text-base text-super-sm">
                             سفارش آنلاین غذا
                         </button>
                     </PreserveQueryLink>
@@ -41,11 +41,11 @@ const Slider = () => {
                     className="bg-white flex items-center gap-2.5 md:py-3 py-2.5 md:px-9 px-7 rounded-t-2xl absolute bottom-[0px] left-[50%] translate-x-[-50%]"
                 >
 
-                    <div className="md:w-3 md:h-3 w-2 h-2 bg-[#417F56] rounded-full"></div>
-                    <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
-                    <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
-                    <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
-                    <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-[#ADADAD] rounded-full"></div>
+                    <div className="md:w-3 md:h-3 w-2 h-2 bg-primary rounded-full"></div>
+                    <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-subtle-fg rounded-full"></div>
+                    <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-subtle-fg rounded-full"></div>
+                    <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-subtle-fg rounded-full"></div>
+                    <div className="md:w-2 md:h-2 w-1.5 h-1.5 bg-subtle-fg rounded-full"></div>
 
                 </div>
 

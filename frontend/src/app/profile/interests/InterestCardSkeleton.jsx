@@ -1,6 +1,6 @@
 const InterestCardSkeleton = () => {
     return (
-        <div className="bg-white border border-[#CBCBCB] rounded-lg overflow-hidden animate-pulse">
+        <div className="bg-white border border-border rounded-lg overflow-hidden animate-pulse">
             {/* Skeleton Image */}
             <div className="w-full lg:h-[180px] md:h-40 h-44 bg-gray-200" />
 

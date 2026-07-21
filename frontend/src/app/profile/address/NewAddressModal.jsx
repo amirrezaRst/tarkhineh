@@ -32,10 +32,10 @@ const NewAddressModal = ({ userId, isOpen, setIsOpen }) => {
             >
 
                 {/*//! Title */}
-                <div className="relative bg-[#EDEDED] w-full py-5">
-                    <h6 className="text-center text-[#353535] font-medium text-xl">ثبت آدرس جدید</h6>
+                <div className="relative bg-surface-sunken w-full py-5">
+                    <h6 className="text-center text-foreground font-medium text-xl">ثبت آدرس جدید</h6>
                     <button className="absolute top-5 left-6 p-1" onClick={() => setIsOpen(false)}>
-                        <XmarkIcon className="fill-[#717171] w-7 h-7" />
+                        <XmarkIcon className="fill-muted-fg w-7 h-7" />
                     </button>
                 </div>
 
@@ -48,12 +48,12 @@ const NewAddressModal = ({ userId, isOpen, setIsOpen }) => {
 
                     <div className="flex gap-3 mt-2">
                         <button
-                            className="bg-[#E5F2E9] rounded-md text-[#417F56] text-super-sm font-medium flex-1 py-2 leading-6"
+                            className="bg-primary-subtle rounded-md text-primary text-super-sm font-medium flex-1 py-2 leading-6"
                         >
                             ویرایش آدرس انتخابی
                         </button>
                         <button
-                            className="bg-[#417F56] rounded-md text-white text-super-sm font-medium flex-1 py-2 leading-6"
+                            className="bg-primary rounded-md text-white text-super-sm font-medium flex-1 py-2 leading-6"
                             type="submit"
                         >
                             ثبت آدرس

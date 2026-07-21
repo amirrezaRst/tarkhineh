@@ -2,7 +2,7 @@ import PanelSidebar from "./PanelSidebar";
 
 const PanelLayout = ({ children }) => {
     return (
-        <div className="bg-[#F8F9FA] flex w-full h-screen overflow-hidden">
+        <div className="bg-background flex w-full h-screen overflow-hidden">
 
             <PanelSidebar />
 
@@ -45,7 +45,7 @@ export default PanelLayout;
     <div className="flex flex-wrap -mx-3">
 
         <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
-            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-md rounded-2xl bg-clip-border border border-[#417F56]/40">
+            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-md rounded-2xl bg-clip-border border border-primary/40">
                 <div className="flex-auto px-6 py-5">
                     <div className="flex flex-row -mx-3">
                         <div className="flex-none w-2/3 max-w-full px-3">
@@ -69,7 +69,7 @@ export default PanelLayout;
 
 
 <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
-    <div className="relative flex flex-col min-w-0 break-words bg-white shadow-md rounded-2xl bg-clip-border border border-[#417F56]/40">
+    <div className="relative flex flex-col min-w-0 break-words bg-white shadow-md rounded-2xl bg-clip-border border border-primary/40">
         <div className="flex-auto px-6 py-5">
             <div className="flex flex-row -mx-3">
                 <div className="flex-none w-2/3 max-w-full px-3">
@@ -94,7 +94,7 @@ export default PanelLayout;
 
 
         <div className="w-full max-w-full px-3 sm:w-1/2 sm:flex-none xl:w-1/4">
-            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-md rounded-2xl bg-clip-border border border-[#417F56]/40">
+            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-md rounded-2xl bg-clip-border border border-primary/40">
                 <div className="flex-auto px-6 py-5">
                     <div className="flex flex-row -mx-3">
                         <div className="flex-none w-2/3 max-w-full px-3">
@@ -118,7 +118,7 @@ export default PanelLayout;
 
 
         <div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
-            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-md rounded-2xl bg-clip-border border border-[#417F56]/40">
+            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-md rounded-2xl bg-clip-border border border-primary/40">
                 <div className="flex-auto px-6 py-5">
                     <div className="flex flex-row -mx-3">
                         <div className="flex-none w-2/3 max-w-full px-3">
@@ -145,7 +145,7 @@ export default PanelLayout;
 
     < div className = "flex flex-wrap mt-6 -mx-3" >
         <div className="w-full px-3 mb-6 lg:mb-0 lg:w-7/12 lg:flex-none">
-            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-md rounded-2xl bg-clip-border border border-[#417F56]/30">
+            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-md rounded-2xl bg-clip-border border border-primary/30">
                 <div className="flex-auto p-4">
                     <div className="flex flex-wrap -mx-3">
                         <div className="max-w-full px-3 lg:w-1/2 lg:flex-none">

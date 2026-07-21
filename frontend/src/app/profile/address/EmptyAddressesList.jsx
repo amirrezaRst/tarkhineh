@@ -10,13 +10,13 @@ const EmptyAddressesList = ({ cartPage }) => {
             />
 
             <div className="flex flex-col items-center gap-7 z-10">
-                <p className={`${cartPage ? "text-lg" : "text-1.5xl"}  text-[#757575]`}>
+                <p className={`${cartPage ? "text-lg" : "text-1.5xl"}  text-muted-fg`}>
                     شما در حال حاظر هیچ آدرسی ثبت نکرده اید!
                 </p>
 
                 {!cartPage &&
                     <button
-                        className="border border-[#417F56] rounded-md text-[#417F56] text-lg px-12 py-2"
+                        className="border border-primary rounded-md text-primary text-lg px-12 py-2"
                     >
                         افزودن آدرس
                     </button>

@@ -22,7 +22,7 @@ const options = [
 
 const OptionsSection = () => {
     return (
-        <section className="container md:py-20 py-12 border-b-2 border-[#CBCBCB]/30 grid md:grid-cols-4 grid-cols-2 gap-6">
+        <section className="container md:py-20 py-12 border-b-2 border-border/30 grid md:grid-cols-4 grid-cols-2 gap-6">
 
             {options.map(({ icon, title }, index) =>
                 <OptionItem key={index} icon={icon} title={title} />

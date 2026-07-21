@@ -20,7 +20,7 @@ const MenuCardRate = ({ reviews }) => {
             {getStarIcon(rate)}
 
             <p>{PersianNumber(rate || 0)}
-                <span className="text-[#adadad] font-light text-xs mr-0.5">
+                <span className="text-subtle-fg font-light text-xs mr-0.5">
                     ({PersianNumber(reviews?.total)} امتیاز)
                 </span>
             </p>

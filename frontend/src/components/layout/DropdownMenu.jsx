@@ -34,13 +34,13 @@ const DropdownMenu = ({ children, handleActive, text, pathname, path }) => {
                     className="cursor-pointer p-1"
                     onClick={() => setIsDropOpen(!isDropOpen)}
                 >
-                    <ChevronIcon className={`inline ${pathname === path ? "fill-[#417F56]" : "fill-[#717171]"} ${isDropOpen ? "rotate-180" : "rotate-0"} duration-300`} />
+                    <ChevronIcon className={`inline ${pathname === path ? "fill-primary" : "fill-muted-fg"} ${isDropOpen ? "rotate-180" : "rotate-0"} duration-300`} />
                 </span>
             </li>
 
             {/*//! Dropdown */}
             <div
-                className={`bg-white w-[150px] absolute mt-2 rounded-md left-[50%] translate-x-[-50%] border border-[#ededed]/40 shadow-2xl py-2 px-3 transition-all duration-300 ease-in-out 
+                className={`bg-white w-[150px] absolute mt-2 rounded-md left-[50%] translate-x-[-50%] border border-border-subtle/40 shadow-2xl py-2 px-3 transition-all duration-300 ease-in-out 
             ${isDropOpen ? "opacity-100 visible translate-y-0" : "opacity-0 invisible translate-y-[-10px]"}`}
                 onClick={() => setIsDropOpen(false)}
             >
