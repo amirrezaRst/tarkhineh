@@ -9,7 +9,7 @@ const BranchPanelMenu = () => {
     return (
         < >
 
-            <h6 className="text-xl font-semibold">آیتم های منو شعبه اقدسیه</h6>
+            <h6 className="text-xl font-semibold">منوی شعبه</h6>
 
             <MenusSection />
 
