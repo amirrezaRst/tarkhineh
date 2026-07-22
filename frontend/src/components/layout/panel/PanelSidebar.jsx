@@ -1,8 +1,17 @@
 "use client";
 
 import { DashboardIcon, DeliveryIcon, DiagramIcon, FastFoodIcon, FastFoodMenuIcon, HistoryIcon } from "@/assets/Icons";
+import useUserStore from "@/stores/useUserStore";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+// Each staff role gets its own accent so the same sidebar shell visually
+// identifies which dashboard you're in.
+const roleAccent = {
+    admin: { activeBg: "bg-role-admin-subtle", activeText: "text-role-admin", iconBg: "bg-role-admin" },
+    branch_manager: { activeBg: "bg-role-branch-subtle", activeText: "text-role-branch", iconBg: "bg-role-branch" },
+    courier: { activeBg: "bg-role-courier-subtle", activeText: "text-role-courier", iconBg: "bg-role-courier" },
+};
 
 
 const sidebarItemsByRole = {
@@ -27,8 +36,10 @@ const sidebarItemsByRole = {
 };
 
 const PanelSidebar = () => {
-    const role = "branch_manager"; //! This should be dynamically set based on the logged-in user's role
-    const sidebarItems = sidebarItemsByRole[role] || sidebarItemsByRole.branch_manager; //! Default to branch_manager if role is not found
+    const user = useUserStore((state) => state.user);
+    const role = user?.role;
+    const sidebarItems = sidebarItemsByRole[role] || [];
+    const accent = roleAccent[role] || roleAccent.branch_manager;
     const pathname = usePathname();
 
 
@@ -55,11 +66,11 @@ const PanelSidebar = () => {
                             <li key={index} className="mt-0.5 w-full">
                                 <Link
                                     href={item.href}
-                                    className={`py-2.5 my-0 mx-4 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold transition-colors ${isActive ? "bg-white shadow-md text-primary" : "text-muted-fg"
+                                    className={`py-2.5 my-0 mx-4 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold transition-colors ${isActive ? `bg-white shadow-md ${accent.activeText}` : "text-muted-fg"
                                         }`}
                                 >
                                     <div className={`mr-2 flex h-10 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5 ${isActive
-                                        ? "bg-gradient-to-tl from-green-700 to-lime-500 shadow-soft-2xl"
+                                        ? `${accent.iconBg} shadow-soft-2xl`
                                         : "bg-white"
                                         }`}>
                                         <Icon className={`${isActive ? "fill-white stroke-white" : "fill-muted-fg"} w-7 h-7`} />
