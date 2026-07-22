@@ -1,92 +1,137 @@
 "use client";
 
-import { DashboardIcon, DeliveryIcon, DiagramIcon, FastFoodIcon, FastFoodMenuIcon, HistoryIcon } from "@/assets/Icons";
+import { DashboardIcon, DeliveryIcon, DiagramIcon, FastFoodIcon, FastFoodMenuIcon, HistoryIcon, LogoutIcon } from "@/assets/Icons";
 import useUserStore from "@/stores/useUserStore";
+import useCartStore from "@/stores/useCartStore";
+import { handleLogout } from "@/services/UserService";
+import { branchNamesDic } from "@/constant/branchDictionary";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-// Each staff role gets its own accent so the same sidebar shell visually
-// identifies which dashboard you're in.
-const roleAccent = {
-    admin: { activeBg: "bg-role-admin-subtle", activeText: "text-role-admin", iconBg: "bg-role-admin" },
-    branch_manager: { activeBg: "bg-role-branch-subtle", activeText: "text-role-branch", iconBg: "bg-role-branch" },
-    courier: { activeBg: "bg-role-courier-subtle", activeText: "text-role-courier", iconBg: "bg-role-courier" },
-};
-
-
-const sidebarItemsByRole = {
+// Nav grouped into sections per role. Icons are monochrome (recoloured via
+// fill-current). Order within a group is by importance.
+const sidebarByRole = {
     admin: [
-        { label: "داشبورد", href: "/admin", icon: DashboardIcon },
-        { label: "مدیریت رستوران‌ها", href: "/admin/restaurants", icon: FastFoodIcon },
-        { label: "گزارشات کلی", href: "/admin/reports", icon: DiagramIcon },
+        { section: null, items: [{ label: "داشبورد", href: "/admin", icon: DashboardIcon }] },
+        {
+            section: "مدیریت", items: [
+                { label: "مدیریت رستوران‌ها", href: "/admin/restaurants", icon: FastFoodIcon },
+                { label: "گزارشات کلی", href: "/admin/reports", icon: DiagramIcon },
+            ]
+        },
     ],
     branch_manager: [
-        { label: "داشبورد", href: "/panel/branch", icon: DashboardIcon },
-        { label: "منو رستوران", href: "/panel/branch/menu", icon: FastFoodMenuIcon },
-        { label: "پیک‌ها", href: "/panel/branch/couriers", icon: DeliveryIcon },
-        { label: "سفارش‌ها", href: "/panel/branch/orders", icon: FastFoodIcon },
-        { label: "گزارشات", href: "/panel/branch/reports", icon: DiagramIcon },
+        { section: null, items: [{ label: "داشبورد", href: "/panel/branch", icon: DashboardIcon }] },
+        {
+            section: "عملیات", items: [
+                { label: "سفارش‌ها", href: "/panel/branch/orders", icon: FastFoodIcon },
+                { label: "منو رستوران", href: "/panel/branch/menu", icon: FastFoodMenuIcon },
+                { label: "پیک‌ها", href: "/panel/branch/couriers", icon: DeliveryIcon },
+            ]
+        },
+        { section: "تحلیل", items: [{ label: "گزارشات", href: "/panel/branch/reports", icon: DiagramIcon }] },
     ],
     courier: [
-        { label: "داشبورد", href: "/panel/courier", icon: DashboardIcon },
-        { label: "سفارش‌های من", href: "/panel/courier/orders", icon: DeliveryIcon },
-        { label: "تاریخچه تحویل", href: "/panel/courier/history", icon: HistoryIcon },
-        { label: "وضعیت فعالیت", href: "/panel/courier/status", icon: DeliveryIcon },
-    ]
+        { section: null, items: [{ label: "داشبورد", href: "/panel/courier", icon: DashboardIcon }] },
+        {
+            section: "تحویل", items: [
+                { label: "سفارش‌های من", href: "/panel/courier/orders", icon: DeliveryIcon },
+                { label: "تاریخچه تحویل", href: "/panel/courier/history", icon: HistoryIcon },
+                { label: "وضعیت فعالیت", href: "/panel/courier/status", icon: DeliveryIcon },
+            ]
+        },
+    ],
+};
+
+const roleLabel = {
+    admin: "مدیر کل",
+    branch_manager: "مدیر شعبه",
+    courier: "پیک",
+};
+
+const initials = (name) => {
+    if (!name) return "؟";
+    const parts = name.trim().split(/\s+/);
+    return (parts[0]?.[0] || "") + (parts[1]?.[0] || "");
 };
 
 const PanelSidebar = () => {
     const user = useUserStore((state) => state.user);
-    const role = user?.role;
-    const sidebarItems = sidebarItemsByRole[role] || [];
-    const accent = roleAccent[role] || roleAccent.branch_manager;
+    const clearUser = useUserStore((state) => state.clearUser);
+    const clearCart = useCartStore((state) => state.clearCart);
     const pathname = usePathname();
+    const router = useRouter();
 
+    const groups = sidebarByRole[user?.role] || [];
+    const branchName = user?.branch ? branchNamesDic[user.branch] : null;
 
     return (
-        <aside className="bg-white max-w-64 z-990 inset-y-0 my-4 ml-4 block w-full -translate-x-full flex-wrap items-center justify-between overflow-y-auto rounded-2xl border-0 p-0 antialiased shadow-none transition-transform duration-200 xl:left-0 xl:translate-x-0 xl:bg-transparent">
-            <div className="h-19.5">
-                <i className="absolute top-0 right-0 hidden p-4 opacity-50 cursor-pointer fas fa-times text-slate-400 xl:hidden" ></i>
-                <Link href="/" className="block px-8 py-6 m-0 text-sm whitespace-nowrap text-slate-700" >
-                    <img src="/images/logo.png" className="inline h-full max-w-full transition-all duration-200 ease-nav-brand max-h-12" alt="main_logo" />
+        <aside className="bg-sidebar w-64 shrink-0 h-full flex flex-col">
+            {/* Brand */}
+            <div className="px-6 py-6 shrink-0">
+                <Link href="/" className="inline-block">
+                    <img src="/images/logo-2.png" className="h-10 max-w-full" alt="ترخینه" />
                 </Link>
             </div>
 
-            <hr className="h-px mt-0 bg-transparent bg-gradient-to-r from-transparent via-black/40 to-transparent" />
+            {/* Nav */}
+            <nav className="flex-1 overflow-y-auto px-3 pb-4 space-y-5">
+                {groups.map((group, gi) => (
+                    <div key={gi}>
+                        {group.section && (
+                            <p className="text-sidebar-muted text-super-xs font-medium px-3 mb-2 tracking-wide">
+                                {group.section}
+                            </p>
+                        )}
+                        <ul className="space-y-1">
+                            {group.items.map((item) => {
+                                const isActive = pathname === item.href;
+                                const Icon = item.icon;
+                                return (
+                                    <li key={item.href}>
+                                        <Link
+                                            href={item.href}
+                                            className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-super-sm font-medium transition-all duration-200 ${isActive
+                                                ? "bg-sidebar-active text-sidebar-active-fg shadow-glow-brand"
+                                                : "text-sidebar-muted hover:bg-sidebar-raised hover:text-sidebar-fg"
+                                                }`}
+                                        >
+                                            <Icon className={`w-5 h-5 shrink-0 fill-current ${isActive ? "" : "opacity-90"}`} />
+                                            <span>{item.label}</span>
+                                        </Link>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                ))}
+            </nav>
 
-            <div className="items-center block w-auto max-h-screen overflow-auto h-sidenav grow basis-full pt-4">
-                <ul className="flex flex-col pl-0 gap-3 mb-0">
-
-
-                    {sidebarItems.map((item, index) => {
-                        const isActive = pathname === item.href;
-                        const Icon = item.icon;
-
-                        return (
-                            <li key={index} className="mt-0.5 w-full">
-                                <Link
-                                    href={item.href}
-                                    className={`py-2.5 my-0 mx-4 flex items-center whitespace-nowrap rounded-lg px-4 font-semibold transition-colors ${isActive ? `bg-white shadow-md ${accent.activeText}` : "text-muted-fg"
-                                        }`}
-                                >
-                                    <div className={`mr-2 flex h-10 w-10 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5 ${isActive
-                                        ? `${accent.iconBg} shadow-soft-2xl`
-                                        : "bg-white"
-                                        }`}>
-                                        <Icon className={`${isActive ? "fill-white stroke-white" : "fill-muted-fg"} w-7 h-7`} />
-                                    </div>
-                                    <span className="mr-1.5 duration-300 opacity-100 pointer-events-none ease-soft">{item.label}</span>
-                                </Link>
-                            </li>
-                        );
-                    })}
-
-
-                </ul>
+            {/* Identity footer */}
+            <div className="shrink-0 border-t border-sidebar-border/10 p-3">
+                <div className="flex items-center gap-3 rounded-xl px-2 py-2">
+                    <div className="w-10 h-10 rounded-full bg-sidebar-active text-sidebar-active-fg flex items-center justify-center font-bold shrink-0">
+                        {initials(user?.fullName)}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                        <p className="text-sidebar-fg text-super-sm font-medium truncate">
+                            {user?.fullName || user?.phoneNumber || "کاربر"}
+                        </p>
+                        <p className="text-sidebar-muted text-super-xs truncate">
+                            {roleLabel[user?.role]}{branchName ? ` · شعبه ${branchName}` : ""}
+                        </p>
+                    </div>
+                </div>
+                <button
+                    onClick={() => handleLogout(clearUser, clearCart, () => { }, router)}
+                    className="mt-1 w-full flex items-center gap-3 rounded-xl px-4 py-2.5 text-super-sm font-medium text-sidebar-muted hover:bg-sidebar-raised hover:text-sidebar-fg transition-colors"
+                >
+                    <LogoutIcon className="w-5 h-5 shrink-0" />
+                    <span>خروج از حساب</span>
+                </button>
             </div>
-
         </aside>
     );
-}
+};
 
 export default PanelSidebar;

@@ -85,6 +85,30 @@ module.exports = {
           courier: "hsl(var(--role-courier) / <alpha-value>)",
           "courier-subtle": "hsl(var(--role-courier-subtle) / <alpha-value>)",
         },
+
+        // Domain: the permanently-dark panel sidebar
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar) / <alpha-value>)",
+          raised: "hsl(var(--sidebar-raised) / <alpha-value>)",
+          fg: "hsl(var(--sidebar-fg) / <alpha-value>)",
+          muted: "hsl(var(--sidebar-muted) / <alpha-value>)",
+          border: "hsl(var(--sidebar-border) / <alpha-value>)",
+          active: "hsl(var(--sidebar-active) / <alpha-value>)",
+          "active-fg": "hsl(var(--sidebar-active-fg) / <alpha-value>)",
+        },
+
+        // Domain: bento-editorial panel surfaces
+        "panel-ground": "hsl(var(--panel-ground) / <alpha-value>)",
+        "feature-from": "hsl(var(--feature-from) / <alpha-value>)",
+        "feature-mid": "hsl(var(--feature-mid) / <alpha-value>)",
+        "feature-to": "hsl(var(--feature-to) / <alpha-value>)",
+      },
+      boxShadow: {
+        // Soft-UI layered shadows for panel cards
+        "soft": "0 1px 2px hsl(0 0% 0% / 0.04), 0 4px 16px hsl(0 0% 0% / 0.06)",
+        "soft-lg": "0 2px 4px hsl(0 0% 0% / 0.05), 0 12px 32px hsl(0 0% 0% / 0.09)",
+        // Brand-green glow for the active sidebar item
+        "glow-brand": "0 0 0 1px hsl(var(--brand-400) / 0.4), 0 6px 18px hsl(var(--brand-500) / 0.35)",
       },
       container: {
         center: true,
