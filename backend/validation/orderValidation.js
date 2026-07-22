@@ -85,3 +85,18 @@ exports.approveOrderValidation = (req, res, next) => {
 
     next();
 };
+
+
+exports.assignCourierValidation = (req, res, next) => {
+    const schema = joi.object({
+        courierId: joi.string().pattern(/^[0-9a-fA-F]{24}$/).required().messages({
+            "string.pattern.base": "'courierId' must be a valid id.",
+            "any.required": "'courierId' is required"
+        })
+    });
+
+    const { error } = schema.validate(req.body);
+    if (error) return res.status(400).json({ status: 400, message: error.details[0].message });
+
+    next();
+};

@@ -23,6 +23,8 @@ const OrderSchema = new mongoose.Schema({
     deliveryFee: { type: Number, default: 0 },
     branch: { type: mongoose.Schema.Types.ObjectId, ref: "Branch" },    //! New Field
     customerNote: { type: String, default: "" },    //! New Field
+    courier: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    assignedAt: { type: Date, default: null },
     status: {
         type: String,
         enum: ['pending', 'preparing', 'on_the_way', 'delivered', 'cancelled'],
