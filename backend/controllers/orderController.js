@@ -306,7 +306,7 @@ exports.updateOrderStatus = async (req, res) => {
         const { id: orderId } = req.params;
         const { status } = req.body;
 
-        const order = await Order.findById(orderId).select("user branch totalPrice status").populate("user", "fullName email phoneNumber");
+        const order = await Order.findById(orderId).select("user branch courier totalPrice status").populate("user", "fullName email phoneNumber");
         if (!order) return res.status(404).json({ status: 404, message: "Order not found" });
 
         const isStaff = STAFF_ROLES.includes(req.user.role);
@@ -318,9 +318,15 @@ exports.updateOrderStatus = async (req, res) => {
             if (status !== "cancelled") {
                 return res.status(403).json({ status: 403, message: "You can only cancel your own order" });
             }
-        } else if (req.user.role === ROLES.BRANCH_MANAGER || req.user.role === ROLES.COURIER) {
+        } else if (req.user.role === ROLES.BRANCH_MANAGER) {
             if (!req.user.branch || order.branch?.toString() !== req.user.branch) {
                 return res.status(403).json({ status: 403, message: "You do not have access to this branch's orders" });
+            }
+        } else if (req.user.role === ROLES.COURIER) {
+            // A courier may only move an order that's actually assigned to them,
+            // not just any order in their branch.
+            if (!order.courier || order.courier.toString() !== req.user.id) {
+                return res.status(403).json({ status: 403, message: "This order is not assigned to you" });
             }
         }
 
@@ -378,6 +384,43 @@ exports.approveOrder = async (req, res) => {
         return res.status(200).json({
             status: 200,
             message: "Order approved successfully.",
+        });
+    } catch (error) {
+        return res.status(500).json({ status: 500, message: "Internal server error.", error: error.message });
+    }
+};
+
+exports.assignCourier = async (req, res) => {
+    try {
+        const { id: orderId } = req.params;
+        const { courierId } = req.body;
+
+        const order = await Order.findById(orderId).select("branch deliveryType courier");
+        if (!order) {
+            return res.status(404).json({ status: 404, message: "Order not found." });
+        }
+
+        if (req.user.role === ROLES.BRANCH_MANAGER && (!req.user.branch || order.branch?.toString() !== req.user.branch)) {
+            return res.status(403).json({ status: 403, message: "You do not have access to this branch's orders" });
+        }
+
+        if (order.deliveryType !== "courier") {
+            return res.status(400).json({ status: 400, message: "This order is not a courier delivery." });
+        }
+
+        const courier = await User.findById(courierId).select("role branch");
+        if (!courier || courier.role !== ROLES.COURIER || courier.branch?.toString() !== order.branch?.toString()) {
+            return res.status(400).json({ status: 400, message: "Invalid courier for this branch." });
+        }
+
+        order.courier = courierId;
+        order.assignedAt = new Date();
+        await order.save();
+
+        return res.status(200).json({
+            status: 200,
+            message: "Courier assigned successfully.",
+            order,
         });
     } catch (error) {
         return res.status(500).json({ status: 500, message: "Internal server error.", error: error.message });

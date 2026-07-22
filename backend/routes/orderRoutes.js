@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { createOrder, getOrderById, updateOrderStatus, deleteOrder, getOrdersByUser, approveOrder } = require('../controllers/orderController');
-const { createOrderValidation, updateOrderStatusValidation, approveOrderValidation } = require('../validation/orderValidation');
+const { createOrder, getOrderById, updateOrderStatus, deleteOrder, getOrdersByUser, approveOrder, assignCourier } = require('../controllers/orderController');
+const { createOrderValidation, updateOrderStatusValidation, approveOrderValidation, assignCourierValidation } = require('../validation/orderValidation');
 const Authenticate = require('../middleware/Authenticate');
 const Authorize = require('../middleware/Authorize');
 const AuthorizeOwner = require('../middleware/AuthorizeOwner');
@@ -23,6 +23,9 @@ router.patch('/:id/status', Authenticate, updateOrderStatusValidation, updateOrd
 
 //! Update EstimatedDeliveryTime and ApprovedAt Field
 router.patch("/:id/approved", Authenticate, Authorize([ROLES.ADMIN, ROLES.BRANCH_MANAGER]), approveOrderValidation, approveOrder);
+
+// Assign a courier to a courier-delivery order (branch/admin only; branch scoping happens in the controller)
+router.patch("/:id/assign-courier", Authenticate, Authorize([ROLES.ADMIN, ROLES.BRANCH_MANAGER]), assignCourierValidation, assignCourier);
 
 // Delete an order
 router.delete('/:id', Authenticate, Authorize([ROLES.ADMIN]), deleteOrder);
