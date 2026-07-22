@@ -1,6 +1,30 @@
+"use client";
+
+import { useEffect } from "react";
 import PanelSidebar from "./PanelSidebar";
+import useUserStore from "@/stores/useUserStore";
 
 const PanelLayout = ({ children }) => {
+    const user = useUserStore((state) => state.user);
+    const fetchUser = useUserStore((state) => state.fetchUser);
+
+    // The panel lives outside MainLayout, which is what normally hydrates the
+    // user store via the Navbar. Without this, `user` stays null on every panel
+    // page — the sidebar renders no items and data-fetch effects that key off
+    // user.branch never run. The middleware guarantees a valid session reached
+    // here, so fetchUser will resolve to the real user.
+    useEffect(() => {
+        if (!user) fetchUser();
+    }, [user, fetchUser]);
+
+    if (!user) {
+        return (
+            <div className="bg-background w-full h-screen flex items-center justify-center">
+                <span className="text-muted-fg">در حال بارگذاری...</span>
+            </div>
+        );
+    }
+
     return (
         <div className="bg-background flex w-full h-screen overflow-hidden">
 
