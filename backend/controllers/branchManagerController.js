@@ -140,8 +140,11 @@ exports.getBranchCouriers = async (req, res) => {
     }
 };
 
-function periodStart(period) {
-    const now = new Date();
+const TZ = "Asia/Tehran";
+const ACTIVE_STATUSES = ["pending", "preparing", "on_the_way"];
+
+function periodStart(period, ref = new Date()) {
+    const now = new Date(ref);
     if (period === "week") {
         const start = new Date(now);
         start.setDate(now.getDate() - now.getDay()); // start of week (Sunday)
@@ -157,43 +160,108 @@ function periodStart(period) {
     return start;
 }
 
+// Delivered-order count + revenue for a [start, end) window on one branch.
+async function deliveredSummary(branchObjectId, start, end) {
+    const agg = await Order.aggregate([
+        { $match: { branch: branchObjectId, status: "delivered", createdAt: { $gte: start, $lt: end } } },
+        { $group: { _id: null, revenue: { $sum: "$finalPrice" }, count: { $sum: 1 } } },
+    ]);
+    const revenue = agg[0]?.revenue || 0;
+    const count = agg[0]?.count || 0;
+    return { revenue, count, avgBasket: count ? Math.round(revenue / count) : 0 };
+}
+
+// Percentage change vs a previous value; null when there's no baseline to compare.
+function pctChange(current, previous) {
+    if (!previous) return current ? null : 0;
+    return Math.round(((current - previous) / previous) * 100);
+}
+
 exports.getBranchStats = async (req, res) => {
     try {
         const branchId = req.params.branch;
         const period = ["today", "week", "month"].includes(req.query.period) ? req.query.period : "today";
         const branchObjectId = new mongoose.Types.ObjectId(branchId);
+
+        const now = new Date();
         const start = periodStart(period);
+        const duration = now - start;
+        const prevStart = new Date(start.getTime() - duration); // previous window of equal length
+        const todayStart = periodStart("today");
+        const sevenStart = new Date(todayStart);
+        sevenStart.setDate(sevenStart.getDate() - 6); // last 7 calendar days incl. today
 
-        const [ordersCount, revenueResult, topItems, activeOrders] = await Promise.all([
-            Order.countDocuments({ branch: branchId, createdAt: { $gte: start } }),
+        const [
+            ordersCount,
+            prevOrdersCount,
+            current,
+            previous,
+            topItems,
+            statusAgg,
+            activeAgg,
+            revenueSeriesAgg,
+            peakHoursAgg,
+        ] = await Promise.all([
+            Order.countDocuments({ branch: branchId, createdAt: { $gte: start, $lt: now } }),
+            Order.countDocuments({ branch: branchId, createdAt: { $gte: prevStart, $lt: start } }),
+            deliveredSummary(branchObjectId, start, now),
+            deliveredSummary(branchObjectId, prevStart, start),
 
             Order.aggregate([
-                { $match: { branch: branchObjectId, status: "delivered", createdAt: { $gte: start } } },
-                { $group: { _id: null, total: { $sum: "$finalPrice" } } },
-            ]),
-
-            Order.aggregate([
-                { $match: { branch: branchObjectId, status: "delivered", createdAt: { $gte: start } } },
+                { $match: { branch: branchObjectId, status: "delivered", createdAt: { $gte: start, $lt: now } } },
                 { $unwind: "$items" },
                 { $group: { _id: "$items.menuItem", quantity: { $sum: "$items.quantity" } } },
                 { $sort: { quantity: -1 } },
-                { $limit: 3 },
-                {
-                    $lookup: {
-                        from: "menus",
-                        localField: "_id",
-                        foreignField: "_id",
-                        as: "menuItem",
-                    },
-                },
+                { $limit: 5 },
+                { $lookup: { from: "menus", localField: "_id", foreignField: "_id", as: "menuItem" } },
                 { $unwind: "$menuItem" },
                 { $project: { _id: 0, menuItem: { _id: 1, name: 1, images: 1 }, quantity: 1 } },
             ]),
 
-            // Not period-scoped on purpose: this reflects the branch's current
-            // pipeline, not the selected reporting window.
-            Order.countDocuments({ branch: branchId, status: { $in: ["pending", "preparing", "on_the_way"] } }),
+            // Order-status breakdown for the period (donut).
+            Order.aggregate([
+                { $match: { branch: branchObjectId, createdAt: { $gte: start, $lt: now } } },
+                { $group: { _id: "$status", count: { $sum: 1 } } },
+            ]),
+
+            // Current active pipeline — NOT period-scoped.
+            Order.aggregate([
+                { $match: { branch: branchObjectId, status: { $in: ACTIVE_STATUSES } } },
+                { $group: { _id: "$status", count: { $sum: 1 } } },
+            ]),
+
+            // Delivered revenue per day, last 7 calendar days.
+            Order.aggregate([
+                { $match: { branch: branchObjectId, status: "delivered", createdAt: { $gte: sevenStart, $lt: now } } },
+                { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: TZ } }, value: { $sum: "$finalPrice" } } },
+            ]),
+
+            // Today's orders grouped by hour (peak hours).
+            Order.aggregate([
+                { $match: { branch: branchObjectId, createdAt: { $gte: todayStart, $lt: now } } },
+                { $group: { _id: { $hour: { date: "$createdAt", timezone: TZ } }, count: { $sum: 1 } } },
+            ]),
         ]);
+
+        // status/active maps with every key present (0 default)
+        const statusBreakdown = { pending: 0, preparing: 0, on_the_way: 0, delivered: 0, cancelled: 0 };
+        statusAgg.forEach((s) => { if (s._id in statusBreakdown) statusBreakdown[s._id] = s.count; });
+        const activeBreakdown = { pending: 0, preparing: 0, on_the_way: 0 };
+        activeAgg.forEach((s) => { if (s._id in activeBreakdown) activeBreakdown[s._id] = s.count; });
+        const activeOrders = activeBreakdown.pending + activeBreakdown.preparing + activeBreakdown.on_the_way;
+
+        // fill the 7-day series with zero-days, ISO date + value (frontend labels it)
+        const seriesMap = Object.fromEntries(revenueSeriesAgg.map((d) => [d._id, d.value]));
+        const revenueSeries = [];
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(sevenStart);
+            d.setDate(d.getDate() + i);
+            const key = d.toLocaleDateString("en-CA", { timeZone: TZ }); // YYYY-MM-DD
+            revenueSeries.push({ date: key, value: seriesMap[key] || 0 });
+        }
+
+        const peakHours = Array.from({ length: 24 }, (_, h) => ({ hour: h, count: 0 }));
+        peakHoursAgg.forEach((p) => { if (p._id >= 0 && p._id < 24) peakHours[p._id].count = p.count; });
 
         res.status(200).json({
             status: 200,
@@ -201,9 +269,19 @@ exports.getBranchStats = async (req, res) => {
             data: {
                 period,
                 ordersCount,
-                revenue: revenueResult[0]?.total || 0,
-                topItems,
+                revenue: current.revenue,
+                avgBasket: current.avgBasket,
                 activeOrders,
+                trends: {
+                    revenue: pctChange(current.revenue, previous.revenue),
+                    orders: pctChange(ordersCount, prevOrdersCount),
+                    avgBasket: pctChange(current.avgBasket, previous.avgBasket),
+                },
+                statusBreakdown,
+                activeBreakdown,
+                revenueSeries,
+                peakHours,
+                topItems,
             },
         });
     } catch (error) {
