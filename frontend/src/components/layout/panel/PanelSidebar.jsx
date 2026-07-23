@@ -49,6 +49,12 @@ const roleLabel = {
     courier: "پیک",
 };
 
+const panelLabel = {
+    admin: "پنل مدیریت کل",
+    branch_manager: "پنل مدیریت شعبه",
+    courier: "پنل پیک",
+};
+
 const initials = (name) => {
     if (!name) return "؟";
     const parts = name.trim().split(/\s+/);
@@ -68,9 +74,10 @@ const PanelSidebar = () => {
     return (
         <aside className="bg-sidebar w-64 shrink-0 h-full flex flex-col">
             {/* Brand */}
-            <div className="px-6 py-6 shrink-0">
-                <Link href="/" className="inline-block">
-                    <img src="/images/logo-2.png" className="h-10 max-w-full" alt="ترخینه" />
+            <div className="px-6 pt-6 pb-5 shrink-0">
+                <Link href="/" className="inline-flex flex-col gap-1.5">
+                    <img src="/images/logo-2.png" className="h-11 w-auto max-w-full" alt="ترخینه" />
+                    <span className="text-sidebar-muted text-super-xs tracking-wide">{panelLabel[user?.role] || "پنل مدیریت"}</span>
                 </Link>
             </div>
 

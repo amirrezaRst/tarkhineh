@@ -1,12 +1,57 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import PanelSidebar from "./PanelSidebar";
 import useUserStore from "@/stores/useUserStore";
+import { branchNamesDic } from "@/constant/branchDictionary";
+
+// Topbar title per route. The dashboard greets by name; sub-pages name the
+// section. Falls back to a neutral title for any unmapped panel route.
+const titleForPath = (pathname, name) => {
+    const map = {
+        "/panel/branch": name ? `خوش آمدید، ${name}` : "خوش آمدید",
+        "/panel/branch/orders": "مدیریت سفارش‌ها",
+        "/panel/branch/menu": "منوی شعبه",
+        "/panel/branch/couriers": "پیک‌های شعبه",
+        "/panel/branch/reports": "گزارشات و تحلیل",
+    };
+    return map[pathname] || "پنل مدیریت";
+};
+
+// At-a-glance store open/closed indicator. Interactive locally; persisting the
+// real open/closed state needs the Branch working-hours field (a later phase),
+// so this reflects UI intent only for now.
+const StoreStatusPill = () => {
+    const [open, setOpen] = useState(true);
+    return (
+        <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-pressed={open}
+            className={`inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-super-xs font-bold border transition-colors ${open
+                ? "bg-primary-subtle text-primary border-primary/20"
+                : "bg-surface-sunken text-muted-fg border-border"
+                }`}
+            title={open ? "شعبه در حال پذیرش سفارش است" : "شعبه بسته است"}
+        >
+            {open ? (
+                <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+                </span>
+            ) : (
+                <span className="inline-flex rounded-full h-2 w-2 bg-muted-fg" />
+            )}
+            {open ? "شعبه باز است" : "شعبه بسته است"}
+        </button>
+    );
+};
 
 const PanelLayout = ({ children }) => {
     const user = useUserStore((state) => state.user);
     const fetchUser = useUserStore((state) => state.fetchUser);
+    const pathname = usePathname();
 
     // The panel lives outside MainLayout, which is what normally hydrates the
     // user store via the Navbar. Without this, `user` stays null on every panel
@@ -19,7 +64,7 @@ const PanelLayout = ({ children }) => {
 
     if (!user) {
         return (
-            <div className="bg-background w-full h-screen flex items-center justify-center">
+            <div className="bg-panel-ground w-full h-screen flex items-center justify-center">
                 <span className="text-muted-fg">در حال بارگذاری...</span>
             </div>
         );
@@ -31,6 +76,7 @@ const PanelLayout = ({ children }) => {
         month: "long",
         day: "numeric",
     });
+    const branchName = user.branch ? branchNamesDic[user.branch] : null;
 
     return (
         <div className="bg-panel-ground flex w-full h-screen overflow-hidden" dir="rtl">
@@ -38,15 +84,32 @@ const PanelLayout = ({ children }) => {
 
             <div className="flex-1 flex flex-col h-full overflow-hidden">
                 {/* Top bar */}
-                <header className="shrink-0 h-16 bg-surface border-b border-border/60 flex items-center justify-between px-8">
-                    <p className="text-foreground font-semibold">
-                        خوش آمدید{user.fullName ? `، ${user.fullName}` : ""}
-                    </p>
-                    <p className="text-muted-fg text-super-sm hidden sm:block">{today}</p>
+                <header className="shrink-0 h-[68px] bg-surface border-b border-border/70 flex items-center justify-between gap-4 px-6 md:px-8">
+                    <div className="min-w-0">
+                        <p className="text-foreground font-extrabold text-super-base truncate">
+                            {titleForPath(pathname, user.fullName)}
+                        </p>
+                        <p className="text-muted-fg text-super-xs mt-0.5">
+                            {today}{branchName ? ` · شعبه ${branchName}` : ""}
+                        </p>
+                    </div>
+
+                    <div className="flex items-center gap-2.5 shrink-0">
+                        <StoreStatusPill />
+                        <button
+                            type="button"
+                            aria-label="اعلان‌ها"
+                            className="w-10 h-10 rounded-xl border border-border bg-surface-sunken grid place-items-center text-muted-fg hover:text-foreground hover:border-border-strong transition-colors"
+                        >
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6M10 20a2 2 0 0 0 4 0" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
                 </header>
 
                 {/*//! START MAIN CONTENT */}
-                <main className="flex-1 overflow-y-auto px-8 py-7">
+                <main className="flex-1 overflow-y-auto px-6 md:px-8 py-7">
                     {children}
                 </main>
                 {/*//? END MAIN CONTENT */}
