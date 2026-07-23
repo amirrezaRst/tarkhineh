@@ -29,6 +29,15 @@ exports.getBranchOrders = async (req, res) => {
         const count = await Order.countDocuments(query);
         const totalPages = Math.ceil(count / limit);
 
+        // Per-status counts for the filter tabs (so every tab shows its size,
+        // not just the active one). One grouped pass over the branch's orders.
+        const countsAgg = await Order.aggregate([
+            { $match: { branch: new mongoose.Types.ObjectId(branch) } },
+            { $group: { _id: "$status", count: { $sum: 1 } } },
+        ]);
+        const counts = { all: 0, pending: 0, preparing: 0, on_the_way: 0, delivered: 0, cancelled: 0 };
+        countsAgg.forEach((c) => { if (c._id in counts) counts[c._id] = c.count; counts.all += c.count; });
+
         res.status(200).json({
             status: 200,
             message: "Orders fetched successfully",
@@ -36,7 +45,8 @@ exports.getBranchOrders = async (req, res) => {
                 orders,
                 totalPages,
                 currentPage: page,
-                totalOrders: count
+                totalOrders: count,
+                counts,
             }
         });
     } catch (error) {
@@ -122,10 +132,12 @@ exports.getBranchCouriers = async (req, res) => {
         const couriers = await User.find({ branch: branchId, role: ROLES.COURIER })
             .select("fullName phoneNumber email");
 
+        const todayStart = periodStart("today");
         const withActiveCounts = await Promise.all(
             couriers.map(async (courier) => ({
                 ...courier.toObject(),
                 activeOrders: await Order.countDocuments({ courier: courier._id, status: "on_the_way" }),
+                deliveredToday: await Order.countDocuments({ courier: courier._id, status: "delivered", createdAt: { $gte: todayStart } }),
             }))
         );
 
@@ -201,6 +213,7 @@ exports.getBranchStats = async (req, res) => {
             activeAgg,
             revenueSeriesAgg,
             peakHoursAgg,
+            paymentAgg,
         ] = await Promise.all([
             Order.countDocuments({ branch: branchId, createdAt: { $gte: start, $lt: now } }),
             Order.countDocuments({ branch: branchId, createdAt: { $gte: prevStart, $lt: start } }),
@@ -241,6 +254,12 @@ exports.getBranchStats = async (req, res) => {
                 { $match: { branch: branchObjectId, createdAt: { $gte: todayStart, $lt: now } } },
                 { $group: { _id: { $hour: { date: "$createdAt", timezone: TZ } }, count: { $sum: 1 } } },
             ]),
+
+            // Payment-method split for the period (online vs cash).
+            Order.aggregate([
+                { $match: { branch: branchObjectId, createdAt: { $gte: start, $lt: now } } },
+                { $group: { _id: "$paymentMethod", count: { $sum: 1 } } },
+            ]),
         ]);
 
         // status/active maps with every key present (0 default)
@@ -263,6 +282,13 @@ exports.getBranchStats = async (req, res) => {
         const peakHours = Array.from({ length: 24 }, (_, h) => ({ hour: h, count: 0 }));
         peakHoursAgg.forEach((p) => { if (p._id >= 0 && p._id < 24) peakHours[p._id].count = p.count; });
 
+        const paymentSplit = { online: 0, cash: 0 };
+        paymentAgg.forEach((p) => { if (p._id in paymentSplit) paymentSplit[p._id] = p.count; });
+
+        // Cancellation rate for the period (share of orders that were cancelled).
+        const periodTotal = Object.values(statusBreakdown).reduce((a, b) => a + b, 0);
+        const cancellationRate = periodTotal ? Math.round((statusBreakdown.cancelled / periodTotal) * 1000) / 10 : 0;
+
         res.status(200).json({
             status: 200,
             message: "Branch stats fetched successfully",
@@ -281,6 +307,8 @@ exports.getBranchStats = async (req, res) => {
                 activeBreakdown,
                 revenueSeries,
                 peakHours,
+                paymentSplit,
+                cancellationRate,
                 topItems,
             },
         });
