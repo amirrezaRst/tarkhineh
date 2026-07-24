@@ -151,6 +151,26 @@
         --role-branch-subtle: var(--brand-50);
         --role-courier: var(--blue-500);
         --role-courier-subtle: var(--blue-50);
+
+        /* Panel sidebar — a permanently-dark surface inside the otherwise
+           light panel (not tied to the .dark theme). Kept as tokens so the
+           dark chrome is never hardcoded in the component. */
+        --sidebar: var(--neutral-900);
+        --sidebar-raised: var(--neutral-800);
+        --sidebar-fg: var(--neutral-50);
+        --sidebar-muted: 0 0% 60%;
+        /* plain white channels; apply translucency in-component with /10 etc. */
+        --sidebar-border: 0 0% 100%;
+        --sidebar-active: var(--brand-400);
+        --sidebar-active-fg: var(--neutral-950);
+
+        /* Panel (bento-editorial) surfaces: a faintly green-tinted page ground
+           so white cards read as raised, and the dark-green gradient for the
+           dashboard's signature "feature" card. */
+        --panel-ground: 132 14% 93%;
+        --feature-from: 144 36% 29%;
+        --feature-mid: 152 42% 18%;
+        --feature-to: 150 43% 15%;
     }
 
     /* Dark theme — scaffolding only. The semantic layer is fully re-pointed
@@ -194,6 +214,38 @@
         --role-admin-subtle: var(--neutral-800);
         --role-branch-subtle: var(--neutral-800);
         --role-courier-subtle: var(--neutral-800);
+    }
+}
+
+
+/* ==========================================================================
+   Panel motion — a staggered entrance for card grids/lists.
+   Put `.stagger-in` on a container; direct children fade+rise in sequence.
+   Each child's delay comes from a --i custom property set inline
+   (style={{ "--i": index }}). Honours prefers-reduced-motion.
+   ========================================================================== */
+@keyframes panel-rise {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.stagger-in>* {
+    opacity: 0;
+    animation: panel-rise 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stagger-in>* {
+        opacity: 1;
+        animation: none;
     }
 }
 

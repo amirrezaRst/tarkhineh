@@ -3,56 +3,51 @@
 import { useState } from "react";
 import FormatPrice from "@/utils/FormatPrice";
 
-const MenuCard = ({ _id, name, description, price, images, available, onToggle }) => {
-    const [busy, setBusy] = useState(false);
+const CATEGORY_LABEL = { main: "غذای اصلی", side: "پیش‌غذا", dessert: "دسر", drink: "نوشیدنی" };
 
+const MenuCard = ({ _id, name, description, price, images, category, available, onToggle }) => {
+    const [busy, setBusy] = useState(false);
     const handleToggle = async () => {
         setBusy(true);
         await onToggle(_id, !available);
         setBusy(false);
     };
 
-    return (
-        <div
-            className="bg-white 3xl:h-[230px] xl:h-[210px] md:h-[250px] h-[200px] flex 2xl:gap-2 border border-border rounded-lg overflow-hidden hover:shadow-lg duration-300"
-        >
-            <img
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images?.[0]}`}
-                alt={`ترخینه ${name}`}
-                className="h-full 3xl:w-[230px] 2xl:w-[210px] xl:w-[190px] lg:w-[170px] md:w-[240px] w-[140px] object-cover"
-            />
+    const img = images?.[0] ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[0]}` : null;
 
-            <div className="w-full md:p-4 p-2.5 flex flex-col justify-between">
-                <div className="flex items-center justify-between gap-2">
-                    <h3 className="3xl:text-2xl md:text-1.5xl text-super-base text-foreground font-semibold">
-                        {name}
-                    </h3>
-                    <button
-                        onClick={handleToggle}
-                        disabled={busy}
-                        aria-pressed={available}
-                        aria-label={available ? "غیرفعال کردن در منوی شعبه" : "افزودن به منوی شعبه"}
-                        className={`shrink-0 w-11 h-6 rounded-full relative transition-colors disabled:opacity-50 ${available ? "bg-primary" : "bg-border"
-                            }`}
-                    >
-                        <span
-                            className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${available ? "translate-x-0.5" : "translate-x-5"
-                                }`}
-                        />
-                    </button>
+    return (
+        <div className={`flex bg-surface rounded-2xl shadow-soft overflow-hidden transition-all duration-200 hover:shadow-soft-lg ${!available ? "opacity-95" : ""}`}>
+            <div className="w-[118px] shrink-0 bg-surface-sunken bg-cover bg-center"
+                style={{ backgroundImage: img ? `url(${img})` : undefined, filter: available ? undefined : "grayscale(0.7)" }} />
+
+            <div className="flex-1 p-4 flex flex-col min-w-0">
+                <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-super-base font-extrabold truncate">{name}</h3>
+                    {category && (
+                        <span className="shrink-0 text-super-xs font-bold text-primary bg-primary-subtle rounded-full px-2 py-0.5">
+                            {CATEGORY_LABEL[category] || category}
+                        </span>
+                    )}
                 </div>
 
-                <p className="text-muted-fg 3xl:text-super-base md:text-super-sm text-super-xs leading-5 flex-1 line-clamp-2 mt-1">
-                    {description}
-                </p>
+                <p className="text-super-xs text-muted-fg mt-1.5 leading-5 line-clamp-2 flex-1">{description}</p>
 
-                <div className="flex items-center justify-between md:mt-3.5 mt-1.5">
-                    <span className="text-foreground 3xl:text-lg md:text-super-base text-sm font-semibold">
-                        {FormatPrice(price)} تومان
-                    </span>
-                    <span className={`text-super-xs font-medium ${available ? "text-primary" : "text-muted-fg"}`}>
-                        {available ? "در منوی شعبه" : "غیرفعال"}
-                    </span>
+                <div className="flex items-center justify-between gap-2 mt-3">
+                    <span className="font-extrabold text-super-sm tabular-nums">{FormatPrice(price)} تومان</span>
+                    <div className="flex items-center gap-2.5">
+                        <span className={`text-super-xs font-bold ${available ? "text-primary" : "text-subtle-fg"}`}>
+                            {available ? "موجود" : "ناموجود"}
+                        </span>
+                        <button
+                            onClick={handleToggle}
+                            disabled={busy}
+                            aria-pressed={available}
+                            aria-label={available ? "غیرفعال کردن در منوی شعبه" : "افزودن به منوی شعبه"}
+                            className={`shrink-0 w-11 h-6 rounded-full relative transition-colors disabled:opacity-50 ${available ? "bg-primary" : "bg-border-strong"}`}
+                        >
+                            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${available ? "right-0.5" : "right-[22px]"}`} />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

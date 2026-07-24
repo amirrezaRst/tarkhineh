@@ -45,6 +45,9 @@ app.use(mongoSanitize());
 app.use("/api", globalLimiter);
 
 //! Static Folder
+// Courier photos live in their own dir; mount it before the generic /public
+// menu-images route so /public/couriers/* resolves here first.
+app.use("/public/couriers", express.static(path.join(__dirname, "public", "courier-images")));
 app.use("/public", express.static(path.join(__dirname, "public", "menu-images")));
 
 //! Routes
@@ -59,6 +62,7 @@ app.use("/api/order", require('./routes/orderRoutes'));
 app.use("/api/payment", require('./routes/paymentRoutes'));
 app.use("/api/like", require('./routes/likeRoutes'));
 app.use("/api/branch-manager", require('./routes/branchManagerRoutes'));
+app.use("/api/courier", require('./routes/courierRoutes'));
 
 //! Report Scheduler
 require('./utils/reportScheduler');
