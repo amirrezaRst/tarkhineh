@@ -110,15 +110,9 @@ const OrderCard = ({ order, couriers, capacity = 3, selected, onSelect, onChange
                     )}
 
                     {order.status === "on_the_way" && (
-                        <>
-                            <span className="text-super-xs text-subtle-fg">
-                                {courierName(order, couriers) ? `پیک: ${courierName(order, couriers)}` : "در حال تحویل"}
-                            </span>
-                            <button onClick={markDelivered} disabled={busy}
-                                className="bg-primary text-primary-fg rounded-lg px-3.5 py-2 text-super-xs font-bold hover:bg-primary-hover disabled:opacity-50">
-                                تحویل داده شد
-                            </button>
-                        </>
+                        <span className="text-super-xs text-subtle-fg">
+                            {courierName(order, couriers) ? `پیک: ${courierName(order, couriers)} · ` : ""}در انتظار تحویل توسط پیک
+                        </span>
                     )}
 
                     {order.status === "delivered" && (

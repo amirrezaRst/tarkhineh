@@ -80,7 +80,7 @@ const BranchPanel = () => {
     }));
 
     return (
-        <div className="max-w-[1240px]">
+        <div className="w-full">
             {/* ===== Bento: feature + stat tiles ===== */}
             <section className="grid grid-cols-2 md:grid-cols-4 auto-rows-[118px] gap-4">
                 {/* Feature — revenue hero with embedded sparkline */}

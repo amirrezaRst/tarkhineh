@@ -66,7 +66,7 @@ const MenusSection = () => {
     );
 
     return (
-        <div className="max-w-[1240px]">
+        <div className="w-full">
             <PanelPageHeader title="منوی شعبه" subtitle={`مدیریت آیتم‌های موجود در شعبه ${branchName}`} />
 
             <div className="mb-5">

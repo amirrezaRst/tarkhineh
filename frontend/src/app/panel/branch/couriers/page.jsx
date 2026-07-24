@@ -51,7 +51,7 @@ const BranchPanelCouriers = () => {
     };
 
     return (
-        <div className="max-w-[1280px]">
+        <div className="w-full">
             <PanelPageHeader
                 title="پیک‌های شعبه"
                 subtitle={`وضعیت، بار کاری و عملکرد پیک‌های شعبه ${branchName}`}
