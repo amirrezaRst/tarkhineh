@@ -10,16 +10,19 @@ export class ApiError extends Error {
 }
 
 async function request(path, { method = "GET", body, signal, headers } = {}) {
+    // FormData (file uploads) must not be JSON-encoded and must let the browser
+    // set its own multipart Content-Type/boundary.
+    const isForm = typeof FormData !== "undefined" && body instanceof FormData;
     let res;
     try {
         res = await fetch(`${API_URL}${path}`, {
             method,
             credentials: "include",
             headers: {
-                ...(body !== undefined && { "Content-Type": "application/json" }),
+                ...(body !== undefined && !isForm && { "Content-Type": "application/json" }),
                 ...headers,
             },
-            body: body !== undefined ? JSON.stringify(body) : undefined,
+            body: body !== undefined ? (isForm ? body : JSON.stringify(body)) : undefined,
             signal,
         });
     } catch (err) {
