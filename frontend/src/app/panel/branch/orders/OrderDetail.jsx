@@ -4,6 +4,7 @@ import FormatPrice from "@/utils/FormatPrice";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import { faTime, shortId, courierName } from "./orderUtils";
 import useOrderActions from "./useOrderActions";
+import CourierSelect from "./CourierSelect";
 
 const STATUS_RANK = { pending: 0, preparing: 1, on_the_way: 2, delivered: 3 };
 
@@ -33,7 +34,7 @@ const Dot = ({ state }) => (
         }`} />
 );
 
-const OrderDetail = ({ order, couriers, onChanged }) => {
+const OrderDetail = ({ order, couriers, capacity = 3, onChanged }) => {
     const { courierId, setCourierId, busy, assignAndSend, approve, eta, setEta, markDelivered, cancel } =
         useOrderActions(order, onChanged);
 
@@ -146,13 +147,7 @@ const OrderDetail = ({ order, couriers, onChanged }) => {
 
                     {order.status === "preparing" && order.deliveryType === "courier" && (
                         <>
-                            <select value={courierId} onChange={(e) => setCourierId(e.target.value)}
-                                className="w-full border border-border rounded-xl px-3 py-3 text-super-sm font-semibold bg-surface">
-                                <option value="">اختصاص پیک…</option>
-                                {couriers.map((c) => (
-                                    <option key={c._id} value={c._id}>{c.fullName || c.phoneNumber} ({PersianNumber(c.activeOrders)} سفارش فعال)</option>
-                                ))}
-                            </select>
+                            <CourierSelect couriers={couriers} capacity={capacity} value={courierId} onChange={setCourierId} full />
                             <button onClick={assignAndSend} disabled={busy || !courierId} className="w-full bg-primary text-primary-fg rounded-xl py-3 text-super-sm font-bold hover:bg-primary-hover disabled:opacity-50">ارسال با پیک</button>
                         </>
                     )}

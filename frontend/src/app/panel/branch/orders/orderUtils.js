@@ -31,3 +31,12 @@ export const courierName = (order, couriers = []) => {
     const c = couriers.find((x) => x._id === order.courier);
     return c ? (c.fullName || c.phoneNumber) : null;
 };
+
+// How long an active order has been waiting, with a severity level so the UI can
+// flag orders that are sitting too long. Only meaningful for pending/preparing.
+export const agingInfo = (order) => {
+    const ref = order.status === "preparing" ? (order.approvedAt || order.createdAt) : order.createdAt;
+    const minutes = Math.max(0, Math.floor((Date.now() - new Date(ref).getTime()) / 60000));
+    const level = minutes >= 20 ? "crit" : minutes >= 10 ? "warn" : "ok";
+    return { minutes, level };
+};

@@ -1,10 +1,24 @@
 "use client";
 
+import PersianNumber from "@/utils/ConvertToPersianNumber";
 import FormatPrice from "@/utils/FormatPrice";
 import OrderStatusBadge, { statusMeta } from "@/components/panel/OrderStatusBadge";
 import { DeliveryIcon } from "@/assets/Icons";
-import { faTime, relativeFa, itemsSummary, shortId, courierName } from "./orderUtils";
+import { faTime, relativeFa, itemsSummary, shortId, courierName, agingInfo } from "./orderUtils";
 import useOrderActions from "./useOrderActions";
+import CourierSelect from "./CourierSelect";
+
+const AGE_CLS = { ok: "bg-surface-sunken text-muted-fg", warn: "bg-warning-subtle text-warning-fg", crit: "bg-destructive-subtle text-destructive" };
+const AgeChip = ({ order }) => {
+    if (order.status !== "pending" && order.status !== "preparing") return null;
+    const { minutes, level } = agingInfo(order);
+    return (
+        <span className={`inline-flex items-center gap-1 text-super-xs font-extrabold px-2 py-0.5 rounded-full ${AGE_CLS[level]}`}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 21a9 9 0 1 0-9-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /><path d="M12 8v4l3 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            {PersianNumber(minutes)} دقیقه{level !== "ok" ? " معطل" : ""}
+        </span>
+    );
+};
 
 const DeliveryPill = ({ type }) => (
     <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-super-xs font-bold ${type === "courier" ? "bg-status-preparing-subtle text-status-preparing" : "bg-surface-sunken text-muted-fg border border-border"
@@ -14,7 +28,7 @@ const DeliveryPill = ({ type }) => (
     </span>
 );
 
-const OrderCard = ({ order, couriers, selected, onSelect, onChanged }) => {
+const OrderCard = ({ order, couriers, capacity = 3, selected, onSelect, onChanged }) => {
     const { eta, setEta, courierId, setCourierId, busy, approve, assignAndSend, markDelivered, cancel } =
         useOrderActions(order, onChanged);
 
@@ -36,7 +50,10 @@ const OrderCard = ({ order, couriers, selected, onSelect, onChanged }) => {
                     <span className="font-extrabold text-primary-hover text-super-sm">#{shortId(order._id)}</span>
                     <span className="text-super-xs text-subtle-fg truncate">{faTime(order.createdAt)} · {relativeFa(order.createdAt)}</span>
                 </div>
-                <OrderStatusBadge status={order.status} />
+                <div className="flex items-center gap-2 shrink-0">
+                    <AgeChip order={order} />
+                    <OrderStatusBadge status={order.status} />
+                </div>
             </div>
 
             <p className="font-bold text-super-sm">
@@ -77,13 +94,7 @@ const OrderCard = ({ order, couriers, selected, onSelect, onChanged }) => {
 
                     {order.status === "preparing" && order.deliveryType === "courier" && (
                         <>
-                            <select value={courierId} onChange={(e) => setCourierId(e.target.value)}
-                                className="border border-border rounded-lg px-2.5 py-2 text-super-xs font-semibold bg-surface max-w-[150px]">
-                                <option value="">اختصاص پیک…</option>
-                                {couriers.map((c) => (
-                                    <option key={c._id} value={c._id}>{c.fullName || c.phoneNumber} ({c.activeOrders})</option>
-                                ))}
-                            </select>
+                            <CourierSelect couriers={couriers} capacity={capacity} value={courierId} onChange={setCourierId} />
                             <button onClick={assignAndSend} disabled={busy || !courierId}
                                 className="bg-primary text-primary-fg rounded-lg px-3.5 py-2 text-super-xs font-bold hover:bg-primary-hover disabled:opacity-50">
                                 ارسال
