@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import PanelSidebar from "./PanelSidebar";
 import useUserStore from "@/stores/useUserStore";
 import { branchNamesDic } from "@/constant/branchDictionary";
+import { setAvailability } from "@/services/CourierService";
 
 // Topbar title per route. The dashboard greets by name; sub-pages name the
 // section. Falls back to a neutral title for any unmapped panel route.
@@ -15,8 +16,47 @@ const titleForPath = (pathname, name) => {
         "/panel/branch/menu": "منوی شعبه",
         "/panel/branch/couriers": "پیک‌های شعبه",
         "/panel/branch/reports": "گزارشات و تحلیل",
+        "/panel/courier": name ? `سلام، ${name}` : "خوش آمدید",
+        "/panel/courier/orders": "تحویل‌های فعال",
+        "/panel/courier/history": "تاریخچهٔ تحویل",
+        "/panel/courier/profile": "پروفایل و عملکرد",
     };
     return map[pathname] || "پنل مدیریت";
+};
+
+// Courier online/offline switch — updates courierStatus and the user store so
+// the whole panel reflects availability immediately.
+const CourierAvailabilityToggle = () => {
+    const user = useUserStore((s) => s.user);
+    const setUser = useUserStore((s) => s.setUser);
+    const [busy, setBusy] = useState(false);
+    const online = user?.courierStatus !== "offline";
+
+    const toggle = async (next) => {
+        if (busy || (next === "available") === online) return;
+        setBusy(true);
+        await setAvailability(next, (s) => setUser({ ...user, courierStatus: s }));
+        setBusy(false);
+    };
+
+    return (
+        <div className="inline-flex bg-surface-sunken border border-border rounded-full p-1 gap-1" role="group" aria-label="وضعیت فعالیت">
+            <button onClick={() => toggle("available")} disabled={busy} aria-pressed={online}
+                className={`inline-flex items-center gap-1.5 text-super-xs font-extrabold px-3.5 py-2 rounded-full transition-colors ${online ? "bg-primary text-primary-fg" : "text-muted-fg hover:text-foreground"}`}>
+                {online && (
+                    <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-70" />
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
+                    </span>
+                )}
+                آنلاین
+            </button>
+            <button onClick={() => toggle("offline")} disabled={busy} aria-pressed={!online}
+                className={`text-super-xs font-extrabold px-3.5 py-2 rounded-full transition-colors ${!online ? "bg-muted-fg text-white" : "text-muted-fg hover:text-foreground"}`}>
+                آفلاین
+            </button>
+        </div>
+    );
 };
 
 // At-a-glance store open/closed indicator. Interactive locally; persisting the
@@ -95,16 +135,22 @@ const PanelLayout = ({ children }) => {
                     </div>
 
                     <div className="flex items-center gap-2.5 shrink-0">
-                        <StoreStatusPill />
-                        <button
-                            type="button"
-                            aria-label="اعلان‌ها"
-                            className="w-10 h-10 rounded-xl border border-border bg-surface-sunken grid place-items-center text-muted-fg hover:text-foreground hover:border-border-strong transition-colors"
-                        >
-                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6M10 20a2 2 0 0 0 4 0" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </button>
+                        {user.role === "courier" ? (
+                            <CourierAvailabilityToggle />
+                        ) : (
+                            <>
+                                <StoreStatusPill />
+                                <button
+                                    type="button"
+                                    aria-label="اعلان‌ها"
+                                    className="w-10 h-10 rounded-xl border border-border bg-surface-sunken grid place-items-center text-muted-fg hover:text-foreground hover:border-border-strong transition-colors"
+                                >
+                                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                        <path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6M10 20a2 2 0 0 0 4 0" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </button>
+                            </>
+                        )}
                     </div>
                 </header>
 
