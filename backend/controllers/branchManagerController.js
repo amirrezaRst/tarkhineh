@@ -543,6 +543,54 @@ exports.getBranchStats = async (req, res) => {
         // Period-aware trend series (revenue + orders per bucket) for the chart.
         const trendSeries = await buildTrendSeries(branchObjectId, period, now);
 
+        // Extra reports analytics (all scoped to the period window).
+        const nn = (x) => ({ $ne: [x, null] });
+        const [timingsAgg, courierPerfAgg, categoryAgg, hourlyAgg] = await Promise.all([
+            // Average accept / delivery / fulfillment durations over delivered orders.
+            Order.aggregate([
+                { $match: { branch: branchObjectId, status: "delivered", createdAt: { $gte: start, $lt: now } } },
+                {
+                    $group: {
+                        _id: null,
+                        accept: { $avg: { $cond: [nn("$approvedAt"), { $subtract: ["$approvedAt", "$createdAt"] }, null] } },
+                        delivery: { $avg: { $cond: [{ $and: [nn("$assignedAt"), nn("$deliveredAt")] }, { $subtract: ["$deliveredAt", "$assignedAt"] }, null] } },
+                        fulfillment: { $avg: { $cond: [nn("$deliveredAt"), { $subtract: ["$deliveredAt", "$createdAt"] }, null] } },
+                    },
+                },
+            ]),
+            // Top couriers by deliveries in the period, with average delivery time.
+            Order.aggregate([
+                { $match: { branch: branchObjectId, status: "delivered", courier: { $ne: null }, createdAt: { $gte: start, $lt: now } } },
+                { $group: { _id: "$courier", deliveries: { $sum: 1 }, avgMs: { $avg: { $cond: [{ $and: [nn("$assignedAt"), nn("$deliveredAt")] }, { $subtract: ["$deliveredAt", "$assignedAt"] }, null] } } } },
+                { $sort: { deliveries: -1 } },
+                { $limit: 5 },
+                { $lookup: { from: "users", localField: "_id", foreignField: "_id", as: "courier" } },
+                { $unwind: "$courier" },
+                { $project: { _id: 0, deliveries: 1, avgMs: 1, courier: { _id: "$courier._id", fullName: "$courier.fullName", image: "$courier.image" } } },
+            ]),
+            // Revenue + quantity per menu category.
+            Order.aggregate([
+                { $match: { branch: branchObjectId, status: "delivered", createdAt: { $gte: start, $lt: now } } },
+                { $unwind: "$items" },
+                { $lookup: { from: "menus", localField: "items.menuItem", foreignField: "_id", as: "m" } },
+                { $unwind: "$m" },
+                { $group: { _id: "$m.category", revenue: { $sum: { $multiply: ["$items.price", "$items.quantity"] } }, quantity: { $sum: "$items.quantity" } } },
+            ]),
+            // Orders per hour across the whole period (peak hours).
+            Order.aggregate([
+                { $match: { branch: branchObjectId, createdAt: { $gte: start, $lt: now } } },
+                { $group: { _id: { $hour: { date: "$createdAt", timezone: TZ } }, count: { $sum: 1 } } },
+            ]),
+        ]);
+
+        const toMin = (ms) => (ms != null ? Math.round(ms / 60000) : null);
+        const t0 = timingsAgg[0] || {};
+        const timings = { accept: toMin(t0.accept), delivery: toMin(t0.delivery), fulfillment: toMin(t0.fulfillment) };
+        const courierPerformance = courierPerfAgg.map((c) => ({ courier: c.courier, deliveries: c.deliveries, avgMinutes: toMin(c.avgMs) }));
+        const salesByCategory = categoryAgg.map((c) => ({ category: c._id, revenue: c.revenue, quantity: c.quantity }));
+        const peakHoursPeriod = Array.from({ length: 24 }, (_, h) => ({ hour: h, count: 0 }));
+        hourlyAgg.forEach((p) => { if (p._id >= 0 && p._id < 24) peakHoursPeriod[p._id].count = p.count; });
+
         res.status(200).json({
             status: 200,
             message: "Branch stats fetched successfully",
@@ -562,6 +610,10 @@ exports.getBranchStats = async (req, res) => {
                 revenueSeries,
                 trendSeries,
                 peakHours,
+                peakHoursPeriod,
+                timings,
+                courierPerformance,
+                salesByCategory,
                 paymentSplit,
                 cancellationRate,
                 topItems,
