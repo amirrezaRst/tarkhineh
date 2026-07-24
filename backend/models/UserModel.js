@@ -13,6 +13,12 @@ const UserSchema = new mongoose.Schema({
     },
     // Only meaningful for branch_manager / courier roles.
     branch: { type: mongoose.Schema.Types.ObjectId, ref: 'Branch', default: null },
+    // Courier-only profile fields (managed from the branch panel).
+    image: { type: String, default: null },
+    courierStatus: { type: String, enum: ['available', 'offline'], default: 'available' },
+    vehicleType: { type: String, enum: ['motorcycle', 'bicycle', 'car', 'foot'], default: 'motorcycle' },
+    plateNumber: { type: String, default: null },
+    nationalCode: { type: String, default: null },
     coupons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' }],
     orderHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
     addresses: [AddressSchema],

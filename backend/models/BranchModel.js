@@ -9,6 +9,9 @@ const BranchSchema = new mongoose.Schema({
     // openTime: { type: String, required: true },
     // closeTime: { type: String, required: true },
     menus: [{ type: mongoose.Schema.Types.ObjectId, ref: "Menu" }],
+    // Max concurrent orders a single courier of this branch may carry. One
+    // shared setting for every courier; drives the over-assignment guard.
+    courierCapacity: { type: Number, default: 3, min: 1 },
 });
 
 module.exports = mongoose.model("Branch", BranchSchema);

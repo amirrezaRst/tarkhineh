@@ -6,33 +6,73 @@ const User = require('../models/UserModel');
 const { ROLES } = require('../config/roles');
 
 
+// Resolve a named date range (or explicit from/to) to a createdAt filter.
+function ordersDateWindow({ range, from, to }) {
+    const now = new Date();
+    if (range === "today") { const s = periodStart("today"); return { $gte: s }; }
+    if (range === "yesterday") {
+        const e = periodStart("today");
+        const s = new Date(e); s.setDate(s.getDate() - 1);
+        return { $gte: s, $lt: e };
+    }
+    if (range === "7days") { const s = periodStart("today"); s.setDate(s.getDate() - 6); return { $gte: s }; }
+    if (range === "custom" && (from || to)) {
+        const w = {};
+        if (from) w.$gte = new Date(from);
+        if (to) { const t = new Date(to); t.setHours(23, 59, 59, 999); w.$lte = t; }
+        return w;
+    }
+    return null; // "all" or unspecified
+}
+
 exports.getBranchOrders = async (req, res) => {
     try {
         const branch = req.params.branch;
         const status = req.query.status || "pending";
+        const { range, from, to, q, sort } = req.query;
 
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 30;
         const skip = (page - 1) * limit;
 
-        const query = { branch };
+        // Date window (shared by both the list and the per-status tab counts).
+        const dateFilter = ordersDateWindow({ range, from, to });
+        const baseQuery = { branch };
+        if (dateFilter) baseQuery.createdAt = dateFilter;
+
+        // Free-text search over order id (hex substring) or customer name/phone.
+        if (q && q.trim()) {
+            const term = q.trim();
+            const rx = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+            const users = await User.find({ $or: [{ fullName: rx }, { phoneNumber: rx }] }).select("_id").limit(50);
+            baseQuery.$or = [
+                { $expr: { $regexMatch: { input: { $toString: "$_id" }, regex: term, options: "i" } } },
+                { user: { $in: users.map((u) => u._id) } },
+            ];
+        }
+
+        const query = { ...baseQuery };
         if (status !== "all") query.status = status;
+
+        const sortMap = { oldest: { createdAt: 1 }, amount: { finalPrice: -1 }, newest: { createdAt: -1 } };
+        const sortBy = sortMap[sort] || sortMap.newest;
 
         const orders = await Order.find(query)
             .populate("user", "fullName phoneNumber")
             .populate("items.menuItem", "name images")
             .skip(skip)
             .limit(limit)
-            .sort({ createdAt: -1 })
+            .sort(sortBy)
             .select("-updatedAt -__v");
 
         const count = await Order.countDocuments(query);
         const totalPages = Math.ceil(count / limit);
 
-        // Per-status counts for the filter tabs (so every tab shows its size,
-        // not just the active one). One grouped pass over the branch's orders.
+        // Per-status counts for the filter tabs, scoped to the same window/search
+        // so each tab reflects what's actually visible.
+        const countMatch = { ...baseQuery, branch: new mongoose.Types.ObjectId(branch) };
         const countsAgg = await Order.aggregate([
-            { $match: { branch: new mongoose.Types.ObjectId(branch) } },
+            { $match: countMatch },
             { $group: { _id: "$status", count: { $sum: 1 } } },
         ]);
         const counts = { all: 0, pending: 0, preparing: 0, on_the_way: 0, delivered: 0, cancelled: 0 };
@@ -125,29 +165,190 @@ exports.toggleMenuAvailability = async (req, res) => {
     }
 };
 
+// One courier's live operational stats: active load, deliveries today/this week,
+// average delivery minutes (assigned -> delivered) and lifetime deliveries.
+async function courierStats(courierId) {
+    const todayStart = periodStart("today");
+    const weekStart = new Date(todayStart);
+    weekStart.setDate(weekStart.getDate() - 6);
+
+    const [activeOrders, deliveredToday, deliveredWeek, agg] = await Promise.all([
+        Order.countDocuments({ courier: courierId, status: { $in: ["preparing", "on_the_way"] } }),
+        Order.countDocuments({ courier: courierId, status: "delivered", deliveredAt: { $gte: todayStart } }),
+        Order.countDocuments({ courier: courierId, status: "delivered", deliveredAt: { $gte: weekStart } }),
+        Order.aggregate([
+            { $match: { courier: courierId, status: "delivered", assignedAt: { $ne: null }, deliveredAt: { $ne: null } } },
+            { $group: { _id: null, total: { $sum: 1 }, avgMs: { $avg: { $subtract: ["$deliveredAt", "$assignedAt"] } } } },
+        ]),
+    ]);
+    const total = agg[0]?.total || 0;
+    const avgMinutes = agg[0]?.avgMs ? Math.round(agg[0].avgMs / 60000) : null;
+    // lifetime total counts all delivered (some may lack assignedAt), so recount
+    const totalDeliveries = await Order.countDocuments({ courier: courierId, status: "delivered" });
+    return { activeOrders, deliveredToday, deliveredWeek, avgMinutes, totalDeliveries };
+}
+
 exports.getBranchCouriers = async (req, res) => {
     try {
         const branchId = req.params.branch;
 
-        const couriers = await User.find({ branch: branchId, role: ROLES.COURIER })
-            .select("fullName phoneNumber email");
+        const [branch, couriers] = await Promise.all([
+            Branch.findById(branchId).select("courierCapacity"),
+            User.find({ branch: branchId, role: ROLES.COURIER })
+                .select("fullName phoneNumber email image courierStatus vehicleType plateNumber nationalCode"),
+        ]);
+        const courierCapacity = branch?.courierCapacity || 3;
 
-        const todayStart = periodStart("today");
-        const withActiveCounts = await Promise.all(
+        const enriched = await Promise.all(
             couriers.map(async (courier) => ({
                 ...courier.toObject(),
-                activeOrders: await Order.countDocuments({ courier: courier._id, status: "on_the_way" }),
-                deliveredToday: await Order.countDocuments({ courier: courier._id, status: "delivered", createdAt: { $gte: todayStart } }),
+                ...(await courierStats(courier._id)),
             }))
         );
 
         res.status(200).json({
             status: 200,
             message: "Couriers fetched successfully",
-            data: { couriers: withActiveCounts },
+            data: { couriers: enriched, courierCapacity },
         });
     } catch (error) {
         console.error("Error fetching branch couriers:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// Create a courier for this branch (with an optional uploaded photo). The upload
+// middleware has already written the file and put its name in req.body.image.
+exports.createCourier = async (req, res) => {
+    try {
+        const branchId = req.params.branch;
+        const { fullName, phoneNumber, nationalCode, vehicleType, plateNumber } = req.body;
+        if (!phoneNumber || !/^09\d{9}$/.test(phoneNumber)) {
+            return res.status(400).json({ status: 400, message: "شماره موبایل معتبر نیست." });
+        }
+        const exists = await User.findOne({ phoneNumber }).select("_id");
+        if (exists) return res.status(400).json({ status: 400, message: "کاربری با این شماره از قبل ثبت شده است." });
+
+        // upload middleware stores just the filename; prefix with the couriers/
+        // sub-path so it resolves through the /public/couriers static mount.
+        const uploaded = Array.isArray(req.body.image) ? req.body.image[0] : null;
+        const image = uploaded ? `couriers/${uploaded}` : null;
+        const courier = await User.create({
+            fullName: fullName || null,
+            phoneNumber,
+            nationalCode: nationalCode || null,
+            vehicleType: ["motorcycle", "bicycle", "car", "foot"].includes(vehicleType) ? vehicleType : "motorcycle",
+            plateNumber: plateNumber || null,
+            image,
+            role: ROLES.COURIER,
+            branch: branchId,
+            courierStatus: "available",
+        });
+
+        res.status(201).json({ status: 201, message: "پیک با موفقیت اضافه شد.", data: { courier } });
+    } catch (error) {
+        console.error("Error creating courier:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// Update a courier — availability toggle and/or basic profile fields.
+exports.updateCourier = async (req, res) => {
+    try {
+        const { branch: branchId, courierId } = req.params;
+        const courier = await User.findOne({ _id: courierId, branch: branchId, role: ROLES.COURIER });
+        if (!courier) return res.status(404).json({ status: 404, message: "پیک یافت نشد." });
+
+        const { courierStatus, fullName, vehicleType, plateNumber, nationalCode } = req.body;
+        if (courierStatus && ["available", "offline"].includes(courierStatus)) courier.courierStatus = courierStatus;
+        if (fullName !== undefined) courier.fullName = fullName;
+        if (vehicleType && ["motorcycle", "bicycle", "car", "foot"].includes(vehicleType)) courier.vehicleType = vehicleType;
+        if (plateNumber !== undefined) courier.plateNumber = plateNumber;
+        if (nationalCode !== undefined) courier.nationalCode = nationalCode;
+        const uploaded = Array.isArray(req.body.image) ? req.body.image[0] : null;
+        if (uploaded) courier.image = `couriers/${uploaded}`;
+
+        await courier.save();
+        res.status(200).json({ status: 200, message: "اطلاعات پیک به‌روزرسانی شد.", data: { courier } });
+    } catch (error) {
+        console.error("Error updating courier:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+exports.deleteCourier = async (req, res) => {
+    try {
+        const { branch: branchId, courierId } = req.params;
+        const active = await Order.countDocuments({ courier: courierId, status: { $in: ["preparing", "on_the_way"] } });
+        if (active > 0) return res.status(400).json({ status: 400, message: "این پیک سفارش فعال دارد و قابل حذف نیست." });
+
+        const courier = await User.findOneAndDelete({ _id: courierId, branch: branchId, role: ROLES.COURIER });
+        if (!courier) return res.status(404).json({ status: 404, message: "پیک یافت نشد." });
+        res.status(200).json({ status: 200, message: "پیک حذف شد." });
+    } catch (error) {
+        console.error("Error deleting courier:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// Courier detail: profile + weekly delivery series + current (unfinished) orders.
+exports.getCourierDetail = async (req, res) => {
+    try {
+        const { branch: branchId, courierId } = req.params;
+        const courier = await User.findOne({ _id: courierId, branch: branchId, role: ROLES.COURIER })
+            .select("fullName phoneNumber image courierStatus vehicleType plateNumber nationalCode createdAt");
+        if (!courier) return res.status(404).json({ status: 404, message: "پیک یافت نشد." });
+
+        const todayStart = periodStart("today");
+        const weekStart = new Date(todayStart);
+        weekStart.setDate(weekStart.getDate() - 6);
+
+        const [stats, weekAgg, currentOrders] = await Promise.all([
+            courierStats(courierId),
+            Order.aggregate([
+                { $match: { courier: new mongoose.Types.ObjectId(courierId), status: "delivered", deliveredAt: { $gte: weekStart } } },
+                { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$deliveredAt", timezone: TZ } }, count: { $sum: 1 } } },
+            ]),
+            Order.find({ courier: courierId, status: { $in: ["preparing", "on_the_way"] } })
+                .populate("user", "fullName phoneNumber")
+                .populate("items.menuItem", "name")
+                .select("user items finalPrice status createdAt assignedAt deliveryAddress")
+                .sort({ assignedAt: -1 }),
+        ]);
+
+        const seriesMap = Object.fromEntries(weekAgg.map((d) => [d._id, d.count]));
+        const weeklyDeliveries = [];
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(weekStart);
+            d.setDate(d.getDate() + i);
+            const key = d.toLocaleDateString("en-CA", { timeZone: TZ });
+            weeklyDeliveries.push({ date: key, count: seriesMap[key] || 0 });
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: "Courier detail fetched successfully",
+            data: { courier: { ...courier.toObject(), ...stats }, weeklyDeliveries, currentOrders },
+        });
+    } catch (error) {
+        console.error("Error fetching courier detail:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// Update the branch-wide courier capacity (one value for every courier).
+exports.updateCourierCapacity = async (req, res) => {
+    try {
+        const branchId = req.params.branch;
+        const capacity = parseInt(req.body.capacity, 10);
+        if (!capacity || capacity < 1 || capacity > 20) {
+            return res.status(400).json({ status: 400, message: "ظرفیت باید بین ۱ تا ۲۰ باشد." });
+        }
+        const branch = await Branch.findByIdAndUpdate(branchId, { courierCapacity: capacity }, { new: true }).select("courierCapacity");
+        if (!branch) return res.status(404).json({ status: 404, message: "شعبه یافت نشد." });
+        res.status(200).json({ status: 200, message: "ظرفیت پیک‌ها به‌روزرسانی شد.", data: { courierCapacity: branch.courierCapacity } });
+    } catch (error) {
+        console.error("Error updating courier capacity:", error);
         res.status(500).json({ status: 500, message: "Internal server error" });
     }
 };
@@ -187,6 +388,56 @@ async function deliveredSummary(branchObjectId, start, end) {
 function pctChange(current, previous) {
     if (!previous) return current ? null : 0;
     return Math.round(((current - previous) / previous) * 100);
+}
+
+const faNum = (n) => String(n).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
+
+// Period-aware series for the reports trend chart. today -> hourly (business
+// hours), week -> last 7 days, month -> each day of the current month. Every
+// point carries both delivered revenue and total order count so the frontend
+// can toggle the metric without another request.
+async function buildTrendSeries(branchObjectId, period, now) {
+    if (period === "today") {
+        const start = periodStart("today");
+        const agg = await Order.aggregate([
+            { $match: { branch: branchObjectId, createdAt: { $gte: start, $lt: now } } },
+            { $group: { _id: { $hour: { date: "$createdAt", timezone: TZ } }, revenue: { $sum: { $cond: [{ $eq: ["$status", "delivered"] }, "$finalPrice", 0] } }, orders: { $sum: 1 } } },
+        ]);
+        const map = Object.fromEntries(agg.map((a) => [a._id, a]));
+        const series = [];
+        for (let h = 8; h <= 23; h++) {
+            const a = map[h];
+            series.push({ label: faNum(h), value: a?.revenue || 0, orders: a?.orders || 0 });
+        }
+        return series;
+    }
+
+    let start, count;
+    if (period === "month") {
+        start = periodStart("month");
+        count = Math.floor((now - start) / 86400000) + 1;
+    } else {
+        start = periodStart("today");
+        start.setDate(start.getDate() - 6);
+        count = 7;
+    }
+    const agg = await Order.aggregate([
+        { $match: { branch: branchObjectId, createdAt: { $gte: start, $lt: now } } },
+        { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: TZ } }, revenue: { $sum: { $cond: [{ $eq: ["$status", "delivered"] }, "$finalPrice", 0] } }, orders: { $sum: 1 } } },
+    ]);
+    const map = Object.fromEntries(agg.map((a) => [a._id, a]));
+    const series = [];
+    for (let i = 0; i < count; i++) {
+        const d = new Date(start);
+        d.setDate(d.getDate() + i);
+        const key = d.toLocaleDateString("en-CA", { timeZone: TZ });
+        const a = map[key];
+        const label = period === "week"
+            ? d.toLocaleDateString("fa-IR", { weekday: "short" })
+            : faNum(d.toLocaleDateString("en-US", { day: "numeric", timeZone: TZ }));
+        series.push({ label, value: a?.revenue || 0, orders: a?.orders || 0 });
+    }
+    return series;
 }
 
 exports.getBranchStats = async (req, res) => {
@@ -289,6 +540,9 @@ exports.getBranchStats = async (req, res) => {
         const periodTotal = Object.values(statusBreakdown).reduce((a, b) => a + b, 0);
         const cancellationRate = periodTotal ? Math.round((statusBreakdown.cancelled / periodTotal) * 1000) / 10 : 0;
 
+        // Period-aware trend series (revenue + orders per bucket) for the chart.
+        const trendSeries = await buildTrendSeries(branchObjectId, period, now);
+
         res.status(200).json({
             status: 200,
             message: "Branch stats fetched successfully",
@@ -306,6 +560,7 @@ exports.getBranchStats = async (req, res) => {
                 statusBreakdown,
                 activeBreakdown,
                 revenueSeries,
+                trendSeries,
                 peakHours,
                 paymentSplit,
                 cancellationRate,
