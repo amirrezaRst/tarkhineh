@@ -3,11 +3,12 @@
 // Reusable donut. segments: [{ label, value, color }] where color is any CSS
 // color string (e.g. "hsl(var(--status-delivered))"). Zero-value segments are
 // dropped. Uses pathLength=100 arcs so percentages map directly to dash lengths.
-const Donut = ({ segments = [], centerValue, centerLabel, size = 150, thickness = 20, gap = 1 }) => {
+const Donut = ({ segments = [], centerValue, centerLabel, size = 150, thickness = 20, gap = 1, onSegmentClick }) => {
     const visible = segments.filter((s) => s.value > 0);
     const total = visible.reduce((sum, s) => sum + s.value, 0) || 1;
     const c = size / 2;
     const r = (size - thickness) / 2;
+    const clickable = typeof onSegmentClick === "function";
 
     let cumulative = 0;
     const arcs = visible.map((s, i) => {
@@ -26,7 +27,11 @@ const Donut = ({ segments = [], centerValue, centerLabel, size = 150, thickness 
                 strokeWidth={thickness}
                 strokeDasharray={`${Math.max(pct - gap, 0.5)} 100`}
                 transform={`rotate(${rotation} ${c} ${c})`}
-            />
+                onClick={clickable ? () => onSegmentClick(s) : undefined}
+                style={clickable ? { cursor: "pointer" } : undefined}
+            >
+                {clickable && <title>{s.label}</title>}
+            </circle>
         );
     });
 

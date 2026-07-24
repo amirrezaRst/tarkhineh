@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import useUserStore from "@/stores/useUserStore";
 import { api } from "@/utils/apiClient";
 import { toast } from "react-toastify";
@@ -28,7 +29,11 @@ const STATUS_SEGMENTS = [
 ];
 const weekdayShort = (iso) => new Date(iso).toLocaleDateString("fa-IR", { weekday: "short" });
 
+// Report period -> orders-page date range (orders has no "month", so widen it).
+const PERIOD_TO_RANGE = { today: "today", week: "7days", month: "all" };
+
 const BranchPanelReports = () => {
+    const router = useRouter();
     const branch = useUserStore((state) => state.user?.branch);
     const branchName = branch ? branchNamesDic[branch] : "";
     const [period, setPeriod] = useState("week");
@@ -47,7 +52,8 @@ const BranchPanelReports = () => {
         return () => controller.abort();
     }, [branch, period]);
 
-    const donutSegments = STATUS_SEGMENTS.map((s) => ({ label: s.label, value: stats?.statusBreakdown?.[s.key] || 0, color: s.color }));
+    const donutSegments = STATUS_SEGMENTS.map((s) => ({ key: s.key, label: s.label, value: stats?.statusBreakdown?.[s.key] || 0, color: s.color }));
+    const openOrders = (statusKey) => router.push(`/panel/branch/orders?status=${statusKey}&range=${PERIOD_TO_RANGE[period] || "all"}`);
     const donutTotal = donutSegments.reduce((sum, s) => sum + s.value, 0);
     const topMax = Math.max(...(stats?.topItems || []).map((t) => t.quantity), 1);
     const weekdayData = (stats?.revenueSeries || []).map((d) => ({ label: weekdayShort(d.date), value: d.value }));
@@ -57,32 +63,37 @@ const BranchPanelReports = () => {
     const onlinePct = payTotal ? Math.round((pay.online / payTotal) * 100) : 0;
     const cashPct = 100 - onlinePct;
 
-    const exportCsv = () => {
+    const exportExcel = async () => {
         if (!stats) return;
+        const XLSX = await import("xlsx");
+        const periodLabel = PERIODS.find((p) => p.key === period)?.label || period;
         const rows = [
             ["گزارش شعبه", branchName],
-            ["بازه", PERIODS.find((p) => p.key === period)?.label || period],
+            ["بازه", periodLabel],
             [],
             ["شاخص", "مقدار"],
             ["فروش کل (تومان)", stats.revenue],
             ["تعداد سفارش", stats.ordersCount],
-            ["میانگین سبد خرید", stats.avgBasket],
+            ["میانگین سبد خرید (تومان)", stats.avgBasket],
             ["نرخ لغو (٪)", stats.cancellationRate],
+            ["پرداخت آنلاین", stats.paymentSplit?.online ?? 0],
+            ["پرداخت نقدی", stats.paymentSplit?.cash ?? 0],
             [],
             ["پرفروش‌ترین آیتم‌ها", "تعداد فروش"],
             ...(stats.topItems || []).map((t) => [t.menuItem.name, t.quantity]),
         ];
-        const csv = "﻿" + rows.map((r) => r.join(",")).join("\n");
-        const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
-        const a = document.createElement("a");
-        a.href = url; a.download = `report-${branchName}-${period}.csv`; a.click();
-        URL.revokeObjectURL(url);
+        const ws = XLSX.utils.aoa_to_sheet(rows);
+        ws["!cols"] = [{ wch: 26 }, { wch: 16 }];
+        const wb = XLSX.utils.book_new();
+        wb.Workbook = { Views: [{ RTL: true }] };
+        XLSX.utils.book_append_sheet(wb, ws, "گزارش");
+        XLSX.writeFile(wb, `report-${branchName}-${period}.xlsx`);
     };
 
     const cardCls = "p-5 border border-border shadow-none";
 
     return (
-        <div className="max-w-[1280px]">
+        <div className="w-full">
             <div className="flex items-start justify-between gap-3 flex-wrap mb-6">
                 <div>
                     <h1 className="text-2xl font-bold">گزارشات و تحلیل</h1>
@@ -95,7 +106,10 @@ const BranchPanelReports = () => {
                                 className={`text-super-xs font-bold px-3.5 py-1.5 rounded-lg transition-colors ${period === p.key ? "bg-surface text-primary shadow-sm" : "text-muted-fg"}`}>{p.label}</button>
                         ))}
                     </div>
-                    <button onClick={exportCsv} disabled={!stats} className="bg-primary text-primary-fg rounded-xl px-4 py-2 text-super-xs font-bold hover:bg-primary-hover disabled:opacity-50">خروجی CSV</button>
+                    <button onClick={exportExcel} disabled={!stats} className="inline-flex items-center gap-1.5 bg-primary text-primary-fg rounded-xl px-4 py-2 text-super-xs font-bold hover:bg-primary-hover disabled:opacity-50">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M14 3v5h5M14 3l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7Z" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" /><path d="m9 12 6 6m0-6-6 6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
+                        خروجی اکسل
+                    </button>
                 </div>
             </div>
 
@@ -141,19 +155,21 @@ const BranchPanelReports = () => {
                 </Card>
 
                 <Card className={cardCls}>
-                    <div className="mb-4"><h2 className="text-super-base font-extrabold">وضعیت سفارش‌ها</h2><p className="text-super-xs text-muted-fg mt-0.5">این بازه</p></div>
+                    <div className="mb-4"><h2 className="text-super-base font-extrabold">وضعیت سفارش‌ها</h2><p className="text-super-xs text-muted-fg mt-0.5">این بازه · برای دیدن سفارش‌ها کلیک کنید</p></div>
                     <div className="flex items-center gap-4">
-                        <Donut segments={donutSegments} centerValue={PersianNumber(donutTotal)} centerLabel="سفارش" />
-                        <div className="flex-1 flex flex-col gap-2.5">
+                        <Donut segments={donutSegments} centerValue={PersianNumber(donutTotal)} centerLabel="سفارش" onSegmentClick={(s) => openOrders(s.key)} />
+                        <div className="flex-1 flex flex-col gap-1">
                             {STATUS_SEGMENTS.filter((s) => (stats?.statusBreakdown?.[s.key] || 0) > 0 || donutTotal === 0).map((s) => {
                                 const v = stats?.statusBreakdown?.[s.key] || 0;
                                 const pct = donutTotal ? Math.round((v / donutTotal) * 100) : 0;
                                 return (
-                                    <div key={s.key} className="flex items-center gap-2.5 text-super-sm">
+                                    <button key={s.key} onClick={() => openOrders(s.key)} disabled={v === 0}
+                                        className="flex items-center gap-2.5 text-super-sm rounded-lg px-2 py-1.5 -mx-2 hover:bg-surface-sunken transition-colors disabled:opacity-60 disabled:hover:bg-transparent">
                                         <span className="w-2.5 h-2.5 rounded-[3px]" style={{ background: s.color }} />
                                         <span className="text-muted-fg">{s.label}</span>
                                         <span className="mr-auto font-extrabold tabular-nums">{PersianNumber(pct)}٪</span>
-                                    </div>
+                                        {v > 0 && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-subtle-fg"><path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                                    </button>
                                 );
                             })}
                         </div>

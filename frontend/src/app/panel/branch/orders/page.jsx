@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import useUserStore from "@/stores/useUserStore";
 import { api } from "@/utils/apiClient";
 import { toast } from "react-toastify";
@@ -36,9 +37,13 @@ const PAGE_SIZE = 15;
 const BranchPanelOrders = () => {
     const branch = useUserStore((state) => state.user?.branch);
     const branchName = branch ? branchNamesDic[branch] : "";
+    const params = useSearchParams();
 
-    const [activeTab, setActiveTab] = useState("all");
-    const [range, setRange] = useState("today");
+    // Initial tab/range may be preset from a deep link (e.g. the reports donut).
+    const qsStatus = params.get("status");
+    const qsRange = params.get("range");
+    const [activeTab, setActiveTab] = useState(TABS.some((t) => t.key === qsStatus) ? qsStatus : "all");
+    const [range, setRange] = useState(RANGES.some((r) => r.key === qsRange) ? qsRange : "today");
     const [custom, setCustom] = useState({ from: "", to: "" });
     const [sort, setSort] = useState("newest");
     const [qInput, setQInput] = useState("");
@@ -124,7 +129,7 @@ const BranchPanelOrders = () => {
     const selectedOrder = useMemo(() => orders.find((o) => o._id === selectedId) || null, [orders, selectedId]);
 
     return (
-        <div className="max-w-[1320px]">
+        <div className="w-full">
             <PanelPageHeader title="سفارش‌ها" subtitle={`مدیریت و پیگیری سفارش‌های شعبه ${branchName}`} />
 
             {/* toolbar: date range + search + sort */}
@@ -205,4 +210,11 @@ const BranchPanelOrders = () => {
     );
 };
 
-export default BranchPanelOrders;
+// useSearchParams requires a Suspense boundary during prerender.
+const OrdersPage = () => (
+    <Suspense fallback={null}>
+        <BranchPanelOrders />
+    </Suspense>
+);
+
+export default OrdersPage;
