@@ -14,6 +14,10 @@ import Donut from "@/components/panel/charts/Donut";
 import BarChart from "@/components/panel/charts/BarChart";
 import InteractiveTrendChart from "@/components/panel/charts/InteractiveTrendChart";
 import { Skeleton } from "@/components/panel/Skeleton";
+import { courierImg, initials } from "../couriers/courierUtils";
+
+const CAT_LABEL = { main: "غذای اصلی", side: "پیش‌غذا", dessert: "دسر", drink: "نوشیدنی" };
+const faMin = (m) => (m == null ? "—" : `${PersianNumber(m)} دقیقه`);
 
 const PERIODS = [
     { key: "today", label: "امروز" },
@@ -62,6 +66,13 @@ const BranchPanelReports = () => {
     const payTotal = pay.online + pay.cash;
     const onlinePct = payTotal ? Math.round((pay.online / payTotal) * 100) : 0;
     const cashPct = 100 - onlinePct;
+
+    const peakData = (stats?.peakHoursPeriod || []).slice(8, 24).map((h) => ({ label: PersianNumber(h.hour), value: h.count }));
+    const timings = stats?.timings || {};
+    const courierPerf = stats?.courierPerformance || [];
+    const perfMax = Math.max(...courierPerf.map((c) => c.deliveries), 1);
+    const salesByCat = [...(stats?.salesByCategory || [])].sort((a, b) => b.revenue - a.revenue);
+    const catMax = Math.max(...salesByCat.map((c) => c.revenue), 1);
 
     const exportExcel = async () => {
         if (!stats) return;
@@ -214,8 +225,92 @@ const BranchPanelReports = () => {
                     </div>
                 </Card>
             </div>
+
+            {/* Peak hours + fulfillment timings */}
+            <div className="grid lg:grid-cols-[1.7fr_1fr] gap-4 mt-4">
+                <Card className={cardCls}>
+                    <div className="mb-4"><h2 className="text-super-base font-extrabold">ساعات پرترافیک</h2><p className="text-super-xs text-muted-fg mt-0.5">تعداد سفارش بر اساس ساعت — این بازه</p></div>
+                    <BarChart data={peakData} />
+                </Card>
+
+                <Card className={cardCls}>
+                    <div className="mb-4"><h2 className="text-super-base font-extrabold">زمان آماده‌سازی و تحویل</h2><p className="text-super-xs text-muted-fg mt-0.5">میانگین در این بازه</p></div>
+                    <div className="flex flex-col gap-2.5">
+                        <TimingRow icon="check" label="زمان تایید سفارش" value={faMin(timings.accept)} tone="primary" />
+                        <TimingRow icon="truck" label="زمان تحویل توسط پیک" value={faMin(timings.delivery)} tone="info" />
+                        <TimingRow icon="clock" label="کل زمان انجام سفارش" value={faMin(timings.fulfillment)} tone="warning" />
+                    </div>
+                </Card>
+            </div>
+
+            {/* Courier performance + sales by category */}
+            <div className="grid lg:grid-cols-2 gap-4 mt-4">
+                <Card className={cardCls}>
+                    <div className="mb-4"><h2 className="text-super-base font-extrabold">عملکرد پیک‌ها</h2><p className="text-super-xs text-muted-fg mt-0.5">برترین‌ها بر اساس تعداد تحویل</p></div>
+                    {courierPerf.length === 0 ? (
+                        <p className="text-muted-fg text-super-sm py-4">در این بازه تحویلی توسط پیک ثبت نشده است.</p>
+                    ) : (
+                        <div className="flex flex-col gap-2.5">
+                            {courierPerf.map((c, i) => (
+                                <div key={c.courier._id} className="flex items-center gap-3">
+                                    <span className={`w-6 text-center font-extrabold text-super-sm ${i === 0 ? "text-primary" : "text-subtle-fg"}`}>{PersianNumber(i + 1)}</span>
+                                    {courierImg(c.courier.image)
+                                        ? <img src={courierImg(c.courier.image)} alt="" className="w-9 h-9 rounded-xl object-cover shrink-0" />
+                                        : <div className="w-9 h-9 rounded-xl grid place-items-center text-white text-super-xs font-extrabold bg-gradient-to-tl from-feature-from to-feature-mid shrink-0">{initials(c.courier.fullName)}</div>}
+                                    <div className="min-w-0 flex-1">
+                                        <div className="text-super-sm font-bold truncate">{c.courier.fullName || "بدون نام"}</div>
+                                        <div className="h-1.5 bg-surface-sunken rounded-full mt-1 overflow-hidden"><div className="h-full bg-primary rounded-full" style={{ width: `${(c.deliveries / perfMax) * 100}%` }} /></div>
+                                    </div>
+                                    <div className="text-left shrink-0">
+                                        <div className="text-super-sm font-extrabold tabular-nums">{PersianNumber(c.deliveries)} <span className="text-super-xs text-muted-fg font-semibold">تحویل</span></div>
+                                        <div className="text-super-xs text-subtle-fg tabular-nums">میانگین {faMin(c.avgMinutes)}</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </Card>
+
+                <Card className={cardCls}>
+                    <div className="mb-4"><h2 className="text-super-base font-extrabold">فروش بر اساس دسته‌بندی</h2><p className="text-super-xs text-muted-fg mt-0.5">سهم هر دسته از فروش این بازه</p></div>
+                    {salesByCat.length === 0 ? (
+                        <p className="text-muted-fg text-super-sm py-4">در این بازه فروشی ثبت نشده است.</p>
+                    ) : (
+                        <div className="flex flex-col gap-3.5">
+                            {salesByCat.map((c) => (
+                                <div key={c.category} className="flex items-center gap-3">
+                                    <span className="w-16 text-super-sm font-semibold shrink-0">{CAT_LABEL[c.category] || c.category}</span>
+                                    <div className="flex-1 h-[22px] bg-surface-sunken rounded-lg overflow-hidden">
+                                        <div className="h-full rounded-lg bg-gradient-to-l from-[hsl(var(--brand-400))] to-[hsl(var(--brand-700))]" style={{ width: `${(c.revenue / catMax) * 100}%` }} />
+                                    </div>
+                                    <div className="text-left shrink-0 w-28">
+                                        <div className="text-super-sm font-extrabold tabular-nums">{FormatPrice(c.revenue)}</div>
+                                        <div className="text-super-xs text-subtle-fg tabular-nums">{PersianNumber(c.quantity)} پرس</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </Card>
+            </div>
         </div>
     );
 };
+
+const TIMING_ICONS = {
+    check: <path d="m5 12 4 4 10-10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />,
+    truck: <><path d="M3 13h11V6H3zM14 9h4l3 3v3h-7" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /><circle cx="7" cy="18" r="1.6" stroke="currentColor" strokeWidth="1.7" /><circle cx="17" cy="18" r="1.6" stroke="currentColor" strokeWidth="1.7" /></>,
+    clock: <><path d="M12 21a9 9 0 1 0-9-9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /><path d="M12 8v4l3 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></>,
+};
+const TONE_CLS = { primary: "bg-primary-subtle text-primary", info: "bg-info-subtle text-info", warning: "bg-warning-subtle text-warning-fg" };
+const TimingRow = ({ icon, label, value, tone }) => (
+    <div className="flex items-center gap-3 bg-surface-sunken rounded-xl px-3.5 py-3">
+        <div className={`w-9 h-9 rounded-xl grid place-items-center shrink-0 ${TONE_CLS[tone]}`}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">{TIMING_ICONS[icon]}</svg>
+        </div>
+        <span className="text-super-sm font-semibold flex-1">{label}</span>
+        <span className="text-super-base font-extrabold tabular-nums">{value}</span>
+    </div>
+);
 
 export default BranchPanelReports;
