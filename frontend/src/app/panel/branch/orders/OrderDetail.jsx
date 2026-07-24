@@ -156,10 +156,13 @@ const OrderDetail = ({ order, couriers, capacity = 3, onChanged }) => {
                         <button onClick={markDelivered} disabled={busy} className="w-full bg-primary text-primary-fg rounded-xl py-3 text-super-sm font-bold hover:bg-primary-hover disabled:opacity-50">تحویل حضوری انجام شد</button>
                     )}
 
-                    {order.status === "on_the_way" && (
+                    {order.status === "on_the_way" && order.deliveryType === "courier" && (
                         <div className="rounded-xl bg-status-on-the-way-subtle text-status-on-the-way text-super-xs font-semibold leading-6 px-4 py-3 text-center">
                             در حال تحویل توسط پیک. با ثبت «کد تحویل» توسط پیک، وضعیت به‌طور خودکار «تحویل شده» می‌شود.
                         </div>
+                    )}
+                    {order.status === "on_the_way" && order.deliveryType === "person" && (
+                        <button onClick={markDelivered} disabled={busy} className="w-full bg-primary text-primary-fg rounded-xl py-3 text-super-sm font-bold hover:bg-primary-hover disabled:opacity-50">تحویل حضوری انجام شد</button>
                     )}
 
                     {(order.status === "delivered" || order.status === "cancelled") && (
