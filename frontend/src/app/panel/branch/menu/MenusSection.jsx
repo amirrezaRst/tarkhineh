@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { branchNamesDic } from "@/constant/branchDictionary";
 import { toggleMenuAvailability } from "@/services/BranchManagerService";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
-import MiniStat from "@/components/panel/MiniStat";
+import MetricBar from "@/components/panel/MetricBar";
 import { SkeletonMenuCard } from "@/components/panel/Skeleton";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import MenuCard from "./MenuCard";
@@ -69,11 +69,13 @@ const MenusSection = () => {
         <div className="max-w-[1240px]">
             <PanelPageHeader title="منوی شعبه" subtitle={`مدیریت آیتم‌های موجود در شعبه ${branchName}`} />
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-5">
-                <MiniStat tone="green" value={PersianNumber(stats.total)} label="کل آیتم‌های منو" />
-                <MiniStat tone="plain" value={PersianNumber(stats.active)} label="فعال در شعبه" />
-                <MiniStat tone="amber" value={PersianNumber(stats.inactive)} label="غیرفعال در شعبه" />
-                <MiniStat tone="blue" value={PersianNumber(stats.cats)} label="دسته‌بندی‌ها" />
+            <div className="mb-5">
+                <MetricBar items={[
+                    { value: PersianNumber(stats.total), label: "کل آیتم‌های منو" },
+                    { value: PersianNumber(stats.active), label: "فعال در شعبه" },
+                    { value: PersianNumber(stats.inactive), label: "غیرفعال در شعبه" },
+                    { value: PersianNumber(stats.cats), label: "دسته‌بندی‌ها" },
+                ]} />
             </div>
 
             <div className="flex items-center gap-2 flex-wrap mb-5">

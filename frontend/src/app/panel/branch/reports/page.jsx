@@ -1,18 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import useUserStore from "@/stores/useUserStore";
 import { api } from "@/utils/apiClient";
 import { toast } from "react-toastify";
 import { branchNamesDic } from "@/constant/branchDictionary";
 import FormatPrice from "@/utils/FormatPrice";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
-import PanelPageHeader from "@/components/panel/PanelPageHeader";
-import MiniStat from "@/components/panel/MiniStat";
 import Card from "@/components/panel/Card";
-import AreaChart from "@/components/panel/charts/AreaChart";
+import StatHeroLedger from "@/components/panel/StatHeroLedger";
 import Donut from "@/components/panel/charts/Donut";
 import BarChart from "@/components/panel/charts/BarChart";
+import InteractiveTrendChart from "@/components/panel/charts/InteractiveTrendChart";
 import { Skeleton } from "@/components/panel/Skeleton";
 
 const PERIODS = [
@@ -20,7 +19,6 @@ const PERIODS = [
     { key: "week", label: "هفته" },
     { key: "month", label: "ماه" },
 ];
-
 const STATUS_SEGMENTS = [
     { key: "delivered", label: "تحویل شده", color: "hsl(var(--status-delivered))" },
     { key: "on_the_way", label: "در حال ارسال", color: "hsl(var(--status-on-the-way))" },
@@ -28,13 +26,13 @@ const STATUS_SEGMENTS = [
     { key: "pending", label: "در انتظار", color: "hsl(var(--status-pending))" },
     { key: "cancelled", label: "لغو شده", color: "hsl(var(--status-cancelled))" },
 ];
-
 const weekdayShort = (iso) => new Date(iso).toLocaleDateString("fa-IR", { weekday: "short" });
 
 const BranchPanelReports = () => {
     const branch = useUserStore((state) => state.user?.branch);
     const branchName = branch ? branchNamesDic[branch] : "";
     const [period, setPeriod] = useState("week");
+    const [metric, setMetric] = useState("value");
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -51,7 +49,6 @@ const BranchPanelReports = () => {
 
     const donutSegments = STATUS_SEGMENTS.map((s) => ({ label: s.label, value: stats?.statusBreakdown?.[s.key] || 0, color: s.color }));
     const donutTotal = donutSegments.reduce((sum, s) => sum + s.value, 0);
-
     const topMax = Math.max(...(stats?.topItems || []).map((t) => t.quantity), 1);
     const weekdayData = (stats?.revenueSeries || []).map((d) => ({ label: weekdayShort(d.date), value: d.value }));
 
@@ -85,7 +82,7 @@ const BranchPanelReports = () => {
     const cardCls = "p-5 border border-border shadow-none";
 
     return (
-        <div className="max-w-[1240px]">
+        <div className="max-w-[1280px]">
             <div className="flex items-start justify-between gap-3 flex-wrap mb-6">
                 <div>
                     <h1 className="text-2xl font-bold">گزارشات و تحلیل</h1>
@@ -95,42 +92,56 @@ const BranchPanelReports = () => {
                     <div className="inline-flex bg-surface-sunken border border-border rounded-xl p-1 gap-1">
                         {PERIODS.map((p) => (
                             <button key={p.key} onClick={() => setPeriod(p.key)}
-                                className={`text-super-xs font-bold px-3.5 py-1.5 rounded-lg transition-colors ${period === p.key ? "bg-surface text-primary shadow-sm" : "text-muted-fg"}`}>
-                                {p.label}
-                            </button>
+                                className={`text-super-xs font-bold px-3.5 py-1.5 rounded-lg transition-colors ${period === p.key ? "bg-surface text-primary shadow-sm" : "text-muted-fg"}`}>{p.label}</button>
                         ))}
                     </div>
-                    <button onClick={exportCsv} disabled={!stats}
-                        className="bg-primary text-primary-fg rounded-xl px-4 py-2 text-super-xs font-bold hover:bg-primary-hover disabled:opacity-50">
-                        خروجی CSV
-                    </button>
+                    <button onClick={exportCsv} disabled={!stats} className="bg-primary text-primary-fg rounded-xl px-4 py-2 text-super-xs font-bold hover:bg-primary-hover disabled:opacity-50">خروجی CSV</button>
                 </div>
             </div>
 
-            {/* KPIs */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-4">
-                {loading ? [0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-[92px] rounded-2xl" />) : (
-                    <>
-                        <MiniStat value={FormatPrice(stats?.revenue ?? 0)} label="فروش کل (تومان)" trend={stats?.trends?.revenue} />
-                        <MiniStat value={PersianNumber(stats?.ordersCount ?? 0)} label="تعداد سفارش" trend={stats?.trends?.orders} />
-                        <MiniStat value={FormatPrice(stats?.avgBasket ?? 0)} label="میانگین سبد خرید" trend={stats?.trends?.avgBasket} />
-                        <MiniStat value={`${PersianNumber(stats?.cancellationRate ?? 0)}٪`} label="نرخ لغو سفارش" />
-                    </>
-                )}
-            </div>
+            {/* KPI hero + ledger */}
+            {loading ? (
+                <div className="grid lg:grid-cols-[1.55fr_1fr] gap-4 mb-4"><Skeleton className="h-44 rounded-[22px]" /><Skeleton className="h-44 rounded-[22px]" /></div>
+            ) : (
+                <div className="mb-4">
+                    <StatHeroLedger
+                        hero={{
+                            label: "فروش کل",
+                            value: FormatPrice(stats?.revenue ?? 0),
+                            unit: "تومان",
+                            trend: stats?.trends?.revenue,
+                            caption: "نسبت به دورهٔ قبل",
+                            series: (stats?.trendSeries || []).map((d) => ({ value: d.value })),
+                        }}
+                        rows={[
+                            { label: "تعداد سفارش", caption: "در این بازه", value: PersianNumber(stats?.ordersCount ?? 0), trend: stats?.trends?.orders },
+                            { label: "میانگین سبد خرید", caption: "به‌ازای هر سفارش", value: FormatPrice(stats?.avgBasket ?? 0), trend: stats?.trends?.avgBasket },
+                            { label: "نرخ لغو سفارش", caption: "سهم لغوشده‌ها", value: `${PersianNumber(stats?.cancellationRate ?? 0)}٪` },
+                        ]}
+                    />
+                </div>
+            )}
 
-            {/* Sales trend + status donut */}
+            {/* Trend + status donut */}
             <div className="grid lg:grid-cols-[1.7fr_1fr] gap-4 mb-4">
                 <Card className={cardCls}>
-                    <CardHead title="روند فروش" note="۷ روز گذشته" />
-                    <AreaChart data={stats?.revenueSeries || []} variant="light" stretch height={170} />
-                    <div className="flex justify-between mt-2 px-1">
-                        {weekdayData.map((d, i) => <span key={i} className="text-super-xs text-subtle-fg">{d.label}</span>)}
+                    <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
+                        <div>
+                            <h2 className="text-super-base font-extrabold">روند فروش</h2>
+                            <p className="text-super-xs text-muted-fg mt-0.5">
+                                {period === "today" ? "امروز · ساعتی" : period === "week" ? "۷ روز گذشته" : "این ماه · روزانه"}
+                            </p>
+                        </div>
+                        <div className="inline-flex bg-surface-sunken border border-border rounded-xl p-1 gap-1">
+                            <button onClick={() => setMetric("value")} className={`text-super-xs font-bold px-3 py-1.5 rounded-lg ${metric === "value" ? "bg-surface text-primary shadow-sm" : "text-muted-fg"}`}>مبلغ فروش</button>
+                            <button onClick={() => setMetric("orders")} className={`text-super-xs font-bold px-3 py-1.5 rounded-lg ${metric === "orders" ? "bg-surface text-primary shadow-sm" : "text-muted-fg"}`}>تعداد سفارش</button>
+                        </div>
                     </div>
+                    {loading ? <Skeleton className="h-56 rounded-xl" /> : <InteractiveTrendChart data={stats?.trendSeries || []} metric={metric} />}
                 </Card>
 
                 <Card className={cardCls}>
-                    <CardHead title="وضعیت سفارش‌ها" note="این بازه" />
+                    <div className="mb-4"><h2 className="text-super-base font-extrabold">وضعیت سفارش‌ها</h2><p className="text-super-xs text-muted-fg mt-0.5">این بازه</p></div>
                     <div className="flex items-center gap-4">
                         <Donut segments={donutSegments} centerValue={PersianNumber(donutTotal)} centerLabel="سفارش" />
                         <div className="flex-1 flex flex-col gap-2.5">
@@ -153,7 +164,7 @@ const BranchPanelReports = () => {
             {/* Top items + weekday/payment */}
             <div className="grid lg:grid-cols-2 gap-4">
                 <Card className={cardCls}>
-                    <CardHead title="پرفروش‌ترین آیتم‌ها" note="بر اساس تعداد فروش" />
+                    <div className="mb-4"><h2 className="text-super-base font-extrabold">پرفروش‌ترین آیتم‌ها</h2><p className="text-super-xs text-muted-fg mt-0.5">بر اساس تعداد فروش</p></div>
                     {(stats?.topItems?.length ?? 0) === 0 ? (
                         <p className="text-muted-fg text-super-sm py-4">در این بازه فروشی ثبت نشده است.</p>
                     ) : (
@@ -172,9 +183,8 @@ const BranchPanelReports = () => {
                 </Card>
 
                 <Card className={cardCls}>
-                    <CardHead title="فروش بر اساس روز هفته" note="۷ روز گذشته" />
+                    <div className="mb-4"><h2 className="text-super-base font-extrabold">فروش بر اساس روز هفته</h2><p className="text-super-xs text-muted-fg mt-0.5">۷ روز گذشته</p></div>
                     <BarChart data={weekdayData} />
-
                     <div className="mt-5">
                         <div className="text-super-sm font-bold mb-2">تفکیک روش پرداخت</div>
                         <div className="flex h-3.5 rounded-full overflow-hidden bg-surface-sunken">
@@ -191,12 +201,5 @@ const BranchPanelReports = () => {
         </div>
     );
 };
-
-const CardHead = ({ title, note }) => (
-    <div className="mb-4">
-        <h2 className="text-super-base font-extrabold">{title}</h2>
-        <p className="text-super-xs text-muted-fg mt-0.5">{note}</p>
-    </div>
-);
 
 export default BranchPanelReports;
