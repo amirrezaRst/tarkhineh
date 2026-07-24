@@ -51,7 +51,7 @@ const CourierProfile = () => {
 
     if (loading) {
         return (
-            <div className="w-full max-w-[1180px]">
+            <div className="w-full">
                 <PanelPageHeader title="پروفایل و عملکرد" subtitle="اطلاعات شما، وضعیت فعالیت و آمار عملکرد" />
                 <div className="grid lg:grid-cols-[340px_1fr] gap-4"><Skeleton className="h-96 rounded-2xl" /><Skeleton className="h-96 rounded-2xl" /></div>
             </div>
@@ -59,7 +59,7 @@ const CourierProfile = () => {
     }
 
     return (
-        <div className="w-full max-w-[1180px]">
+        <div className="w-full">
             <PanelPageHeader title="پروفایل و عملکرد" subtitle="اطلاعات شما، وضعیت فعالیت و آمار عملکرد" />
 
             <div className="grid lg:grid-cols-[340px_1fr] gap-4 items-start">

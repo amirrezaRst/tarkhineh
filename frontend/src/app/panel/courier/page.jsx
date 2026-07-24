@@ -104,7 +104,7 @@ const CourierDashboard = () => {
     const s = data?.stats || {};
 
     return (
-        <div className="w-full max-w-[1180px]">
+        <div className="w-full">
             <h1 className="text-2xl font-bold">سلام{name ? `، ${name}` : ""} 👋</h1>
             <p className="text-muted-fg text-super-sm mt-1.5 mb-5">وضعیت امروز شما و تحویل جاری</p>
 

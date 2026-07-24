@@ -37,7 +37,7 @@ const CourierHistory = () => {
     const deliveryMinutes = (o) => (o.assignedAt && o.deliveredAt ? Math.round((new Date(o.deliveredAt) - new Date(o.assignedAt)) / 60000) : null);
 
     return (
-        <div className="w-full max-w-[1180px]">
+        <div className="w-full">
             <div className="flex items-start justify-between gap-3 flex-wrap mb-6">
                 <div>
                     <h1 className="text-2xl font-bold">تاریخچهٔ تحویل</h1>

@@ -45,7 +45,7 @@ const CourierEarnings = () => {
     const busiest = daily.reduce((b, d) => (d.count > (b?.count ?? -1) ? d : b), null);
 
     return (
-        <div className="w-full max-w-[1180px]">
+        <div className="w-full">
             <div className="flex items-start justify-between gap-3 flex-wrap mb-6">
                 <div>
                     <h1 className="text-2xl font-bold">درآمد و تسویه</h1>

@@ -43,7 +43,7 @@ const CourierDeliveries = () => {
     const enRoute = deliveries.filter((o) => o.status === "on_the_way").length;
 
     return (
-        <div className="w-full max-w-[1180px]">
+        <div className="w-full">
             <PanelPageHeader title="تحویل‌های فعال" subtitle="سفارش‌هایی که به شما تخصیص داده شده و باید تحویل دهید" />
 
             <div className="grid lg:grid-cols-[1fr_300px] gap-4 items-start">
