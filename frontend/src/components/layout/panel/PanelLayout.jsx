@@ -19,6 +19,7 @@ const titleForPath = (pathname, name) => {
         "/panel/courier": name ? `سلام، ${name}` : "خوش آمدید",
         "/panel/courier/orders": "تحویل‌های فعال",
         "/panel/courier/history": "تاریخچهٔ تحویل",
+        "/panel/courier/earnings": "درآمد و تسویه",
         "/panel/courier/profile": "پروفایل و عملکرد",
     };
     return map[pathname] || "پنل مدیریت";

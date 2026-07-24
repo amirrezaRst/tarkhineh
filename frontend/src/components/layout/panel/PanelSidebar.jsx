@@ -1,6 +1,6 @@
 "use client";
 
-import { DashboardIcon, DeliveryIcon, DiagramIcon, FastFoodIcon, FastFoodMenuIcon, HistoryIcon, LogoutIcon, UserIcon } from "@/assets/Icons";
+import { DashboardIcon, DeliveryIcon, DiagramIcon, FastFoodIcon, FastFoodMenuIcon, HistoryIcon, LogoutIcon, UserIcon, WalletMoneyIcon } from "@/assets/Icons";
 import useUserStore from "@/stores/useUserStore";
 import useCartStore from "@/stores/useCartStore";
 import { handleLogout } from "@/services/UserService";
@@ -39,7 +39,12 @@ const sidebarByRole = {
                 { label: "تاریخچهٔ تحویل", href: "/panel/courier/history", icon: HistoryIcon },
             ]
         },
-        { section: "حساب", items: [{ label: "پروفایل و عملکرد", href: "/panel/courier/profile", icon: UserIcon }] },
+        {
+            section: "حساب", items: [
+                { label: "درآمد و تسویه", href: "/panel/courier/earnings", icon: WalletMoneyIcon },
+                { label: "پروفایل و عملکرد", href: "/panel/courier/profile", icon: UserIcon },
+            ]
+        },
     ],
 };
 
