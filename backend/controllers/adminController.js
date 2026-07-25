@@ -377,6 +377,107 @@ exports.getAssignableUsers = async (req, res) => {
 };
 
 // ----------------------------------------------------------------------------
+// OPERATIONS — global orders + couriers
+// ----------------------------------------------------------------------------
+exports.getOrders = async (req, res) => {
+    try {
+        const { branch, status, q } = req.query;
+        const range = req.query.range || "week";
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(50, parseInt(req.query.limit) || 20);
+
+        const base = {};
+        if (branch && branch !== "all") base.branch = branch;
+        const ws = range === "today" ? todayStart() : range === "week" ? daysAgoStart(6) : range === "month" ? monthStart() : null;
+        if (ws) base.createdAt = { $gte: ws };
+        if (q && q.trim()) {
+            const term = q.trim();
+            const rx = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+            const users = await User.find({ $or: [{ fullName: rx }, { phoneNumber: rx }] }).select("_id").limit(50);
+            base.$or = [
+                { $expr: { $regexMatch: { input: { $toString: "$_id" }, regex: term, options: "i" } } },
+                { user: { $in: users.map((u) => u._id) } },
+            ];
+        }
+        const query = { ...base };
+        if (status && status !== "all") query.status = status;
+
+        const aggMatch = { ...base };
+        if (aggMatch.branch) aggMatch.branch = oid(aggMatch.branch);
+
+        const [orders, total, countsAgg] = await Promise.all([
+            Order.find(query)
+                .populate("user", "fullName phoneNumber")
+                .populate("branch", "name")
+                .populate("courier", "fullName phoneNumber")
+                .populate("items.menuItem", "name")
+                .select("user branch courier status finalPrice deliveryFee deliveryType paymentStatus paymentMethod refundStatus deliveryAddress items createdAt deliveredAt")
+                .sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).lean(),
+            Order.countDocuments(query),
+            Order.aggregate([{ $match: aggMatch }, { $group: { _id: "$status", count: { $sum: 1 } } }]),
+        ]);
+
+        const counts = { all: 0, pending: 0, preparing: 0, on_the_way: 0, delivered: 0, cancelled: 0 };
+        countsAgg.forEach((c) => { if (c._id in counts) counts[c._id] = c.count; counts.all += c.count; });
+
+        res.status(200).json({
+            status: 200, message: "Orders fetched",
+            data: { orders, total, page, pages: Math.ceil(total / limit), counts },
+        });
+    } catch (error) {
+        console.error("Admin orders error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+exports.cancelOrder = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id).select("status paymentStatus refundStatus");
+        if (!order) return res.status(404).json({ status: 404, message: "سفارش یافت نشد." });
+        if (order.status === "delivered") return res.status(400).json({ status: 400, message: "سفارش تحویل‌شده قابل لغو نیست." });
+        if (order.status === "cancelled") return res.status(400).json({ status: 400, message: "این سفارش قبلاً لغو شده است." });
+        order.status = "cancelled";
+        let refunded = false;
+        if (order.paymentStatus === "paid") { order.refundStatus = "requested"; refunded = true; }
+        await order.save();
+        res.status(200).json({ status: 200, message: refunded ? "سفارش لغو و درخواست بازپرداخت ثبت شد." : "سفارش لغو شد." });
+    } catch (error) {
+        console.error("Admin cancel order error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+exports.getCouriers = async (req, res) => {
+    try {
+        const couriers = await User.find({ role: ROLES.COURIER })
+            .populate("branch", "name").select("fullName phoneNumber image vehicleType plateNumber courierStatus branch createdAt").lean();
+        const ids = couriers.map((c) => c._id);
+        const ts = todayStart();
+
+        const [activeAgg, todayAgg, totalAgg] = await Promise.all([
+            Order.aggregate([{ $match: { courier: { $in: ids }, status: { $in: ["preparing", "on_the_way"] } } }, { $group: { _id: "$courier", c: { $sum: 1 } } }]),
+            Order.aggregate([{ $match: { courier: { $in: ids }, status: "delivered", deliveredAt: { $gte: ts } } }, { $group: { _id: "$courier", c: { $sum: 1 } } }]),
+            Order.aggregate([{ $match: { courier: { $in: ids }, status: "delivered" } }, { $group: { _id: "$courier", c: { $sum: 1 } } }]),
+        ]);
+        const m = (agg) => Object.fromEntries(agg.map((x) => [String(x._id), x.c]));
+        const [act, tod, tot] = [m(activeAgg), m(todayAgg), m(totalAgg)];
+
+        const data = couriers.map((c) => ({
+            ...c,
+            active: act[String(c._id)] || 0,
+            deliveredToday: tod[String(c._id)] || 0,
+            totalDeliveries: tot[String(c._id)] || 0,
+        })).sort((a, b) => b.totalDeliveries - a.totalDeliveries);
+
+        const online = data.filter((c) => c.courierStatus === "available").length;
+        res.status(200).json({ status: 200, message: "Couriers fetched", data: { couriers: data, summary: { total: data.length, online, offline: data.length - online } } });
+    } catch (error) {
+        console.error("Admin couriers error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// ----------------------------------------------------------------------------
 // REPORTS — cross-branch analytics
 // ----------------------------------------------------------------------------
 exports.getReports = async (req, res) => {

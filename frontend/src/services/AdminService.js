@@ -21,6 +21,12 @@ export const deleteBranch = async (id, onSuccess) => {
     catch (err) { fail(err); }
 };
 
+// ---- orders (oversight) ----
+export const cancelOrder = async (id, onSuccess) => {
+    try { await api.patch(`/admin/orders/${id}/cancel`); onSuccess?.(); toast.success("سفارش لغو شد."); return true; }
+    catch (err) { fail(err); return false; }
+};
+
 // ---- users & roles ----
 export const updateUserRole = async (id, body, onSuccess) => {
     try { await api.patch(`/admin/users/${id}/role`, body); onSuccess?.(); toast.success("نقش کاربر به‌روزرسانی شد."); return true; }

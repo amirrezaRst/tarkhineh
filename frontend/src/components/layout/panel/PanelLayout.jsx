@@ -12,6 +12,8 @@ import { setAvailability } from "@/services/CourierService";
 const titleForPath = (pathname, name) => {
     const map = {
         "/admin": name ? `خوش آمدید، ${name}` : "داشبورد کل",
+        "/admin/orders": "سفارش‌های سراسری",
+        "/admin/couriers": "پیک‌های سراسری",
         "/admin/branches": "مدیریت شعبه‌ها",
         "/admin/users": "کاربران و نقش‌ها",
         "/admin/menu": "منوی کاتالوگ",

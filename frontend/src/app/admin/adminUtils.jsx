@@ -51,6 +51,22 @@ export const Avatar = ({ name, phone, role = "user", src, size = 32 }) => {
     );
 };
 
+export const STATUS_META = {
+    pending: { label: "در انتظار تأیید", color: "hsl(var(--status-pending))", sub: "bg-status-pending-subtle text-status-pending" },
+    preparing: { label: "در حال آماده‌سازی", color: "hsl(var(--status-preparing))", sub: "bg-status-preparing-subtle text-status-preparing" },
+    on_the_way: { label: "در مسیر", color: "hsl(var(--status-on-the-way))", sub: "bg-status-on-the-way-subtle text-status-on-the-way" },
+    delivered: { label: "تحویل‌شده", color: "hsl(var(--status-delivered))", sub: "bg-status-delivered-subtle text-status-delivered" },
+    cancelled: { label: "لغوشده", color: "hsl(var(--status-cancelled))", sub: "bg-status-cancelled-subtle text-status-cancelled" },
+};
+
+export const StatusPill = ({ status }) => {
+    const m = STATUS_META[status] || STATUS_META.pending;
+    return <span className={`inline-flex items-center gap-1.5 text-super-xs font-bold px-2.5 py-1 rounded-full whitespace-nowrap ${m.sub}`}><span className="w-1.5 h-1.5 rounded-full bg-current" />{m.label}</span>;
+};
+
+export const PAYMENT_LABEL = { paid: "پرداخت‌شده", unpaid: "پرداخت‌نشده", failed: "ناموفق" };
+export const DELIVERY_LABEL = { courier: "ارسال با پیک", person: "تحویل حضوری" };
+
 export const CAT_LABEL = { main: "غذای اصلی", side: "پیش‌غذا", dessert: "دسر", drink: "نوشیدنی" };
 export const FOOD_TYPE_LABEL = { iranian: "ایرانی", "non-iranian": "غیرایرانی", pizza: "پیتزا", sandwich: "ساندویچ" };
 

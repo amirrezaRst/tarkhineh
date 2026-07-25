@@ -14,6 +14,12 @@ const sidebarByRole = {
     admin: [
         { section: null, items: [{ label: "داشبورد کل", href: "/admin", icon: DashboardIcon }] },
         {
+            section: "نظارت", items: [
+                { label: "سفارش‌های سراسری", href: "/admin/orders", icon: FastFoodIcon },
+                { label: "پیک‌های سراسری", href: "/admin/couriers", icon: DeliveryIcon },
+            ]
+        },
+        {
             section: "مدیریت", items: [
                 { label: "شعبه‌ها", href: "/admin/branches", icon: HomeIcon },
                 { label: "کاربران و نقش‌ها", href: "/admin/users", icon: UserIcon },
