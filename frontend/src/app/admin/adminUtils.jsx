@@ -1,0 +1,65 @@
+// Shared helpers for the admin panel: role identity, avatars, category labels.
+
+export const ROLE_META = {
+    admin: { label: "مدیر کل", tone: "admin" },
+    branch_manager: { label: "مدیر شعبه", tone: "branch" },
+    courier: { label: "پیک", tone: "courier" },
+    user: { label: "کاربر", tone: "user" },
+};
+
+// role tone -> pill classes (dot + label, never colour-alone).
+const TONE = {
+    admin: "bg-[hsl(var(--role-admin)/0.12)] text-[hsl(var(--role-admin))]",
+    branch: "bg-[hsl(var(--role-branch)/0.12)] text-[hsl(var(--role-branch))]",
+    courier: "bg-[hsl(var(--role-courier)/0.12)] text-[hsl(var(--role-courier))]",
+    user: "bg-surface-sunken text-muted-fg",
+    warn: "bg-warning-subtle text-warning-fg",
+};
+
+export const RolePill = ({ role, children, tone }) => {
+    const t = tone || ROLE_META[role]?.tone || "user";
+    return (
+        <span className={`inline-flex items-center gap-1.5 text-super-xs font-bold px-2.5 py-1 rounded-full whitespace-nowrap ${TONE[t]}`}>
+            <span className="w-1.5 h-1.5 rounded-full bg-current" />
+            {children || ROLE_META[role]?.label || role}
+        </span>
+    );
+};
+
+const AV_BG = {
+    admin: "bg-[hsl(var(--role-admin))]",
+    branch: "bg-[hsl(var(--role-branch))]",
+    courier: "bg-[hsl(var(--role-courier))]",
+    user: "bg-[hsl(var(--muted-fg))]",
+};
+
+export const initials = (name, phone) => {
+    if (name && name.trim()) {
+        const p = name.trim().split(/\s+/);
+        return (p[0]?.[0] || "") + (p[1]?.[0] || "");
+    }
+    return phone ? String(phone).slice(-2) : "؟";
+};
+
+export const Avatar = ({ name, phone, role = "user", src, size = 32 }) => {
+    const s = { width: size, height: size };
+    if (src) return <img src={src} alt="" style={s} className="rounded-full object-cover shrink-0" />;
+    return (
+        <div style={s} className={`rounded-full grid place-items-center text-white font-extrabold shrink-0 ${AV_BG[ROLE_META[role]?.tone || "user"]}`}>
+            <span style={{ fontSize: size * 0.36 }}>{initials(name, phone)}</span>
+        </div>
+    );
+};
+
+export const CAT_LABEL = { main: "غذای اصلی", side: "پیش‌غذا", dessert: "دسر", drink: "نوشیدنی" };
+export const FOOD_TYPE_LABEL = { iranian: "ایرانی", "non-iranian": "غیرایرانی", pizza: "پیتزا", sandwich: "ساندویچ" };
+
+export const faDate = (d) => (d ? new Date(d).toLocaleDateString("fa-IR", { year: "numeric", month: "long", day: "numeric" }) : "—");
+
+// Menu image served from /public/menu-images (image field stored as a filename).
+export const menuImg = (images) => {
+    const first = Array.isArray(images) ? images[0] : images;
+    if (!first) return null;
+    if (/^https?:\/\//.test(first)) return first;
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL}/menu-images/${String(first).replace(/^\/?(public\/)?menu-images\//, "")}`;
+};

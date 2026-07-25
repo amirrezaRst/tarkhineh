@@ -11,6 +11,11 @@ import { setAvailability } from "@/services/CourierService";
 // section. Falls back to a neutral title for any unmapped panel route.
 const titleForPath = (pathname, name) => {
     const map = {
+        "/admin": name ? `خوش آمدید، ${name}` : "داشبورد کل",
+        "/admin/branches": "مدیریت شعبه‌ها",
+        "/admin/users": "کاربران و نقش‌ها",
+        "/admin/menu": "منوی کاتالوگ",
+        "/admin/reports": "گزارشات و تحلیل کل",
         "/panel/branch": name ? `خوش آمدید، ${name}` : "خوش آمدید",
         "/panel/branch/orders": "مدیریت سفارش‌ها",
         "/panel/branch/menu": "منوی شعبه",
@@ -138,6 +143,10 @@ const PanelLayout = ({ children }) => {
                     <div className="flex items-center gap-2.5 shrink-0">
                         {user.role === "courier" ? (
                             <CourierAvailabilityToggle />
+                        ) : user.role === "admin" ? (
+                            <span className="inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-super-xs font-bold bg-[hsl(var(--role-admin)/0.12)] text-[hsl(var(--role-admin))] border border-[hsl(var(--role-admin)/0.25)]">
+                                <span className="w-2 h-2 rounded-full bg-[hsl(var(--role-admin))]" /> نمای کل پلتفرم
+                            </span>
                         ) : (
                             <>
                                 <StoreStatusPill />
