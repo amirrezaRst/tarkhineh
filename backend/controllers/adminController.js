@@ -157,7 +157,7 @@ exports.getBranches = async (req, res) => {
             return {
                 _id: b._id,
                 name: b.name,
-                courierCapacity: b.courierCapacity,
+                courierCapacity: b.courierCapacity ?? 3,
                 manager: b.manager || null,
                 revenue: r.revenue,
                 orders: r.orders,

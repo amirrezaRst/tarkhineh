@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
 const MainLayout = ({ children }) => {
 
     const pathname = usePathname();
-    const isPanelRoute = pathname.startsWith("/panel");
+    const isPanelRoute = pathname.startsWith("/panel") || pathname.startsWith("/admin");
 
     return (
         <>
