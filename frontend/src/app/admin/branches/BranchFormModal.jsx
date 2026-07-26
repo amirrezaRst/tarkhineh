@@ -13,6 +13,10 @@ const BranchFormModal = ({ open, onClose, branch, onSaved }) => {
     const [name, setName] = useState(branch?.name || "");
     const [capacity, setCapacity] = useState(branch?.courierCapacity ?? 3);
     const [manager, setManager] = useState(branch?.manager || null);
+    const [address, setAddress] = useState(branch?.address || "");
+    const [phoneNumber, setPhoneNumber] = useState(branch?.phoneNumber || "");
+    const [openTime, setOpenTime] = useState(branch?.openTime || "");
+    const [closeTime, setCloseTime] = useState(branch?.closeTime || "");
     const [busy, setBusy] = useState(false);
 
     const submit = async (e) => {
@@ -20,9 +24,10 @@ const BranchFormModal = ({ open, onClose, branch, onSaved }) => {
         if (!name.trim()) return;
         if (!editing && !manager) return;
         setBusy(true);
+        const profile = { address, phoneNumber, openTime, closeTime };
         const ok = editing
-            ? await updateBranch(branch._id, { name, courierCapacity: Number(capacity), ...(manager && manager._id !== branch.manager?._id ? { managerId: manager._id } : {}) }, onSaved)
-            : await createBranch({ name, courierCapacity: Number(capacity), managerId: manager._id }, onSaved);
+            ? await updateBranch(branch._id, { name, courierCapacity: Number(capacity), ...profile, ...(manager && manager._id !== branch.manager?._id ? { managerId: manager._id } : {}) }, onSaved)
+            : await createBranch({ name, courierCapacity: Number(capacity), managerId: manager._id, ...profile }, onSaved);
         setBusy(false);
         if (ok) onClose();
     };
@@ -39,6 +44,21 @@ const BranchFormModal = ({ open, onClose, branch, onSaved }) => {
                 <label className="block text-super-sm font-bold mb-1.5">{editing ? "تغییر مدیر شعبه (اختیاری)" : "مدیر شعبه"}</label>
                 <div className="mb-1.5"><UserPicker value={manager} onChange={setManager} /></div>
                 <p className="text-super-xs text-muted-fg mb-4">کاربر انتخاب‌شده به‌طور خودکار به نقش «مدیر شعبه» ارتقا می‌یابد.</p>
+
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="col-span-2">
+                        <label className="block text-super-sm font-bold mb-1.5">آدرس <span className="text-super-xs font-normal text-muted-fg">(اختیاری)</span></label>
+                        <input value={address} onChange={(e) => setAddress(e.target.value)} className="w-full border border-border rounded-xl px-3.5 py-2.5 text-super-sm bg-surface focus:outline-none focus:ring-2 focus:ring-primary/40" placeholder="تهران، خیابان…" />
+                    </div>
+                    <div>
+                        <label className="block text-super-sm font-bold mb-1.5">تلفن</label>
+                        <input value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value.replace(/[^\d]/g, ""))} inputMode="numeric" className="w-full border border-border rounded-xl px-3.5 py-2.5 text-super-sm bg-surface tabular-nums focus:outline-none focus:ring-2 focus:ring-primary/40" placeholder="۰۲۱…" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                        <div><label className="block text-super-sm font-bold mb-1.5">باز</label><input type="time" value={openTime} onChange={(e) => setOpenTime(e.target.value)} className="w-full border border-border rounded-xl px-2 py-2.5 text-super-sm bg-surface tabular-nums focus:outline-none focus:ring-2 focus:ring-primary/40" /></div>
+                        <div><label className="block text-super-sm font-bold mb-1.5">بسته</label><input type="time" value={closeTime} onChange={(e) => setCloseTime(e.target.value)} className="w-full border border-border rounded-xl px-2 py-2.5 text-super-sm bg-surface tabular-nums focus:outline-none focus:ring-2 focus:ring-primary/40" /></div>
+                    </div>
+                </div>
 
                 <label className="block text-super-sm font-bold mb-1.5">ظرفیت هم‌زمان هر پیک</label>
                 <div className="flex items-center gap-2 mb-6">

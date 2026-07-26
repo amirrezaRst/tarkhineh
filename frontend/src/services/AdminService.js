@@ -26,6 +26,10 @@ export const cancelOrder = async (id, onSuccess) => {
     try { await api.patch(`/admin/orders/${id}/cancel`); onSuccess?.(); toast.success("سفارش لغو شد."); return true; }
     catch (err) { fail(err); return false; }
 };
+export const refundOrder = async (id, onSuccess) => {
+    try { await api.patch(`/admin/orders/${id}/refund`); onSuccess?.(); toast.success("بازپرداخت انجام شد."); return true; }
+    catch (err) { fail(err); return false; }
+};
 
 // ---- users & roles ----
 export const updateUserRole = async (id, body, onSuccess) => {
@@ -34,6 +38,34 @@ export const updateUserRole = async (id, body, onSuccess) => {
 };
 export const deleteUser = async (id, onSuccess) => {
     try { await api.delete(`/admin/users/${id}`); onSuccess?.(); toast.success("کاربر حذف شد."); }
+    catch (err) { fail(err); }
+};
+
+// ---- promotions: coupons + discounts ----
+export const createCoupon = async (data, onSuccess) => {
+    try { await api.post("/admin/coupons", data); onSuccess?.(); toast.success("کوپن ایجاد شد."); return true; }
+    catch (err) { fail(err); return false; }
+};
+export const updateCoupon = async (id, data, onSuccess) => {
+    try { await api.patch(`/admin/coupons/${id}`, data); onSuccess?.(); toast.success("کوپن به‌روزرسانی شد."); return true; }
+    catch (err) { fail(err); return false; }
+};
+export const deleteCoupon = async (id, onSuccess) => {
+    try { await api.delete(`/admin/coupons/${id}`); onSuccess?.(); toast.success("کوپن حذف شد."); }
+    catch (err) { fail(err); }
+};
+export const createDiscount = async (data, onSuccess) => {
+    try { await api.post("/admin/discounts", data); onSuccess?.(); toast.success("تخفیف ایجاد شد."); return true; }
+    catch (err) { fail(err); return false; }
+};
+export const deleteDiscount = async (id, onSuccess) => {
+    try { await api.delete(`/admin/discounts/${id}`); onSuccess?.(); toast.success("تخفیف حذف شد."); }
+    catch (err) { fail(err); }
+};
+
+// ---- reviews ----
+export const deleteReview = async (id, onSuccess) => {
+    try { await api.delete(`/admin/reviews/${id}`); onSuccess?.(); toast.success("نظر حذف شد."); }
     catch (err) { fail(err); }
 };
 

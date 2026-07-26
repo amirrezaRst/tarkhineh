@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { api } from "@/utils/apiClient";
 import { toast } from "react-toastify";
 import FormatPrice from "@/utils/FormatPrice";
@@ -12,8 +13,8 @@ import { Avatar, RolePill } from "../adminUtils";
 import { deleteBranch } from "@/services/AdminService";
 import BranchFormModal from "./BranchFormModal";
 
-const BranchCard = ({ b, onEdit, onDelete }) => (
-    <Card className="p-5">
+const BranchCard = ({ b, onOpen, onEdit, onDelete }) => (
+    <Card interactive className="p-5 cursor-pointer" onClick={() => onOpen(b)}>
         <div className="flex items-start justify-between gap-3">
             <div>
                 <div className="text-super-base font-extrabold">{b.name}</div>
@@ -39,14 +40,15 @@ const BranchCard = ({ b, onEdit, onDelete }) => (
                 </div>
             ) : <span className="text-super-xs text-warning-fg">مدیری منتسب نشده است</span>}
             <div className="flex gap-2 shrink-0">
-                <button onClick={() => onEdit(b)} aria-label="ویرایش" className="w-9 h-9 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-foreground hover:border-border-strong">✎</button>
-                <button onClick={() => onDelete(b)} aria-label="حذف" className="w-9 h-9 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40">🗑</button>
+                <button onClick={(e) => { e.stopPropagation(); onEdit(b); }} aria-label="ویرایش" className="w-9 h-9 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-foreground hover:border-border-strong">✎</button>
+                <button onClick={(e) => { e.stopPropagation(); onDelete(b); }} aria-label="حذف" className="w-9 h-9 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40">🗑</button>
             </div>
         </div>
     </Card>
 );
 
 const AdminBranches = () => {
+    const router = useRouter();
     const [branches, setBranches] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modal, setModal] = useState(null); // {mode:'new'|'edit', branch?}
@@ -77,7 +79,7 @@ const AdminBranches = () => {
                 <Card className="p-12 text-center text-muted-fg text-super-sm">هنوز شعبه‌ای ثبت نشده است.</Card>
             ) : (
                 <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {branches.map((b) => <BranchCard key={b._id} b={b} onEdit={(br) => setModal({ mode: "edit", branch: br })} onDelete={onDelete} />)}
+                    {branches.map((b) => <BranchCard key={b._id} b={b} onOpen={(br) => router.push(`/admin/branches/${br._id}`)} onEdit={(br) => setModal({ mode: "edit", branch: br })} onDelete={onDelete} />)}
                 </div>
             )}
 
