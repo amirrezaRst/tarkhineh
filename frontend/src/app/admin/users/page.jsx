@@ -9,6 +9,7 @@ import PanelPageHeader from "@/components/panel/PanelPageHeader";
 import { Skeleton } from "@/components/panel/Skeleton";
 import { Avatar, RolePill, ROLE_META, faDate } from "../adminUtils";
 import { deleteUser } from "@/services/AdminService";
+import { SwapIcon, TrashIcon } from "../icons";
 import RoleModal from "./RoleModal";
 
 const TABS = [
@@ -95,8 +96,8 @@ const AdminUsers = () => {
                                     <td className="px-4 py-3 tabular-nums text-muted-fg">{faDate(u.createdAt)}</td>
                                     <td className="px-4 py-3">
                                         <div className="flex gap-2">
-                                            <button onClick={() => setEditing(u)} aria-label="تغییر نقش" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-primary hover:border-primary/40" title="تغییر نقش">⇄</button>
-                                            <button onClick={() => onDelete(u)} aria-label="حذف" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40" title="حذف">🗑</button>
+                                            <button onClick={() => setEditing(u)} aria-label="تغییر نقش" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-primary hover:border-primary/40" title="تغییر نقش"><SwapIcon className="w-4 h-4" /></button>
+                                            <button onClick={() => onDelete(u)} aria-label="حذف" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40" title="حذف"><TrashIcon className="w-4 h-4" /></button>
                                         </div>
                                     </td>
                                 </tr>

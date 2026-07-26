@@ -8,14 +8,26 @@ import Card from "@/components/panel/Card";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
 import { Skeleton } from "@/components/panel/Skeleton";
 import { Avatar, faDate } from "../adminUtils";
-import { deleteReview } from "@/services/AdminService";
+import { setReviewStatus, deleteReview } from "@/services/AdminService";
+import { CheckIcon, CloseIcon, TrashIcon } from "../icons";
 
-const Stars = ({ n }) => (
-    <span className="text-[hsl(var(--amber-400))] tabular-nums" aria-label={`${n} از ۵`}>{"★".repeat(n)}<span className="text-border-strong">{"★".repeat(5 - n)}</span></span>
+const Stars = ({ n, className = "" }) => (
+    <span className={`text-[hsl(var(--amber-400))] ${className}`} aria-label={`${n} از ۵`}>{"★".repeat(n)}<span className="text-border-strong">{"★".repeat(5 - n)}</span></span>
 );
 
+const STATUS_TABS = [
+    { key: "all", label: "همه" }, { key: "pending", label: "در انتظار تأیید" },
+    { key: "approved", label: "تأییدشده" }, { key: "rejected", label: "ردشده" },
+];
+const STATUS_PILL = {
+    pending: "bg-status-pending-subtle text-status-pending", approved: "bg-status-delivered-subtle text-status-delivered", rejected: "bg-status-cancelled-subtle text-status-cancelled",
+};
+const STATUS_LABEL = { pending: "در انتظار تأیید", approved: "منتشرشده", rejected: "ردشده" };
+
 const AdminReviews = () => {
+    const [status, setStatus] = useState("pending");
     const [rating, setRating] = useState("all");
+    const [branch, setBranch] = useState("all");
     const [page, setPage] = useState(1);
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -23,57 +35,101 @@ const AdminReviews = () => {
     const load = useCallback(async (signal) => {
         setLoading(true);
         try {
-            const res = await api.get(`/admin/reviews?rating=${rating}&page=${page}`, { signal });
+            const res = await api.get(`/admin/reviews?status=${status}&rating=${rating}&branch=${branch}&page=${page}`, { signal });
             setData(res.data);
         } catch (err) { if (err.name !== "AbortError") toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید."); }
         finally { setLoading(false); }
-    }, [rating, page]);
+    }, [status, rating, branch, page]);
 
     useEffect(() => { const c = new AbortController(); load(c.signal); return () => c.abort(); }, [load]);
 
     const reviews = data?.reviews || [];
     const dist = data?.distribution || {};
+    const sc = data?.statusCounts || {};
+    const byBranch = data?.byBranch || [];
     const maxDist = Math.max(...Object.values(dist), 1);
+    const reset = (fn) => { setPage(1); fn(); };
 
-    const onDelete = async (r) => { if (confirm("این نظر حذف شود؟")) await deleteReview(r._id, () => load()); };
+    const act = async (fn) => { await fn(); load(); };
 
     return (
         <div className="w-full">
-            <PanelPageHeader title="نظرات و امتیازها" subtitle="مدیریت و پایش نظرات مشتریان در همهٔ شعبه‌ها" />
+            <PanelPageHeader title="نظرات و امتیازها" subtitle="بررسی و تأیید نظرات پیش از انتشار، و سنجش رضایت شعبه‌ها" />
+
+            {/* moderation status tabs */}
+            <div className="flex gap-1.5 mb-5 flex-wrap">
+                {STATUS_TABS.map((t) => {
+                    const isPending = t.key === "pending";
+                    const n = sc[t.key] ?? 0;
+                    return (
+                        <button key={t.key} onClick={() => reset(() => setStatus(t.key))}
+                            className={`inline-flex items-center gap-2 text-super-xs font-bold px-3.5 py-2 rounded-lg border transition-colors ${status === t.key ? "bg-primary text-primary-fg border-primary" : "bg-surface border-border text-muted-fg hover:text-foreground"}`}>
+                            {t.label}
+                            <span className={`tabular-nums px-1.5 rounded-full ${isPending && n > 0 && status !== t.key ? "bg-status-pending text-white" : "opacity-70"}`}>{PersianNumber(n)}</span>
+                        </button>
+                    );
+                })}
+            </div>
 
             <div className="grid lg:grid-cols-[300px_1fr] gap-4 items-start">
-                {/* summary rail */}
+                {/* rail */}
                 <div className="flex flex-col gap-4">
                     <Card className="p-5 text-center">
                         {loading ? <Skeleton className="h-16" /> : (
                             <>
                                 <div className="text-4xl font-extrabold tabular-nums">{data?.avg != null ? PersianNumber(data.avg) : "—"}</div>
-                                <div className="text-[hsl(var(--amber-400))] text-lg mt-1">{"★".repeat(Math.round(data?.avg || 0))}<span className="text-border-strong">{"★".repeat(5 - Math.round(data?.avg || 0))}</span></div>
+                                <Stars n={Math.round(data?.avg || 0)} className="text-lg" />
                                 <div className="text-super-xs text-muted-fg mt-1">میانگین از {PersianNumber(data?.totalAll ?? 0)} نظر</div>
                             </>
                         )}
                     </Card>
+
                     <Card className="p-5">
                         <div className="text-super-xs font-bold text-muted-fg mb-3">توزیع امتیاز</div>
                         {[5, 4, 3, 2, 1].map((n) => (
-                            <button key={n} onClick={() => { setPage(1); setRating(rating === String(n) ? "all" : String(n)); }}
-                                className={`w-full flex items-center gap-2 py-1.5 ${rating === String(n) ? "opacity-100" : "opacity-90 hover:opacity-100"}`}>
+                            <button key={n} onClick={() => reset(() => setRating(rating === String(n) ? "all" : String(n)))}
+                                className={`w-full flex items-center gap-2 py-1.5 ${rating === String(n) ? "" : "opacity-90 hover:opacity-100"}`}>
                                 <span className="text-super-xs w-3 tabular-nums">{PersianNumber(n)}</span>
                                 <span className="text-[hsl(var(--amber-400))] text-super-xs">★</span>
                                 <span className="flex-1 h-2 rounded-full bg-surface-sunken overflow-hidden"><span className="block h-full rounded-full bg-[hsl(var(--amber-400))]" style={{ width: `${Math.round(((dist[n] || 0) / maxDist) * 100)}%` }} /></span>
                                 <span className="text-super-xs tabular-nums text-muted-fg w-6 text-left">{PersianNumber(dist[n] || 0)}</span>
                             </button>
                         ))}
-                        {rating !== "all" && <button onClick={() => { setPage(1); setRating("all"); }} className="text-super-xs text-primary font-bold mt-2">نمایش همه</button>}
+                    </Card>
+
+                    <Card className="p-5">
+                        <div className="text-super-xs font-bold text-muted-fg mb-3">رضایت به‌تفکیک شعبه</div>
+                        {byBranch.length === 0 ? <p className="text-super-xs text-muted-fg py-2">داده‌ای نیست.</p> : (
+                            <div className="space-y-2.5">
+                                {byBranch.map((b) => (
+                                    <button key={b.name} onClick={() => reset(() => setBranch(branch === b.name ? "all" : b.name))}
+                                        className="w-full flex items-center gap-2 text-super-sm">
+                                        <span className="flex-1 text-right font-semibold truncate">{b.name}</span>
+                                        <span className="flex-1 h-2 rounded-full bg-surface-sunken overflow-hidden max-w-[90px]"><span className="block h-full rounded-full bg-gradient-to-l from-[hsl(var(--brand-400))] to-[hsl(var(--brand-700))]" style={{ width: `${(b.avg / 5) * 100}%` }} /></span>
+                                        <span className="tabular-nums font-extrabold w-8 text-left">{PersianNumber(b.avg)}</span>
+                                        <span className="tabular-nums text-super-xs text-subtle-fg w-8 text-left">({PersianNumber(b.count)})</span>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </Card>
                 </div>
 
                 {/* list */}
                 <div className="min-w-0">
+                    {(rating !== "all" || branch !== "all") && (
+                        <div className="flex items-center gap-2 mb-3 text-super-xs">
+                            <span className="text-muted-fg">فیلتر:</span>
+                            {rating !== "all" && <span className="bg-surface-sunken px-2 py-0.5 rounded-full">{PersianNumber(rating)} ستاره</span>}
+                            {branch !== "all" && <span className="bg-surface-sunken px-2 py-0.5 rounded-full">شعبه {branch}</span>}
+                            <button onClick={() => reset(() => { setRating("all"); setBranch("all"); })} className="text-primary font-bold">پاک‌کردن</button>
+                        </div>
+                    )}
+
                     {loading ? (
-                        <div className="space-y-3">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-24 rounded-2xl" />)}</div>
+                        <div className="space-y-3">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-28 rounded-2xl" />)}</div>
                     ) : reviews.length === 0 ? (
-                        <Card className="p-12 text-center text-muted-fg text-super-sm">نظری یافت نشد.</Card>
+                        <Card className="p-12 text-center text-muted-fg text-super-sm">نظری در این وضعیت یافت نشد.</Card>
                     ) : (
                         <div className="space-y-3">
                             {reviews.map((r) => (
@@ -86,15 +142,22 @@ const AdminReviews = () => {
                                                 <div className="text-super-xs text-muted-fg">{faDate(r.createdAt)}</div>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3">
-                                            <Stars n={r.rating} />
-                                            <button onClick={() => onDelete(r)} aria-label="حذف" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40">🗑</button>
+                                        <div className="flex items-center gap-2.5">
+                                            <Stars n={r.rating} className="text-super-sm" />
+                                            <span className={`text-super-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap ${STATUS_PILL[r.status] || ""}`}>{STATUS_LABEL[r.status] || r.status}</span>
                                         </div>
                                     </div>
                                     <p className="text-super-sm mt-3 leading-7">{r.text}</p>
-                                    <div className="flex gap-2 mt-2 flex-wrap">
-                                        {r.menuItem?.name && <span className="text-super-xs bg-surface-sunken text-muted-fg px-2 py-0.5 rounded-full">{r.menuItem.name}</span>}
-                                        {r.branch?.name && <span className="text-super-xs bg-surface-sunken text-muted-fg px-2 py-0.5 rounded-full">شعبه {r.branch.name}</span>}
+                                    <div className="flex items-center justify-between gap-2 mt-3 flex-wrap">
+                                        <div className="flex gap-2 flex-wrap">
+                                            {r.menuItem?.name && <span className="text-super-xs bg-surface-sunken text-muted-fg px-2 py-0.5 rounded-full">{r.menuItem.name}</span>}
+                                            {r.branch?.name && <span className="text-super-xs bg-surface-sunken text-muted-fg px-2 py-0.5 rounded-full">شعبه {r.branch.name}</span>}
+                                        </div>
+                                        <div className="flex gap-2">
+                                            {r.status !== "approved" && <button onClick={() => act(() => setReviewStatus(r._id, "approved"))} className="inline-flex items-center gap-1.5 text-super-xs font-bold px-3 py-1.5 rounded-lg bg-status-delivered-subtle text-status-delivered hover:bg-status-delivered hover:text-white transition-colors"><CheckIcon className="w-3.5 h-3.5" /> تأیید و انتشار</button>}
+                                            {r.status !== "rejected" && <button onClick={() => act(() => setReviewStatus(r._id, "rejected"))} className="inline-flex items-center gap-1.5 text-super-xs font-bold px-3 py-1.5 rounded-lg border border-border text-muted-fg hover:text-status-cancelled hover:border-status-cancelled/40 transition-colors"><CloseIcon className="w-3.5 h-3.5" /> رد</button>}
+                                            <button onClick={() => { if (confirm("این نظر برای همیشه حذف شود؟")) act(() => deleteReview(r._id)); }} aria-label="حذف" className="w-8 h-8 grid place-items-center rounded-lg border border-border text-muted-fg hover:text-destructive hover:border-destructive/40"><TrashIcon className="w-4 h-4" /></button>
+                                        </div>
                                     </div>
                                 </Card>
                             ))}

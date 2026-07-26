@@ -58,12 +58,20 @@ export const createDiscount = async (data, onSuccess) => {
     try { await api.post("/admin/discounts", data); onSuccess?.(); toast.success("تخفیف ایجاد شد."); return true; }
     catch (err) { fail(err); return false; }
 };
+export const updateDiscount = async (id, data, onSuccess) => {
+    try { await api.patch(`/admin/discounts/${id}`, data); onSuccess?.(); toast.success("تخفیف به‌روزرسانی شد."); return true; }
+    catch (err) { fail(err); return false; }
+};
 export const deleteDiscount = async (id, onSuccess) => {
     try { await api.delete(`/admin/discounts/${id}`); onSuccess?.(); toast.success("تخفیف حذف شد."); }
     catch (err) { fail(err); }
 };
 
 // ---- reviews ----
+export const setReviewStatus = async (id, status, onSuccess) => {
+    try { const r = await api.patch(`/admin/reviews/${id}/status`, { status }); onSuccess?.(); toast.success(r.message); return true; }
+    catch (err) { fail(err); return false; }
+};
 export const deleteReview = async (id, onSuccess) => {
     try { await api.delete(`/admin/reviews/${id}`); onSuccess?.(); toast.success("نظر حذف شد."); }
     catch (err) { fail(err); }

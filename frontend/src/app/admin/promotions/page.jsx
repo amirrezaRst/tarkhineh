@@ -10,6 +10,7 @@ import PanelPageHeader from "@/components/panel/PanelPageHeader";
 import { Skeleton } from "@/components/panel/Skeleton";
 import { CAT_LABEL, faDate } from "../adminUtils";
 import { deleteCoupon, deleteDiscount } from "@/services/AdminService";
+import { EditIcon, TrashIcon, PlusIcon } from "../icons";
 import CouponModal from "./CouponModal";
 import DiscountModal from "./DiscountModal";
 
@@ -23,7 +24,7 @@ const AdminPromotions = () => {
     const [menus, setMenus] = useState([]);
     const [loading, setLoading] = useState(true);
     const [couponModal, setCouponModal] = useState(null); // {coupon?}
-    const [discountModal, setDiscountModal] = useState(false);
+    const [discountModal, setDiscountModal] = useState(null); // {discount?}
 
     const load = useCallback(async () => {
         setLoading(true);
@@ -44,8 +45,8 @@ const AdminPromotions = () => {
         <div className="w-full">
             <PanelPageHeader title="کوپن و تخفیف" subtitle="مدیریت کدهای تخفیف سراسری و تخفیف روی آیتم‌های منو"
                 action={tab === "coupons"
-                    ? <button onClick={() => setCouponModal({})} className="bg-primary text-primary-fg rounded-xl px-4 py-2.5 text-super-sm font-bold hover:bg-primary-hover">＋ کوپن جدید</button>
-                    : <button onClick={() => setDiscountModal(true)} className="bg-primary text-primary-fg rounded-xl px-4 py-2.5 text-super-sm font-bold hover:bg-primary-hover">＋ تخفیف جدید</button>} />
+                    ? <button onClick={() => setCouponModal({})} className="inline-flex items-center gap-2 bg-primary text-primary-fg rounded-xl px-4 py-2.5 text-super-sm font-bold hover:bg-primary-hover"><PlusIcon className="w-4 h-4" /> کوپن جدید</button>
+                    : <button onClick={() => setDiscountModal({})} className="inline-flex items-center gap-2 bg-primary text-primary-fg rounded-xl px-4 py-2.5 text-super-sm font-bold hover:bg-primary-hover"><PlusIcon className="w-4 h-4" /> تخفیف جدید</button>} />
 
             <div className="inline-flex bg-surface-sunken border border-border rounded-xl p-1 gap-1 mb-5">
                 <button onClick={() => setTab("coupons")} className={`text-super-sm font-bold px-4 py-1.5 rounded-lg transition-colors ${tab === "coupons" ? "bg-surface text-primary shadow-sm" : "text-muted-fg"}`}>کوپن‌ها<span className="mr-1.5 tabular-nums opacity-70">{PersianNumber(coupons.length)}</span></button>
@@ -71,7 +72,7 @@ const AdminPromotions = () => {
                                                 <td className="px-4 py-3 tabular-nums">{PersianNumber(c.usageLimit)}</td>
                                                 <td className="px-4 py-3 text-super-xs text-muted-fg tabular-nums">{faDate(c.validFrom)} تا {faDate(c.validTo)}</td>
                                                 <td className="px-4 py-3">{isActive(c.active, c.validTo) ? <span className="text-super-xs font-bold bg-status-delivered-subtle text-status-delivered px-2.5 py-1 rounded-full">فعال</span> : <span className="text-super-xs font-bold bg-surface-sunken text-muted-fg px-2.5 py-1 rounded-full">غیرفعال</span>}</td>
-                                                <td className="px-4 py-3"><div className="flex gap-2"><button onClick={() => setCouponModal({ coupon: c })} className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-foreground">✎</button><button onClick={() => onDelCoupon(c)} className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40">🗑</button></div></td>
+                                                <td className="px-4 py-3"><div className="flex gap-2"><button onClick={() => setCouponModal({ coupon: c })} aria-label="ویرایش" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-foreground"><EditIcon className="w-4 h-4" /></button><button onClick={() => onDelCoupon(c)} aria-label="حذف" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40"><TrashIcon className="w-4 h-4" /></button></div></td>
                                             </tr>
                                         ))}
                             </tbody>
@@ -90,7 +91,7 @@ const AdminPromotions = () => {
                                                 <td className="px-4 py-3 font-bold tabular-nums">{val(d.discountType, d.discountValue)}</td>
                                                 <td className="px-4 py-3 text-super-xs text-muted-fg tabular-nums">{faDate(d.startDate)} تا {faDate(d.endDate)}</td>
                                                 <td className="px-4 py-3">{isActive(d.active, d.endDate) ? <span className="text-super-xs font-bold bg-status-delivered-subtle text-status-delivered px-2.5 py-1 rounded-full">فعال</span> : <span className="text-super-xs font-bold bg-surface-sunken text-muted-fg px-2.5 py-1 rounded-full">منقضی</span>}</td>
-                                                <td className="px-4 py-3"><button onClick={() => onDelDiscount(d)} className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40">🗑</button></td>
+                                                <td className="px-4 py-3"><div className="flex gap-2"><button onClick={() => setDiscountModal({ discount: d })} aria-label="ویرایش" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-foreground"><EditIcon className="w-4 h-4" /></button><button onClick={() => onDelDiscount(d)} aria-label="حذف" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40"><TrashIcon className="w-4 h-4" /></button></div></td>
                                             </tr>
                                         ))}
                             </tbody>
@@ -100,7 +101,7 @@ const AdminPromotions = () => {
             </Card>
 
             <CouponModal open={!!couponModal} onClose={() => setCouponModal(null)} coupon={couponModal?.coupon} onSaved={load} />
-            <DiscountModal open={discountModal} onClose={() => setDiscountModal(false)} menus={menus} onSaved={load} />
+            <DiscountModal open={!!discountModal} onClose={() => setDiscountModal(null)} menus={menus} discount={discountModal?.discount} onSaved={load} />
         </div>
     );
 };

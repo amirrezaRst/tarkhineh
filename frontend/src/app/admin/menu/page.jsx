@@ -10,6 +10,7 @@ import PanelPageHeader from "@/components/panel/PanelPageHeader";
 import { SkeletonMenuCard } from "@/components/panel/Skeleton";
 import { CAT_LABEL, menuImg } from "../adminUtils";
 import { deleteMenuItem } from "@/services/AdminService";
+import { EditIcon, TrashIcon, PlusIcon } from "../icons";
 import MenuFormModal from "./MenuFormModal";
 
 const TABS = [{ key: "all", label: "همه" }, { key: "main", label: "غذای اصلی" }, { key: "side", label: "پیش‌غذا" }, { key: "drink", label: "نوشیدنی" }, { key: "dessert", label: "دسر" }];
@@ -29,8 +30,8 @@ const MenuCard = ({ m, onEdit, onDelete }) => {
                 <div className="flex items-center justify-between mt-auto pt-2">
                     <span className="font-extrabold text-primary tabular-nums text-super-sm">{FormatPrice(m.price)} ت</span>
                     <div className="flex gap-2">
-                        <button onClick={() => onEdit(m)} aria-label="ویرایش" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-foreground hover:border-border-strong">✎</button>
-                        <button onClick={() => onDelete(m)} aria-label="حذف" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40">🗑</button>
+                        <button onClick={() => onEdit(m)} aria-label="ویرایش" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-foreground hover:border-border-strong"><EditIcon className="w-4 h-4" /></button>
+                        <button onClick={() => onDelete(m)} aria-label="حذف" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40"><TrashIcon className="w-4 h-4" /></button>
                     </div>
                 </div>
             </div>
@@ -49,7 +50,7 @@ const AdminMenu = () => {
         setLoading(true);
         try {
             const res = await api.get("/menu");
-            setItems(res.data.menuItems || []);
+            setItems(res.menuItems || []);
         } catch { toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید."); }
         finally { setLoading(false); }
     }, []);
@@ -69,7 +70,7 @@ const AdminMenu = () => {
     return (
         <div className="w-full">
             <PanelPageHeader title="منوی کاتالوگ" subtitle="کاتالوگ سراسری غذاها؛ شعبه‌ها از این فهرست انتخاب می‌کنند"
-                action={<button onClick={() => setModal({ mode: "new" })} className="bg-primary text-primary-fg rounded-xl px-4 py-2.5 text-super-sm font-bold hover:bg-primary-hover">＋ افزودن غذا</button>} />
+                action={<button onClick={() => setModal({ mode: "new" })} className="inline-flex items-center gap-2 bg-primary text-primary-fg rounded-xl px-4 py-2.5 text-super-sm font-bold hover:bg-primary-hover"><PlusIcon className="w-4 h-4" /> افزودن غذا</button>} />
 
             <div className="flex flex-wrap items-center gap-3 mb-5">
                 <div className="flex-1 min-w-[200px] flex items-center gap-2 bg-surface-sunken border border-border rounded-xl px-3.5 py-2.5">

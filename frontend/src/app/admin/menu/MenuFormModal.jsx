@@ -4,6 +4,7 @@ import { useState } from "react";
 import Modal from "@/components/panel/Modal";
 import { createMenuItem, updateMenuItem } from "@/services/AdminService";
 import { CAT_LABEL, FOOD_TYPE_LABEL, menuImg } from "../adminUtils";
+import { ImageIcon } from "../icons";
 
 const CATS = ["main", "side", "dessert", "drink"];
 const FOOD_TYPES = ["iranian", "non-iranian", "pizza", "sandwich"];
@@ -60,7 +61,7 @@ const MenuFormModal = ({ open, onClose, item, onSaved }) => {
                     <div>
                         <label className="aspect-square rounded-2xl border-2 border-dashed border-border-strong bg-surface-sunken grid place-items-center text-subtle-fg overflow-hidden cursor-pointer hover:border-primary transition-colors">
                             {preview ? <img src={preview} alt="" className="w-full h-full object-cover" /> : (
-                                <span className="text-super-xs text-center px-2">＋ افزودن تصویر<br />(jpg / png)</span>
+                                <span className="flex flex-col items-center gap-1.5 text-super-xs text-center px-2"><ImageIcon className="w-6 h-6" />افزودن تصویر<br />(jpg / png)</span>
                             )}
                             <input type="file" accept="image/jpeg,image/png" onChange={onFile} className="hidden" />
                         </label>
