@@ -43,7 +43,9 @@ const OrderSchema = new mongoose.Schema({
     },
     paymentTransactionId: { type: String }, //! New Field
     refundStatus: { type: String, enum: ['none', 'requested', 'processed'] },   //! New Field
-    pickupCode: { type: Number },   //! New Field
+    // Delivery confirmation code the customer gives the courier. Defaulted so no
+    // order can ever exist without one (createOrder also sets it explicitly).
+    pickupCode: { type: Number, default: () => Math.floor(1000 + Math.random() * 9000) },
     approvedAt: { type: Date, default: null },  //! New Field
     deliveredAt: { type: Date },
 }, { timestamps: true });
