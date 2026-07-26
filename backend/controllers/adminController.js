@@ -684,6 +684,31 @@ exports.createDiscount = async (req, res) => {
     }
 };
 
+exports.updateDiscount = async (req, res) => {
+    try {
+        const { discountType, discountValue, startDate, endDate, active } = req.body;
+        const fields = {};
+        if (discountType !== undefined) {
+            if (!["percentage", "flat"].includes(discountType)) return res.status(400).json({ status: 400, message: "نوع تخفیف نامعتبر است." });
+            fields.discountType = discountType;
+        }
+        if (discountValue !== undefined) {
+            if (!discountValue || discountValue <= 0) return res.status(400).json({ status: 400, message: "مقدار تخفیف نامعتبر است." });
+            fields.discountValue = discountValue;
+        }
+        if (startDate !== undefined) fields.startDate = startDate;
+        if (endDate !== undefined) fields.endDate = endDate;
+        if (active !== undefined) fields.active = active;
+
+        const discount = await Discount.findByIdAndUpdate(req.params.id, fields, { new: true });
+        if (!discount) return res.status(404).json({ status: 404, message: "تخفیف یافت نشد." });
+        res.status(200).json({ status: 200, message: "تخفیف به‌روزرسانی شد.", data: { discount } });
+    } catch (error) {
+        console.error("Admin update discount error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
 exports.deleteDiscount = async (req, res) => {
     try {
         const d = await Discount.findByIdAndDelete(req.params.id);
@@ -700,33 +725,60 @@ exports.deleteDiscount = async (req, res) => {
 // ----------------------------------------------------------------------------
 exports.getReviews = async (req, res) => {
     try {
-        const { rating } = req.query;
+        const { rating, status, branch } = req.query;
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.min(50, parseInt(req.query.limit) || 20);
         const filter = {};
         if (rating && rating !== "all") filter.rating = Number(rating);
+        if (status && status !== "all") filter.status = status;
+        if (branch && branch !== "all") filter.branch = branch;
 
-        const [reviews, total, distAgg, avgAgg] = await Promise.all([
+        const [reviews, total, distAgg, avgAgg, statusAgg, byBranchAgg, branches] = await Promise.all([
             Review.find(filter).populate("user", "fullName phoneNumber").populate("menuItem", "name").populate("branch", "name")
                 .sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).lean(),
             Review.countDocuments(filter),
             Review.aggregate([{ $group: { _id: "$rating", count: { $sum: 1 } } }]),
             Review.aggregate([{ $group: { _id: null, avg: { $avg: "$rating" }, count: { $sum: 1 } } }]),
+            Review.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
+            Review.aggregate([{ $match: { branch: { $ne: null } } }, { $group: { _id: "$branch", avg: { $avg: "$rating" }, count: { $sum: 1 } } }]),
+            Branch.find().select("name").lean(),
         ]);
         const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
         distAgg.forEach((d) => { if (distribution[d._id] != null) distribution[d._id] = d.count; });
+        const statusCounts = { all: 0, pending: 0, approved: 0, rejected: 0 };
+        statusAgg.forEach((s) => { if (statusCounts[s._id] != null) statusCounts[s._id] = s.count; statusCounts.all += s.count; });
+        const nameMap = Object.fromEntries(branches.map((b) => [String(b._id), b.name]));
+        const byBranch = byBranchAgg
+            .map((b) => ({ name: nameMap[String(b._id)] || "—", avg: Number(b.avg.toFixed(1)), count: b.count }))
+            .sort((a, b) => b.avg - a.avg);
 
         res.status(200).json({
             status: 200, message: "Reviews fetched",
             data: {
                 reviews, total, page, pages: Math.ceil(total / limit),
-                distribution,
+                distribution, statusCounts, byBranch,
                 avg: avgAgg[0]?.avg != null ? Number(avgAgg[0].avg.toFixed(1)) : null,
                 totalAll: avgAgg[0]?.count || 0,
             },
         });
     } catch (error) {
         console.error("Admin reviews error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+exports.updateReviewStatus = async (req, res) => {
+    try {
+        const { status } = req.body;
+        if (!["approved", "rejected", "pending"].includes(status)) {
+            return res.status(400).json({ status: 400, message: "وضعیت نامعتبر است." });
+        }
+        const review = await Review.findByIdAndUpdate(req.params.id, { status }, { new: true });
+        if (!review) return res.status(404).json({ status: 404, message: "نظر یافت نشد." });
+        const msg = status === "approved" ? "نظر تأیید و منتشر شد." : status === "rejected" ? "نظر رد شد." : "نظر به حالت در انتظار بازگشت.";
+        res.status(200).json({ status: 200, message: msg });
+    } catch (error) {
+        console.error("Admin review status error:", error);
         res.status(500).json({ status: 500, message: "Internal server error" });
     }
 };
