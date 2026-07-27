@@ -6,6 +6,7 @@ const Review = require('../models/ReviewModel');
 const Coupon = require('../models/CouponModel');
 const Discount = require('../models/DiscountModel');
 const Menu = require('../models/MenuModel');
+const Setting = require('../models/SettingModel');
 const { ROLES } = require('../config/roles');
 
 const TZ = "Asia/Tehran";
@@ -823,7 +824,11 @@ exports.getReports = async (req, res) => {
         const period = req.query.period || "month";
         const start = period === "today" ? todayStart() : period === "week" ? daysAgoStart(6) : monthStart();
 
-        const [peakAgg, categoryAgg, topCouriers, revenueByBranchAgg, branches] = await Promise.all([
+        const dayCount = Math.max(1, Math.round((Date.now() - start.getTime()) / 86400000) + 1);
+        const dayKey = (d) => d.toLocaleDateString("en-CA", { timeZone: TZ });
+
+        const [peakAgg, categoryAgg, topCouriers, revenueByBranchAgg, branches,
+            revenueTrendAgg, newUsersAgg, statusAgg, paymentAgg, timingAgg, topItemsAgg] = await Promise.all([
             Order.aggregate([
                 { $match: { createdAt: { $gte: start } } },
                 { $group: { _id: { $hour: { date: "$createdAt", timezone: TZ } }, count: { $sum: 1 } } },
@@ -838,8 +843,7 @@ exports.getReports = async (req, res) => {
             Order.aggregate([
                 { $match: { status: "delivered", createdAt: { $gte: start }, courier: { $ne: null } } },
                 { $group: { _id: "$courier", deliveries: { $sum: 1 } } },
-                { $sort: { deliveries: -1 } },
-                { $limit: 5 },
+                { $sort: { deliveries: -1 } }, { $limit: 5 },
                 { $lookup: { from: "users", localField: "_id", foreignField: "_id", as: "u" } },
                 { $unwind: "$u" },
                 { $project: { deliveries: 1, fullName: "$u.fullName", phoneNumber: "$u.phoneNumber" } },
@@ -849,6 +853,38 @@ exports.getReports = async (req, res) => {
                 { $group: { _id: "$branch", revenue: { $sum: "$finalPrice" }, orders: { $sum: 1 } } },
             ]),
             Branch.find().select("name").lean(),
+            // daily revenue + orders
+            Order.aggregate([
+                { $match: { createdAt: { $gte: start } } },
+                { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: TZ } }, revenue: { $sum: { $cond: [{ $eq: ["$status", "delivered"] }, "$finalPrice", 0] } }, orders: { $sum: 1 } } },
+            ]),
+            // daily new users
+            User.aggregate([
+                { $match: { createdAt: { $gte: start } } },
+                { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: TZ } }, count: { $sum: 1 } } },
+            ]),
+            // status breakdown (for cancellation rate)
+            Order.aggregate([{ $match: { createdAt: { $gte: start } } }, { $group: { _id: "$status", count: { $sum: 1 } } }]),
+            // paid orders by method
+            Order.aggregate([{ $match: { paymentStatus: "paid", createdAt: { $gte: start } } }, { $group: { _id: "$paymentMethod", count: { $sum: 1 }, sum: { $sum: "$finalPrice" } } }]),
+            // avg timings (ms), nulls ignored by $avg
+            Order.aggregate([
+                { $match: { status: "delivered", createdAt: { $gte: start } } },
+                { $group: { _id: null,
+                    accept: { $avg: { $cond: [{ $ne: ["$approvedAt", null] }, { $subtract: ["$approvedAt", "$createdAt"] }, null] } },
+                    delivery: { $avg: { $cond: [{ $and: [{ $ne: ["$deliveredAt", null] }, { $ne: ["$assignedAt", null] }] }, { $subtract: ["$deliveredAt", "$assignedAt"] }, null] } },
+                    fulfillment: { $avg: { $subtract: ["$deliveredAt", "$createdAt"] } } } },
+            ]),
+            // best-selling items
+            Order.aggregate([
+                { $match: { status: "delivered", createdAt: { $gte: start } } },
+                { $unwind: "$items" },
+                { $group: { _id: "$items.menuItem", qty: { $sum: "$items.quantity" }, revenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } } } },
+                { $sort: { qty: -1 } }, { $limit: 8 },
+                { $lookup: { from: "menus", localField: "_id", foreignField: "_id", as: "m" } },
+                { $unwind: "$m" },
+                { $project: { qty: 1, revenue: 1, name: "$m.name" } },
+            ]),
         ]);
 
         // peak hours 8..23
@@ -866,13 +902,147 @@ exports.getReports = async (req, res) => {
             .map((b) => ({ name: nameMap[String(b._id)] || "—", revenue: b.revenue, orders: b.orders }))
             .sort((a, b) => b.revenue - a.revenue);
 
+        // fill daily series
+        const revMap = Object.fromEntries(revenueTrendAgg.map((d) => [d._id, d]));
+        const userMap = Object.fromEntries(newUsersAgg.map((d) => [d._id, d.count]));
+        const revenueTrend = [], newUsersTrend = [];
+        for (let i = dayCount - 1; i >= 0; i--) {
+            const d = daysAgoStart(i); const k = dayKey(d);
+            const label = d.toLocaleDateString("fa-IR", { day: "numeric", month: "short" });
+            revenueTrend.push({ label, value: revMap[k]?.revenue || 0, orders: revMap[k]?.orders || 0 });
+            newUsersTrend.push({ label, value: userMap[k] || 0 });
+        }
+
+        const statusCounts = { pending: 0, preparing: 0, on_the_way: 0, delivered: 0, cancelled: 0 };
+        statusAgg.forEach((s) => { if (statusCounts[s._id] != null) statusCounts[s._id] = s.count; });
+        const totalOrders = Object.values(statusCounts).reduce((a, b) => a + b, 0);
+        const cancellationRate = totalOrders ? Math.round((statusCounts.cancelled / totalOrders) * 100) : 0;
+
+        const paymentSplit = { online: { count: 0, sum: 0 }, cash: { count: 0, sum: 0 } };
+        paymentAgg.forEach((p) => { if (paymentSplit[p._id]) paymentSplit[p._id] = { count: p.count, sum: p.sum }; });
+
+        const toMin = (ms) => (ms != null ? Math.round(ms / 60000) : null);
+        const t = timingAgg[0] || {};
+        const timings = { accept: toMin(t.accept), delivery: toMin(t.delivery), fulfillment: toMin(t.fulfillment) };
+
         res.status(200).json({
             status: 200,
             message: "Admin reports fetched",
-            data: { peakHours, salesByCategory, topCouriers, revenueByBranch },
+            data: {
+                peakHours, salesByCategory, topCouriers, revenueByBranch,
+                revenueTrend, newUsersTrend, statusCounts, totalOrders, cancellationRate,
+                paymentSplit, timings, topItems: topItemsAgg,
+            },
         });
     } catch (error) {
         console.error("Admin reports error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// ----------------------------------------------------------------------------
+// CUSTOMER INSIGHTS
+// ----------------------------------------------------------------------------
+exports.getCustomers = async (req, res) => {
+    try {
+        const q = req.query.q;
+        const [agg, newThisMonth] = await Promise.all([
+            Order.aggregate([
+                { $group: { _id: "$user", orders: { $sum: 1 }, spent: { $sum: { $cond: [{ $eq: ["$status", "delivered"] }, "$finalPrice", 0] } }, last: { $max: "$createdAt" } } },
+            ]),
+            User.countDocuments({ role: ROLES.USER, createdAt: { $gte: monthStart() } }),
+        ]);
+
+        const totalCustomers = agg.length;
+        const repeat = agg.filter((a) => a.orders > 1).length;
+        const totalOrders = agg.reduce((s, a) => s + a.orders, 0);
+        const avgOrders = totalCustomers ? Number((totalOrders / totalCustomers).toFixed(1)) : 0;
+
+        const top = [...agg].sort((a, b) => b.spent - a.spent).slice(0, 60);
+        const users = await User.find({ _id: { $in: top.map((t) => t._id) } }).select("fullName phoneNumber createdAt").lean();
+        const umap = Object.fromEntries(users.map((u) => [String(u._id), u]));
+        let topCustomers = top
+            .map((t) => ({ _id: t._id, fullName: umap[String(t._id)]?.fullName || null, phoneNumber: umap[String(t._id)]?.phoneNumber || null, joinedAt: umap[String(t._id)]?.createdAt, orders: t.orders, spent: t.spent, last: t.last }))
+            .filter((t) => t.phoneNumber);
+        if (q && q.trim()) {
+            const rx = new RegExp(q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+            topCustomers = topCustomers.filter((t) => rx.test(t.fullName || "") || rx.test(t.phoneNumber || ""));
+        }
+        topCustomers = topCustomers.slice(0, 25);
+
+        res.status(200).json({
+            status: 200, message: "Customers fetched",
+            data: {
+                summary: { totalCustomers, repeat, repeatPct: totalCustomers ? Math.round((repeat / totalCustomers) * 100) : 0, newThisMonth, avgOrders },
+                topCustomers,
+            },
+        });
+    } catch (error) {
+        console.error("Admin customers error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// ----------------------------------------------------------------------------
+// ACTIVITY FEED (for the topbar bell)
+// ----------------------------------------------------------------------------
+exports.getActivity = async (req, res) => {
+    try {
+        const [orders, users, reviews, pendingReviews, pendingOrders] = await Promise.all([
+            Order.find().populate("user", "fullName").populate("branch", "name").select("user branch status finalPrice createdAt").sort({ createdAt: -1 }).limit(12).lean(),
+            User.find({ role: ROLES.USER }).select("fullName phoneNumber createdAt").sort({ createdAt: -1 }).limit(6).lean(),
+            Review.find().populate("user", "fullName").select("user rating status createdAt").sort({ createdAt: -1 }).limit(6).lean(),
+            Review.countDocuments({ status: "pending" }),
+            Order.countDocuments({ status: "pending" }),
+        ]);
+
+        const events = [];
+        orders.forEach((o) => events.push({ type: "order", title: `سفارش #${String(o._id).slice(-5)}`, subtitle: `${o.user?.fullName || "مشتری"}${o.branch?.name ? ` · ${o.branch.name}` : ""}`, status: o.status, time: o.createdAt, link: "/admin/orders" }));
+        users.forEach((u) => events.push({ type: "user", title: "کاربر جدید", subtitle: u.fullName || u.phoneNumber, time: u.createdAt, link: "/admin/users" }));
+        reviews.forEach((r) => events.push({ type: "review", title: `نظر جدید (${r.rating}★)`, subtitle: r.user?.fullName || "کاربر", status: r.status, time: r.createdAt, link: "/admin/reviews" }));
+        events.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+        res.status(200).json({
+            status: 200, message: "Activity fetched",
+            data: { events: events.slice(0, 20), badge: pendingReviews + pendingOrders, counts: { pendingReviews, pendingOrders } },
+        });
+    } catch (error) {
+        console.error("Admin activity error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// ----------------------------------------------------------------------------
+// PLATFORM SETTINGS
+// ----------------------------------------------------------------------------
+exports.getSettings = async (req, res) => {
+    try {
+        let settings = await Setting.findOne({ key: "platform" }).lean();
+        if (!settings) settings = (await Setting.create({ key: "platform" })).toObject();
+        res.status(200).json({ status: 200, message: "Settings fetched", data: { settings } });
+    } catch (error) {
+        console.error("Admin get settings error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+exports.updateSettings = async (req, res) => {
+    try {
+        const fields = {};
+        ["deliveryFee", "taxPercent", "minOrder", "serviceFee"].forEach((k) => {
+            if (req.body[k] !== undefined) {
+                const v = Number(req.body[k]);
+                if (Number.isNaN(v) || v < 0) return;
+                fields[k] = v;
+            }
+        });
+        if (req.body.supportPhone !== undefined) fields.supportPhone = req.body.supportPhone || null;
+        if (fields.taxPercent != null && fields.taxPercent > 100) return res.status(400).json({ status: 400, message: "درصد مالیات نامعتبر است." });
+
+        const settings = await Setting.findOneAndUpdate({ key: "platform" }, fields, { new: true, upsert: true });
+        res.status(200).json({ status: 200, message: "تنظیمات ذخیره شد.", data: { settings } });
+    } catch (error) {
+        console.error("Admin update settings error:", error);
         res.status(500).json({ status: 500, message: "Internal server error" });
     }
 };

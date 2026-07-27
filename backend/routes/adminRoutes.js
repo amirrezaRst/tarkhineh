@@ -4,6 +4,7 @@ const {
     getOverview, getBranches, createBranch, updateBranch, assignManager, deleteBranch,
     getUsers, updateUserRole, deleteUser, getAssignableUsers, getReports,
     getOrders, cancelOrder, getCouriers, getFinance, refundOrder,
+    getCustomers, getActivity, getSettings, updateSettings,
     getBranchDetail, setBranchImages,
     getCoupons, createCoupon, updateCoupon, deleteCoupon,
     getDiscounts, createDiscount, updateDiscount, deleteDiscount,
@@ -20,6 +21,10 @@ const branchPhotos = uploadImage({ fieldName: "images", fileSize: 5000000, desti
 
 router.get("/overview", adminOnly, getOverview);
 router.get("/reports", adminOnly, getReports);
+router.get("/customers", adminOnly, getCustomers);
+router.get("/activity", adminOnly, getActivity);
+router.get("/settings", adminOnly, getSettings);
+router.patch("/settings", adminOnly, updateSettings);
 
 router.get("/branches", adminOnly, getBranches);
 router.get("/branches/:id", adminOnly, getBranchDetail);
