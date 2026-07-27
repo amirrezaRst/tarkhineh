@@ -141,6 +141,35 @@ exports.getOverview = async (req, res) => {
 };
 
 // ----------------------------------------------------------------------------
+// GLOBAL SEARCH — the topbar search box (orders / users / branches)
+// ----------------------------------------------------------------------------
+exports.getSearch = async (req, res) => {
+    try {
+        const q = (req.query.q || "").trim();
+        if (q.length < 2) return res.status(200).json({ status: 200, message: "Search results", data: { orders: [], users: [], branches: [] } });
+        const rx = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+
+        const [users, branches, matchingUsers] = await Promise.all([
+            User.find({ $or: [{ fullName: rx }, { phoneNumber: rx }] }).select("fullName phoneNumber role").limit(5).lean(),
+            Branch.find({ name: rx }).select("name").limit(5).lean(),
+            User.find({ $or: [{ fullName: rx }, { phoneNumber: rx }] }).select("_id").limit(50).lean(),
+        ]);
+
+        const orderOr = [{ $expr: { $regexMatch: { input: { $toString: "$_id" }, regex: q, options: "i" } } }];
+        if (matchingUsers.length) orderOr.push({ user: { $in: matchingUsers.map((u) => u._id) } });
+        const orders = await Order.find({ $or: orderOr })
+            .populate("user", "fullName phoneNumber").populate("branch", "name")
+            .select("user branch status finalPrice createdAt")
+            .sort({ createdAt: -1 }).limit(5).lean();
+
+        res.status(200).json({ status: 200, message: "Search results", data: { orders, users, branches } });
+    } catch (error) {
+        console.error("Admin search error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// ----------------------------------------------------------------------------
 // BRANCHES — list with stats + CRUD + assign manager
 // ----------------------------------------------------------------------------
 exports.getBranches = async (req, res) => {
@@ -347,15 +376,19 @@ exports.deleteBranch = async (req, res) => {
 // ----------------------------------------------------------------------------
 exports.getUsers = async (req, res) => {
     try {
-        const { role, q } = req.query;
+        const { role, q, id } = req.query;
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.min(50, parseInt(req.query.limit) || 20);
 
-        const filter = {};
-        if (role && role !== "all") filter.role = role;
-        if (q && q.trim()) {
-            const rx = new RegExp(q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
-            filter.$or = [{ fullName: rx }, { phoneNumber: rx }];
+        // Deep-link mode: fetch exactly one user by id (bell / search), ignore
+        // every other filter so it's found regardless of the current view.
+        const filter = id ? { _id: id } : {};
+        if (!id) {
+            if (role && role !== "all") filter.role = role;
+            if (q && q.trim()) {
+                const rx = new RegExp(q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+                filter.$or = [{ fullName: rx }, { phoneNumber: rx }];
+            }
         }
 
         const [users, total, roleAgg] = await Promise.all([
@@ -464,26 +497,30 @@ exports.getAssignableUsers = async (req, res) => {
 // ----------------------------------------------------------------------------
 exports.getOrders = async (req, res) => {
     try {
-        const { branch, status, q } = req.query;
+        const { branch, status, q, id } = req.query;
         const range = req.query.range || "week";
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.min(50, parseInt(req.query.limit) || 20);
 
-        const base = {};
-        if (branch && branch !== "all") base.branch = branch;
-        const ws = range === "today" ? todayStart() : range === "week" ? daysAgoStart(6) : range === "month" ? monthStart() : null;
-        if (ws) base.createdAt = { $gte: ws };
-        if (q && q.trim()) {
-            const term = q.trim();
-            const rx = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
-            const users = await User.find({ $or: [{ fullName: rx }, { phoneNumber: rx }] }).select("_id").limit(50);
-            base.$or = [
-                { $expr: { $regexMatch: { input: { $toString: "$_id" }, regex: term, options: "i" } } },
-                { user: { $in: users.map((u) => u._id) } },
-            ];
+        // Deep-link mode: fetch exactly one order by id (bell / search), ignore
+        // every other filter so it's found regardless of the current view.
+        const base = id ? { _id: id } : {};
+        if (!id) {
+            if (branch && branch !== "all") base.branch = branch;
+            const ws = range === "today" ? todayStart() : range === "week" ? daysAgoStart(6) : range === "month" ? monthStart() : null;
+            if (ws) base.createdAt = { $gte: ws };
+            if (q && q.trim()) {
+                const term = q.trim();
+                const rx = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+                const users = await User.find({ $or: [{ fullName: rx }, { phoneNumber: rx }] }).select("_id").limit(50);
+                base.$or = [
+                    { $expr: { $regexMatch: { input: { $toString: "$_id" }, regex: term, options: "i" } } },
+                    { user: { $in: users.map((u) => u._id) } },
+                ];
+            }
         }
         const query = { ...base };
-        if (status && status !== "all") query.status = status;
+        if (!id && status && status !== "all") query.status = status;
 
         const aggMatch = { ...base };
         if (aggMatch.branch) aggMatch.branch = oid(aggMatch.branch);
@@ -747,13 +784,17 @@ exports.deleteDiscount = async (req, res) => {
 // ----------------------------------------------------------------------------
 exports.getReviews = async (req, res) => {
     try {
-        const { rating, status, branch } = req.query;
+        const { rating, status, branch, id } = req.query;
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const limit = Math.min(50, parseInt(req.query.limit) || 20);
-        const filter = {};
-        if (rating && rating !== "all") filter.rating = Number(rating);
-        if (status && status !== "all") filter.status = status;
-        if (branch && branch !== "all") filter.branch = branch;
+        // Deep-link mode: fetch exactly one review by id (bell / search), ignore
+        // every other filter so it's found regardless of the current view.
+        const filter = id ? { _id: id } : {};
+        if (!id) {
+            if (rating && rating !== "all") filter.rating = Number(rating);
+            if (status && status !== "all") filter.status = status;
+            if (branch && branch !== "all") filter.branch = branch;
+        }
 
         const [reviews, total, distAgg, avgAgg, statusAgg, byBranchAgg, branches] = await Promise.all([
             Review.find(filter).populate("user", "fullName phoneNumber").populate("menuItem", "name").populate("branch", "name")
@@ -997,9 +1038,9 @@ exports.getActivity = async (req, res) => {
         ]);
 
         const events = [];
-        orders.forEach((o) => events.push({ type: "order", title: `سفارش #${String(o._id).slice(-5)}`, subtitle: `${o.user?.fullName || "مشتری"}${o.branch?.name ? ` · ${o.branch.name}` : ""}`, status: o.status, time: o.createdAt, link: "/admin/orders" }));
-        users.forEach((u) => events.push({ type: "user", title: "کاربر جدید", subtitle: u.fullName || u.phoneNumber, time: u.createdAt, link: "/admin/users" }));
-        reviews.forEach((r) => events.push({ type: "review", title: `نظر جدید (${r.rating}★)`, subtitle: r.user?.fullName || "کاربر", status: r.status, time: r.createdAt, link: "/admin/reviews" }));
+        orders.forEach((o) => events.push({ type: "order", title: `سفارش #${String(o._id).slice(-5)}`, subtitle: `${o.user?.fullName || "مشتری"}${o.branch?.name ? ` · ${o.branch.name}` : ""}`, status: o.status, time: o.createdAt, link: `/admin/orders?openId=${o._id}` }));
+        users.forEach((u) => events.push({ type: "user", title: "کاربر جدید", subtitle: u.fullName || u.phoneNumber, time: u.createdAt, link: `/admin/users?openId=${u._id}` }));
+        reviews.forEach((r) => events.push({ type: "review", title: `نظر جدید (${r.rating}★)`, subtitle: r.user?.fullName || "کاربر", status: r.status, time: r.createdAt, link: `/admin/reviews?openId=${r._id}` }));
         events.sort((a, b) => new Date(b.time) - new Date(a.time));
 
         res.status(200).json({

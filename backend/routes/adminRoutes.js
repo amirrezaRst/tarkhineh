@@ -1,7 +1,7 @@
 const express = require('express');
 
 const {
-    getOverview, getBranches, createBranch, updateBranch, assignManager, deleteBranch,
+    getOverview, getSearch, getBranches, createBranch, updateBranch, assignManager, deleteBranch,
     getUsers, updateUserRole, deleteUser, getAssignableUsers, getReports,
     getOrders, cancelOrder, getCouriers, getFinance, refundOrder,
     getCustomers, getActivity, getSettings, updateSettings,
@@ -20,6 +20,7 @@ const adminOnly = [Authenticate, Authorize([ROLES.ADMIN])];
 const branchPhotos = uploadImage({ fieldName: "images", fileSize: 5000000, destination: '../public/branch-images/', width: 1000, height: 700, quality: 78, maxCount: 6 });
 
 router.get("/overview", adminOnly, getOverview);
+router.get("/search", adminOnly, getSearch);
 router.get("/reports", adminOnly, getReports);
 router.get("/customers", adminOnly, getCustomers);
 router.get("/activity", adminOnly, getActivity);
