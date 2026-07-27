@@ -1,6 +1,6 @@
 "use client";
 
-import { DashboardIcon, DeliveryIcon, DiagramIcon, DiscountIcon, FastFoodIcon, FastFoodMenuIcon, HistoryIcon, HomeIcon, LogoutIcon, StarIcon, UserIcon, WalletMoneyIcon } from "@/assets/Icons";
+import { DashboardIcon, DeliveryIcon, DiagramIcon, DiscountIcon, FastFoodIcon, FastFoodMenuIcon, GearIcon, HistoryIcon, HomeIcon, LogoutIcon, StarIcon, UserHeartIcon, UserIcon, WalletMoneyIcon } from "@/assets/Icons";
 import useUserStore from "@/stores/useUserStore";
 import useCartStore from "@/stores/useCartStore";
 import { handleLogout } from "@/services/UserService";
@@ -34,8 +34,10 @@ const sidebarByRole = {
         },
         { section: "مالی و تحلیل", items: [
             { label: "مالی و پرداخت‌ها", href: "/admin/finance", icon: WalletMoneyIcon },
+            { label: "تحلیل مشتریان", href: "/admin/customers", icon: UserHeartIcon },
             { label: "گزارشات کل", href: "/admin/reports", icon: DiagramIcon },
         ] },
+        { section: "پیکربندی", items: [{ label: "تنظیمات پلتفرم", href: "/admin/settings", icon: GearIcon }] },
     ],
     branch_manager: [
         { section: null, items: [{ label: "داشبورد", href: "/panel/branch", icon: DashboardIcon }] },

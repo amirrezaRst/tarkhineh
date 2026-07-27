@@ -6,6 +6,7 @@ import PanelSidebar from "./PanelSidebar";
 import useUserStore from "@/stores/useUserStore";
 import { branchNamesDic } from "@/constant/branchDictionary";
 import { setAvailability } from "@/services/CourierService";
+import AdminBell from "./AdminBell";
 
 // Topbar title per route. The dashboard greets by name; sub-pages name the
 // section. Falls back to a neutral title for any unmapped panel route.
@@ -20,7 +21,9 @@ const titleForPath = (pathname, name) => {
         "/admin/finance": "مالی و پرداخت‌ها",
         "/admin/promotions": "کوپن و تخفیف",
         "/admin/reviews": "نظرات و امتیازها",
+        "/admin/customers": "تحلیل مشتریان",
         "/admin/reports": "گزارشات و تحلیل کل",
+        "/admin/settings": "تنظیمات پلتفرم",
         "/panel/branch": name ? `خوش آمدید، ${name}` : "خوش آمدید",
         "/panel/branch/orders": "مدیریت سفارش‌ها",
         "/panel/branch/menu": "منوی شعبه",
@@ -149,9 +152,12 @@ const PanelLayout = ({ children }) => {
                         {user.role === "courier" ? (
                             <CourierAvailabilityToggle />
                         ) : user.role === "admin" ? (
-                            <span className="inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-super-xs font-bold bg-[hsl(var(--role-admin)/0.12)] text-[hsl(var(--role-admin))] border border-[hsl(var(--role-admin)/0.25)]">
-                                <span className="w-2 h-2 rounded-full bg-[hsl(var(--role-admin))]" /> نمای کل پلتفرم
-                            </span>
+                            <>
+                                <span className="hidden sm:inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-super-xs font-bold bg-[hsl(var(--role-admin)/0.12)] text-[hsl(var(--role-admin))] border border-[hsl(var(--role-admin)/0.25)]">
+                                    <span className="w-2 h-2 rounded-full bg-[hsl(var(--role-admin))]" /> نمای کل پلتفرم
+                                </span>
+                                <AdminBell />
+                            </>
                         ) : (
                             <>
                                 <StoreStatusPill />

@@ -77,6 +77,12 @@ export const deleteDiscount = async (id, onSuccess) => {
     catch (err) { fail(err); }
 };
 
+// ---- platform settings ----
+export const updateSettings = async (data, onSuccess) => {
+    try { const r = await api.patch("/admin/settings", data); onSuccess?.(r.data.settings); toast.success("تنظیمات ذخیره شد."); return true; }
+    catch (err) { fail(err); return false; }
+};
+
 // ---- reviews ----
 export const setReviewStatus = async (id, status, onSuccess) => {
     try { const r = await api.patch(`/admin/reviews/${id}/status`, { status }); onSuccess?.(); toast.success(r.message); return true; }
