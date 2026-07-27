@@ -11,7 +11,8 @@ import MetricBar from "@/components/panel/MetricBar";
 import BarChart from "@/components/panel/charts/BarChart";
 import { Skeleton } from "@/components/panel/Skeleton";
 import { Avatar, StatusPill, STATUS_META, branchImg } from "../../adminUtils";
-import { EditIcon } from "../../icons";
+import { EditIcon, TrashIcon } from "../../icons";
+import { deleteBranch } from "@/services/AdminService";
 import BranchFormModal from "../BranchFormModal";
 import { courierImg, VEHICLE_LABEL } from "../../../panel/branch/couriers/courierUtils";
 
@@ -30,6 +31,7 @@ const AdminBranchDetail = () => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [edit, setEdit] = useState(false);
+    const [busy, setBusy] = useState(false);
 
     const load = useCallback(async () => {
         setLoading(true);
@@ -43,6 +45,13 @@ const AdminBranchDetail = () => {
 
     if (loading) return <div className="w-full space-y-4"><Skeleton className="h-28 rounded-2xl" /><Skeleton className="h-24 rounded-2xl" /><div className="grid lg:grid-cols-2 gap-4"><Skeleton className="h-64 rounded-2xl" /><Skeleton className="h-64 rounded-2xl" /></div></div>;
     if (!data) return null;
+
+    const onDelete = async () => {
+        if (!confirm(`شعبهٔ «${data.branch.name}» حذف شود؟`)) return;
+        setBusy(true);
+        await deleteBranch(data.branch._id, () => router.push("/admin/branches"));
+        setBusy(false);
+    };
 
     const b = data.branch, s = data.stats;
     const series = (data.revenueSeries || []).map((d) => ({ label: d.label, value: d.value }));
@@ -69,6 +78,7 @@ const AdminBranchDetail = () => {
                     <div className="flex items-center gap-3">
                         {b.manager && <div className="flex items-center gap-2"><Avatar name={b.manager.fullName} phone={b.manager.phoneNumber} role="branch_manager" size={36} /><div><div className="text-super-sm font-bold">{b.manager.fullName || "—"}</div><div className="text-super-xs text-muted-fg">مدیر شعبه</div></div></div>}
                         <button onClick={() => setEdit(true)} className="inline-flex items-center gap-2 bg-surface-sunken border border-border rounded-xl px-4 py-2.5 text-super-sm font-bold hover:border-border-strong"><EditIcon className="w-4 h-4" /> ویرایش</button>
+                        <button onClick={onDelete} disabled={busy} aria-label="حذف شعبه" title="حذف شعبه" className="w-10 h-10 rounded-xl border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40 disabled:opacity-50"><TrashIcon className="w-4 h-4" /></button>
                     </div>
                 </div>
                 {b.images?.length > 0 && (
@@ -93,7 +103,7 @@ const AdminBranchDetail = () => {
             <div className="grid lg:grid-cols-2 gap-4 items-start">
                 <Card className="p-5">
                     <h2 className="text-super-base font-extrabold mb-4">درآمد ۷ روز اخیر</h2>
-                    <BarChart data={series} height={150} />
+                    <BarChart data={series} height={150} formatValue={(v) => `${FormatPrice(v)} تومان`} />
                 </Card>
 
                 <Card className="p-5">

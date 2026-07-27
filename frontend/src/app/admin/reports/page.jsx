@@ -123,13 +123,13 @@ const AdminReports = () => {
                         </Card>
                         <Card className="p-5">
                             <h2 className="text-super-base font-extrabold mb-4">کاربران جدید</h2>
-                            <BarChart data={users} height={140} />
+                            <BarChart data={users} height={140} formatValue={(v) => `${PersianNumber(v)} کاربر`} />
                         </Card>
                     </div>
 
                     {/* peak hours + revenue by branch */}
                     <div className="grid lg:grid-cols-2 gap-4">
-                        <Card className="p-5"><h2 className="text-super-base font-extrabold mb-4">ساعات پرترافیک</h2><BarChart data={peak} height={150} /></Card>
+                        <Card className="p-5"><h2 className="text-super-base font-extrabold mb-4">ساعات پرترافیک</h2><BarChart data={peak} height={150} formatValue={(v) => `${PersianNumber(v)} سفارش`} /></Card>
                         <Card className="p-5"><h2 className="text-super-base font-extrabold mb-4">درآمد بر اساس شعبه</h2>{branchRows.length ? <Bars rows={branchRows} /> : <p className="text-muted-fg text-super-sm py-8 text-center">داده‌ای نیست.</p>}</Card>
                     </div>
 

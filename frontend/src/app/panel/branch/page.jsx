@@ -191,7 +191,7 @@ const BranchPanel = () => {
                         <h2 className="text-super-base font-extrabold">ساعات پرترافیک</h2>
                         <p className="text-super-xs text-muted-fg mt-0.5">تعداد سفارش بر اساس ساعت — امروز</p>
                     </div>
-                    <BarChart data={peakData} />
+                    <BarChart data={peakData} formatValue={(v) => `${PersianNumber(v)} سفارش`} />
                 </Card>
             </section>
 

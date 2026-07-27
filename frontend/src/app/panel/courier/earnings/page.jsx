@@ -117,7 +117,7 @@ const CourierEarnings = () => {
                         <><Skeleton className="h-44 rounded-2xl" /><Skeleton className="h-36 rounded-2xl" /></>
                     ) : (
                         <>
-                            <WeekBarsCard title="درآمد روزهای هفته (تومان)" data={weekData} total={FormatPrice(weekTotalFees)} totalLabel="جمع هفته" />
+                            <WeekBarsCard title="درآمد روزهای هفته (تومان)" data={weekData} total={FormatPrice(weekTotalFees)} totalLabel="جمع هفته" formatValue={(v) => `${FormatPrice(v)} تومان`} />
                             <LedgerCard title="جمع‌بندی" rows={[
                                 { k: "تعداد تحویل (بازه)", v: PersianNumber(cur.count) },
                                 { k: "میانگین هر تحویل", v: `${FormatPrice(avg)} ت` },

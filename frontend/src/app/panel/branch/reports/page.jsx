@@ -211,7 +211,7 @@ const BranchPanelReports = () => {
 
                 <Card className={cardCls}>
                     <div className="mb-4"><h2 className="text-super-base font-extrabold">فروش بر اساس روز هفته</h2><p className="text-super-xs text-muted-fg mt-0.5">۷ روز گذشته</p></div>
-                    <BarChart data={weekdayData} />
+                    <BarChart data={weekdayData} formatValue={(v) => `${FormatPrice(v)} تومان`} />
                     <div className="mt-5">
                         <div className="text-super-sm font-bold mb-2">تفکیک روش پرداخت</div>
                         <div className="flex h-3.5 rounded-full overflow-hidden bg-surface-sunken">
@@ -230,7 +230,7 @@ const BranchPanelReports = () => {
             <div className="grid lg:grid-cols-[1.7fr_1fr] gap-4 mt-4">
                 <Card className={cardCls}>
                     <div className="mb-4"><h2 className="text-super-base font-extrabold">ساعات پرترافیک</h2><p className="text-super-xs text-muted-fg mt-0.5">تعداد سفارش بر اساس ساعت — این بازه</p></div>
-                    <BarChart data={peakData} />
+                    <BarChart data={peakData} formatValue={(v) => `${PersianNumber(v)} سفارش`} />
                 </Card>
 
                 <Card className={cardCls}>

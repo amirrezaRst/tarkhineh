@@ -97,7 +97,7 @@ const CourierDetailModal = ({ open, onClose, branch, courierId, capacity, onChan
                             <div className="text-super-sm font-extrabold">تحویل‌های این هفته</div>
                             <div className="text-super-xs text-muted-fg">مجموع: <b className="tabular-nums">{PersianNumber(weekTotal)}</b></div>
                         </div>
-                        <BarChart data={weekData} height={90} />
+                        <BarChart data={weekData} height={90} formatValue={(v) => `${PersianNumber(v)} تحویل`} />
 
                         {/* current orders */}
                         <div className="text-super-sm font-extrabold mt-5 mb-2.5">سفارش‌های جاری این پیک</div>

@@ -22,13 +22,13 @@ export const LedgerCard = ({ title, rows = [] }) => (
 );
 
 // Weekly bar chart card with a total footer.
-export const WeekBarsCard = ({ title, data = [], total, totalLabel = "مجموع" }) => (
+export const WeekBarsCard = ({ title, data = [], total, totalLabel = "مجموع", formatValue }) => (
     <Card className="p-5">
         <div className="flex items-end justify-between mb-2">
             <div className="text-super-xs font-bold text-muted-fg">{title}</div>
             {total != null && <div className="text-super-xs text-muted-fg">{totalLabel}: <b className="tabular-nums">{total}</b></div>}
         </div>
-        <BarChart data={data} height={104} />
+        <BarChart data={data} height={104} formatValue={formatValue} />
     </Card>
 );
 

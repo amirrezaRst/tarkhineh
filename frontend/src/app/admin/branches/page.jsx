@@ -10,8 +10,7 @@ import Card from "@/components/panel/Card";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
 import { Skeleton } from "@/components/panel/Skeleton";
 import { Avatar, branchImg } from "../adminUtils";
-import { deleteBranch } from "@/services/AdminService";
-import { EditIcon, TrashIcon, PlusIcon, PinIcon, ClockIcon, ImageIcon } from "../icons";
+import { PlusIcon, PinIcon, ClockIcon, ImageIcon } from "../icons";
 import BranchFormModal from "./BranchFormModal";
 
 const OpenTag = ({ isOpen }) => {
@@ -21,7 +20,7 @@ const OpenTag = ({ isOpen }) => {
         : <span className="inline-flex items-center gap-1.5 text-super-xs font-bold px-2.5 py-1 rounded-full bg-status-cancelled-subtle text-status-cancelled"><span className="w-1.5 h-1.5 rounded-full bg-current" /> بسته</span>;
 };
 
-const BranchCard = ({ b, onOpen, onEdit, onDelete }) => {
+const BranchCard = ({ b, onOpen }) => {
     const img = branchImg(b.images);
     return (
         <Card interactive className="overflow-hidden cursor-pointer flex flex-col" onClick={() => onOpen(b)}>
@@ -37,13 +36,7 @@ const BranchCard = ({ b, onOpen, onEdit, onDelete }) => {
             </div>
 
             <div className="p-4 flex-1 flex flex-col">
-                <div className="flex items-start justify-between gap-2">
-                    <h3 className="text-super-base font-extrabold">{b.name}</h3>
-                    <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
-                        <button onClick={() => onEdit(b)} aria-label="ویرایش" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-foreground hover:border-border-strong"><EditIcon className="w-4 h-4" /></button>
-                        <button onClick={() => onDelete(b)} aria-label="حذف" className="w-8 h-8 rounded-lg border border-border grid place-items-center text-muted-fg hover:text-destructive hover:border-destructive/40"><TrashIcon className="w-4 h-4" /></button>
-                    </div>
-                </div>
+                <h3 className="text-super-base font-extrabold">{b.name}</h3>
 
                 {b.address && <p className="flex items-start gap-1.5 text-super-xs text-muted-fg mt-1.5 leading-6"><PinIcon className="w-3.5 h-3.5 mt-0.5 shrink-0" /><span className="line-clamp-2">{b.address}</span></p>}
                 {b.openTime && b.closeTime && <p className="flex items-center gap-1.5 text-super-xs text-subtle-fg mt-1 tabular-nums"><ClockIcon className="w-3.5 h-3.5 shrink-0" />{b.openTime} تا {b.closeTime}</p>}
@@ -70,7 +63,7 @@ const AdminBranches = () => {
     const router = useRouter();
     const [branches, setBranches] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [modal, setModal] = useState(null); // {mode:'new'|'edit', branch?}
+    const [newModal, setNewModal] = useState(false);
 
     const load = useCallback(async () => {
         try {
@@ -81,15 +74,10 @@ const AdminBranches = () => {
     }, []);
     useEffect(() => { load(); }, [load]);
 
-    const onDelete = async (b) => {
-        if (!confirm(`شعبهٔ «${b.name}» حذف شود؟`)) return;
-        await deleteBranch(b._id, load);
-    };
-
     return (
         <div className="w-full">
-            <PanelPageHeader title="مدیریت شعبه‌ها" subtitle="ساخت و ویرایش شعبه‌ها با اطلاعات کامل — تصاویر و مشخصات روی سایت مشتری نمایش داده می‌شود"
-                action={<button onClick={() => setModal({ mode: "new" })} className="inline-flex items-center gap-2 bg-primary text-primary-fg rounded-xl px-4 py-2.5 text-super-sm font-bold hover:bg-primary-hover"><PlusIcon className="w-4 h-4" /> شعبهٔ جدید</button>} />
+            <PanelPageHeader title="مدیریت شعبه‌ها" subtitle="برای ویرایش یا حذف یک شعبه، ابتدا روی کارت آن کلیک کنید — تصاویر و مشخصات روی سایت مشتری نمایش داده می‌شود"
+                action={<button onClick={() => setNewModal(true)} className="inline-flex items-center gap-2 bg-primary text-primary-fg rounded-xl px-4 py-2.5 text-super-sm font-bold hover:bg-primary-hover"><PlusIcon className="w-4 h-4" /> شعبهٔ جدید</button>} />
 
             {loading ? (
                 <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-72 rounded-2xl" />)}</div>
@@ -97,11 +85,11 @@ const AdminBranches = () => {
                 <Card className="p-12 text-center text-muted-fg text-super-sm">هنوز شعبه‌ای ثبت نشده است.</Card>
             ) : (
                 <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {branches.map((b) => <BranchCard key={b._id} b={b} onOpen={(br) => router.push(`/admin/branches/${br._id}`)} onEdit={(br) => setModal({ mode: "edit", branch: br })} onDelete={onDelete} />)}
+                    {branches.map((b) => <BranchCard key={b._id} b={b} onOpen={(br) => router.push(`/admin/branches/${br._id}`)} />)}
                 </div>
             )}
 
-            <BranchFormModal open={!!modal} onClose={() => setModal(null)} branch={modal?.branch} onSaved={load} />
+            <BranchFormModal open={newModal} onClose={() => setNewModal(false)} onSaved={load} />
         </div>
     );
 };
