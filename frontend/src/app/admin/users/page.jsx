@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/utils/apiClient";
 import { toast } from "react-toastify";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
@@ -21,6 +22,8 @@ const TABS = [
 ];
 
 const AdminUsers = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const [role, setRole] = useState("all");
     const [q, setQ] = useState("");
     const [page, setPage] = useState(1);
@@ -42,6 +45,18 @@ const AdminUsers = () => {
         const t = setTimeout(() => load(c.signal), 250);
         return () => { clearTimeout(t); c.abort(); };
     }, [load]);
+
+    // Deep link from the activity bell / global search: open that exact user's
+    // role modal regardless of the current filters, then clean the URL.
+    useEffect(() => {
+        const openId = searchParams.get("openId");
+        if (!openId) return;
+        api.get(`/admin/users?id=${openId}`)
+            .then((res) => { const u = res.data.users?.[0]; if (u) setEditing(u); else toast.error("کاربر یافت نشد."); })
+            .catch(() => toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید."))
+            .finally(() => router.replace("/admin/users"));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const reload = () => load();
     const counts = data?.roleCounts || {};
@@ -122,4 +137,11 @@ const AdminUsers = () => {
     );
 };
 
-export default AdminUsers;
+// useSearchParams requires a Suspense boundary during prerender.
+const AdminUsersPage = () => (
+    <Suspense fallback={null}>
+        <AdminUsers />
+    </Suspense>
+);
+
+export default AdminUsersPage;

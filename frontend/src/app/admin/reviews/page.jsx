@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/utils/apiClient";
 import { toast } from "react-toastify";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
@@ -24,13 +25,48 @@ const STATUS_PILL = {
 };
 const STATUS_LABEL = { pending: "در انتظار تأیید", approved: "منتشرشده", rejected: "ردشده" };
 
+// Shared review card — used both in the normal list and as the pinned
+// "opened from the bell" highlight so both look and behave identically.
+const ReviewCard = ({ r, onAct, highlighted }) => (
+    <Card className={`p-4 ${highlighted ? "ring-2 ring-primary/50" : ""}`}>
+        <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+                <Avatar name={r.user?.fullName} phone={r.user?.phoneNumber} role="user" size={36} />
+                <div>
+                    <div className="font-bold text-super-sm">{r.user?.fullName || "کاربر"}</div>
+                    <div className="text-super-xs text-muted-fg">{faDate(r.createdAt)}</div>
+                </div>
+            </div>
+            <div className="flex items-center gap-2.5">
+                <Stars n={r.rating} className="text-super-sm" />
+                <span className={`text-super-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap ${STATUS_PILL[r.status] || ""}`}>{STATUS_LABEL[r.status] || r.status}</span>
+            </div>
+        </div>
+        <p className="text-super-sm mt-3 leading-7">{r.text}</p>
+        <div className="flex items-center justify-between gap-2 mt-3 flex-wrap">
+            <div className="flex gap-2 flex-wrap">
+                {r.menuItem?.name && <span className="text-super-xs bg-surface-sunken text-muted-fg px-2 py-0.5 rounded-full">{r.menuItem.name}</span>}
+                {r.branch?.name && <span className="text-super-xs bg-surface-sunken text-muted-fg px-2 py-0.5 rounded-full">شعبه {r.branch.name}</span>}
+            </div>
+            <div className="flex gap-2">
+                {r.status !== "approved" && <button onClick={() => onAct(() => setReviewStatus(r._id, "approved"))} className="inline-flex items-center gap-1.5 text-super-xs font-bold px-3 py-1.5 rounded-lg bg-status-delivered-subtle text-status-delivered hover:bg-status-delivered hover:text-white transition-colors"><CheckIcon className="w-3.5 h-3.5" /> تأیید و انتشار</button>}
+                {r.status !== "rejected" && <button onClick={() => onAct(() => setReviewStatus(r._id, "rejected"))} className="inline-flex items-center gap-1.5 text-super-xs font-bold px-3 py-1.5 rounded-lg border border-border text-muted-fg hover:text-status-cancelled hover:border-status-cancelled/40 transition-colors"><CloseIcon className="w-3.5 h-3.5" /> رد</button>}
+                <button onClick={() => { if (confirm("این نظر برای همیشه حذف شود؟")) onAct(() => deleteReview(r._id)); }} aria-label="حذف" className="w-8 h-8 grid place-items-center rounded-lg border border-border text-muted-fg hover:text-destructive hover:border-destructive/40"><TrashIcon className="w-4 h-4" /></button>
+            </div>
+        </div>
+    </Card>
+);
+
 const AdminReviews = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const [status, setStatus] = useState("pending");
     const [rating, setRating] = useState("all");
     const [branch, setBranch] = useState("all");
     const [page, setPage] = useState(1);
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [pinned, setPinned] = useState(null);
 
     const load = useCallback(async (signal) => {
         setLoading(true);
@@ -43,6 +79,18 @@ const AdminReviews = () => {
 
     useEffect(() => { const c = new AbortController(); load(c.signal); return () => c.abort(); }, [load]);
 
+    // Deep link from the activity bell / global search: pin that exact review
+    // above the (unaffected) filtered list, then clean the URL.
+    useEffect(() => {
+        const openId = searchParams.get("openId");
+        if (!openId) return;
+        api.get(`/admin/reviews?id=${openId}`)
+            .then((res) => { const r = res.data.reviews?.[0]; if (r) setPinned(r); else toast.error("نظر یافت نشد."); })
+            .catch(() => toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید."))
+            .finally(() => router.replace("/admin/reviews"));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const reviews = data?.reviews || [];
     const dist = data?.distribution || {};
     const sc = data?.statusCounts || {};
@@ -50,11 +98,21 @@ const AdminReviews = () => {
     const maxDist = Math.max(...Object.values(dist), 1);
     const reset = (fn) => { setPage(1); fn(); };
 
-    const act = async (fn) => { await fn(); load(); };
+    const act = async (fn) => { await fn(); load(); setPinned(null); };
 
     return (
         <div className="w-full">
             <PanelPageHeader title="نظرات و امتیازها" subtitle="بررسی و تأیید نظرات پیش از انتشار، و سنجش رضایت شعبه‌ها" />
+
+            {pinned && (
+                <div className="mb-5">
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-super-xs font-bold text-primary">نظر انتخاب‌شده از اعلان‌ها</span>
+                        <button onClick={() => setPinned(null)} className="text-super-xs text-muted-fg hover:text-foreground">بستن ×</button>
+                    </div>
+                    <ReviewCard r={pinned} onAct={act} highlighted />
+                </div>
+            )}
 
             {/* moderation status tabs */}
             <div className="flex gap-1.5 mb-5 flex-wrap">
@@ -132,35 +190,7 @@ const AdminReviews = () => {
                         <Card className="p-12 text-center text-muted-fg text-super-sm">نظری در این وضعیت یافت نشد.</Card>
                     ) : (
                         <div className="space-y-3">
-                            {reviews.map((r) => (
-                                <Card key={r._id} className="p-4">
-                                    <div className="flex items-start justify-between gap-3">
-                                        <div className="flex items-center gap-2.5">
-                                            <Avatar name={r.user?.fullName} phone={r.user?.phoneNumber} role="user" size={36} />
-                                            <div>
-                                                <div className="font-bold text-super-sm">{r.user?.fullName || "کاربر"}</div>
-                                                <div className="text-super-xs text-muted-fg">{faDate(r.createdAt)}</div>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-2.5">
-                                            <Stars n={r.rating} className="text-super-sm" />
-                                            <span className={`text-super-xs font-bold px-2 py-0.5 rounded-full whitespace-nowrap ${STATUS_PILL[r.status] || ""}`}>{STATUS_LABEL[r.status] || r.status}</span>
-                                        </div>
-                                    </div>
-                                    <p className="text-super-sm mt-3 leading-7">{r.text}</p>
-                                    <div className="flex items-center justify-between gap-2 mt-3 flex-wrap">
-                                        <div className="flex gap-2 flex-wrap">
-                                            {r.menuItem?.name && <span className="text-super-xs bg-surface-sunken text-muted-fg px-2 py-0.5 rounded-full">{r.menuItem.name}</span>}
-                                            {r.branch?.name && <span className="text-super-xs bg-surface-sunken text-muted-fg px-2 py-0.5 rounded-full">شعبه {r.branch.name}</span>}
-                                        </div>
-                                        <div className="flex gap-2">
-                                            {r.status !== "approved" && <button onClick={() => act(() => setReviewStatus(r._id, "approved"))} className="inline-flex items-center gap-1.5 text-super-xs font-bold px-3 py-1.5 rounded-lg bg-status-delivered-subtle text-status-delivered hover:bg-status-delivered hover:text-white transition-colors"><CheckIcon className="w-3.5 h-3.5" /> تأیید و انتشار</button>}
-                                            {r.status !== "rejected" && <button onClick={() => act(() => setReviewStatus(r._id, "rejected"))} className="inline-flex items-center gap-1.5 text-super-xs font-bold px-3 py-1.5 rounded-lg border border-border text-muted-fg hover:text-status-cancelled hover:border-status-cancelled/40 transition-colors"><CloseIcon className="w-3.5 h-3.5" /> رد</button>}
-                                            <button onClick={() => { if (confirm("این نظر برای همیشه حذف شود؟")) act(() => deleteReview(r._id)); }} aria-label="حذف" className="w-8 h-8 grid place-items-center rounded-lg border border-border text-muted-fg hover:text-destructive hover:border-destructive/40"><TrashIcon className="w-4 h-4" /></button>
-                                        </div>
-                                    </div>
-                                </Card>
-                            ))}
+                            {reviews.map((r) => <ReviewCard key={r._id} r={r} onAct={act} />)}
                         </div>
                     )}
 
@@ -179,4 +209,11 @@ const AdminReviews = () => {
     );
 };
 
-export default AdminReviews;
+// useSearchParams requires a Suspense boundary during prerender.
+const AdminReviewsPage = () => (
+    <Suspense fallback={null}>
+        <AdminReviews />
+    </Suspense>
+);
+
+export default AdminReviewsPage;

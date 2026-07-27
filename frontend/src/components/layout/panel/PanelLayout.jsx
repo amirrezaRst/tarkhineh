@@ -7,6 +7,7 @@ import useUserStore from "@/stores/useUserStore";
 import { branchNamesDic } from "@/constant/branchDictionary";
 import { setAvailability } from "@/services/CourierService";
 import AdminBell from "./AdminBell";
+import GlobalSearch from "./GlobalSearch";
 
 // Topbar title per route. The dashboard greets by name; sub-pages name the
 // section. Falls back to a neutral title for any unmapped panel route.
@@ -153,9 +154,7 @@ const PanelLayout = ({ children }) => {
                             <CourierAvailabilityToggle />
                         ) : user.role === "admin" ? (
                             <>
-                                <span className="hidden sm:inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-super-xs font-bold bg-[hsl(var(--role-admin)/0.12)] text-[hsl(var(--role-admin))] border border-[hsl(var(--role-admin)/0.25)]">
-                                    <span className="w-2 h-2 rounded-full bg-[hsl(var(--role-admin))]" /> نمای کل پلتفرم
-                                </span>
+                                <GlobalSearch />
                                 <AdminBell />
                             </>
                         ) : (

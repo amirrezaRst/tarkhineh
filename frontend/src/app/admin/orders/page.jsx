@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/utils/apiClient";
 import { toast } from "react-toastify";
 import FormatPrice from "@/utils/FormatPrice";
@@ -19,6 +20,8 @@ const RANGES = [{ key: "today", label: "امروز" }, { key: "week", label: "ه
 const faTime = (d) => new Date(d).toLocaleString("fa-IR", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 
 const AdminOrders = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const [status, setStatus] = useState("all");
     const [range, setRange] = useState("week");
     const [branch, setBranch] = useState("all");
@@ -30,6 +33,18 @@ const AdminOrders = () => {
     const [selected, setSelected] = useState(null);
 
     useEffect(() => { api.get("/admin/branches").then((r) => setBranches(r.data.branches)).catch(() => { }); }, []);
+
+    // Deep link from the activity bell / global search: open that exact order's
+    // detail modal regardless of the current filters, then clean the URL.
+    useEffect(() => {
+        const openId = searchParams.get("openId");
+        if (!openId) return;
+        api.get(`/admin/orders?id=${openId}`)
+            .then((res) => { const o = res.data.orders?.[0]; if (o) setSelected(o); else toast.error("سفارش یافت نشد."); })
+            .catch(() => toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید."))
+            .finally(() => router.replace("/admin/orders"));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const load = useCallback(async (signal) => {
         setLoading(true);
@@ -119,4 +134,11 @@ const AdminOrders = () => {
     );
 };
 
-export default AdminOrders;
+// useSearchParams requires a Suspense boundary during prerender.
+const AdminOrdersPage = () => (
+    <Suspense fallback={null}>
+        <AdminOrders />
+    </Suspense>
+);
+
+export default AdminOrdersPage;
