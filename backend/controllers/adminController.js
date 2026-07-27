@@ -170,6 +170,9 @@ exports.getBranches = async (req, res) => {
                 _id: b._id,
                 name: b.name,
                 courierCapacity: b.courierCapacity ?? 3,
+                address: b.address || null, phoneNumber: b.phoneNumber || null,
+                openTime: b.openTime || null, closeTime: b.closeTime || null,
+                images: b.images || [], isOpen: branchOpen(b.openTime, b.closeTime),
                 manager: b.manager || null,
                 revenue: r.revenue,
                 orders: r.orders,
@@ -298,6 +301,24 @@ exports.assignManager = async (req, res) => {
         res.status(200).json({ status: 200, message: "مدیر شعبه منتسب شد." });
     } catch (error) {
         console.error("Admin assign manager error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// Replace a branch's image set: keeps the filenames sent in `keep` (JSON array
+// of existing ones) and appends any newly uploaded+processed files. Max 6.
+exports.setBranchImages = async (req, res) => {
+    try {
+        const branch = await Branch.findById(req.params.id);
+        if (!branch) return res.status(404).json({ status: 404, message: "شعبه یافت نشد." });
+        let keep = [];
+        try { keep = JSON.parse(req.body.keep || "[]"); } catch { keep = []; }
+        const uploaded = Array.isArray(req.body.images) ? req.body.images : [];
+        branch.images = [...keep.filter((k) => typeof k === "string"), ...uploaded].slice(0, 6);
+        await branch.save();
+        res.status(200).json({ status: 200, message: "تصاویر شعبه به‌روزرسانی شد.", data: { images: branch.images } });
+    } catch (error) {
+        console.error("Admin branch images error:", error);
         res.status(500).json({ status: 500, message: "Internal server error" });
     }
 };

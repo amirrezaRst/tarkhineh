@@ -4,7 +4,7 @@ const {
     getOverview, getBranches, createBranch, updateBranch, assignManager, deleteBranch,
     getUsers, updateUserRole, deleteUser, getAssignableUsers, getReports,
     getOrders, cancelOrder, getCouriers, getFinance, refundOrder,
-    getBranchDetail,
+    getBranchDetail, setBranchImages,
     getCoupons, createCoupon, updateCoupon, deleteCoupon,
     getDiscounts, createDiscount, updateDiscount, deleteDiscount,
     getReviews, updateReviewStatus, deleteReview,
@@ -12,9 +12,11 @@ const {
 const Authenticate = require('../middleware/Authenticate');
 const Authorize = require('../middleware/Authorize');
 const { ROLES } = require('../config/roles');
+const uploadImage = require('../utils/upload');
 
 const router = express.Router();
 const adminOnly = [Authenticate, Authorize([ROLES.ADMIN])];
+const branchPhotos = uploadImage({ fieldName: "images", fileSize: 5000000, destination: '../public/branch-images/', width: 1000, height: 700, quality: 78, maxCount: 6 });
 
 router.get("/overview", adminOnly, getOverview);
 router.get("/reports", adminOnly, getReports);
@@ -23,6 +25,7 @@ router.get("/branches", adminOnly, getBranches);
 router.get("/branches/:id", adminOnly, getBranchDetail);
 router.post("/branches", adminOnly, createBranch);
 router.patch("/branches/:id", adminOnly, updateBranch);
+router.patch("/branches/:id/images", adminOnly, ...branchPhotos, setBranchImages);
 router.patch("/branches/:id/assign-manager", adminOnly, assignManager);
 router.delete("/branches/:id", adminOnly, deleteBranch);
 

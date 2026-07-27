@@ -10,7 +10,8 @@ import Card from "@/components/panel/Card";
 import MetricBar from "@/components/panel/MetricBar";
 import BarChart from "@/components/panel/charts/BarChart";
 import { Skeleton } from "@/components/panel/Skeleton";
-import { Avatar, StatusPill, STATUS_META } from "../../adminUtils";
+import { Avatar, StatusPill, STATUS_META, branchImg } from "../../adminUtils";
+import { EditIcon } from "../../icons";
 import BranchFormModal from "../BranchFormModal";
 import { courierImg, VEHICLE_LABEL } from "../../../panel/branch/couriers/courierUtils";
 
@@ -67,9 +68,16 @@ const AdminBranchDetail = () => {
                     </div>
                     <div className="flex items-center gap-3">
                         {b.manager && <div className="flex items-center gap-2"><Avatar name={b.manager.fullName} phone={b.manager.phoneNumber} role="branch_manager" size={36} /><div><div className="text-super-sm font-bold">{b.manager.fullName || "—"}</div><div className="text-super-xs text-muted-fg">مدیر شعبه</div></div></div>}
-                        <button onClick={() => setEdit(true)} className="bg-surface-sunken border border-border rounded-xl px-4 py-2.5 text-super-sm font-bold hover:border-border-strong">✎ ویرایش</button>
+                        <button onClick={() => setEdit(true)} className="inline-flex items-center gap-2 bg-surface-sunken border border-border rounded-xl px-4 py-2.5 text-super-sm font-bold hover:border-border-strong"><EditIcon className="w-4 h-4" /> ویرایش</button>
                     </div>
                 </div>
+                {b.images?.length > 0 && (
+                    <div className="flex gap-2.5 mt-4 pt-4 border-t border-border overflow-x-auto">
+                        {b.images.map((im, i) => (
+                            <img key={i} src={branchImg(im)} alt={`${b.name} ${i + 1}`} className="w-28 h-20 rounded-xl object-cover border border-border shrink-0" />
+                        ))}
+                    </div>
+                )}
             </Card>
 
             <div className="mb-4">

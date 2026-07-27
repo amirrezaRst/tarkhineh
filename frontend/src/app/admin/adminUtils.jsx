@@ -72,10 +72,20 @@ export const FOOD_TYPE_LABEL = { iranian: "ایرانی", "non-iranian": "غیر
 
 export const faDate = (d) => (d ? new Date(d).toLocaleDateString("fa-IR", { year: "numeric", month: "long", day: "numeric" }) : "—");
 
-// Menu image served from /public/menu-images (image field stored as a filename).
+// Menu image. The backend serves /public -> public/menu-images, so a stored
+// filename resolves at ${IMAGE_URL}/<filename> (same convention as the rest of
+// the app's MenuCard components).
 export const menuImg = (images) => {
     const first = Array.isArray(images) ? images[0] : images;
     if (!first) return null;
     if (/^https?:\/\//.test(first)) return first;
-    return `${process.env.NEXT_PUBLIC_IMAGE_URL}/menu-images/${String(first).replace(/^\/?(public\/)?menu-images\//, "")}`;
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL}/${first}`;
+};
+
+// Branch image served from the dedicated /public/branches mount.
+export const branchImg = (images) => {
+    const first = Array.isArray(images) ? images[0] : images;
+    if (!first) return null;
+    if (/^https?:\/\//.test(first)) return first;
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL}/branches/${String(first).replace(/^\/?branches\//, "")}`;
 };

@@ -4,13 +4,23 @@ import { api } from "@/utils/apiClient";
 const fail = (err) => toast.error(err?.status === 400 ? err.message : "خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
 
 // ---- branches ----
-export const createBranch = async (data, onSuccess) => {
-    try { await api.post("/admin/branches", data); onSuccess?.(); toast.success("شعبه ایجاد شد."); return true; }
+// createBranch returns the created branch (or null) so the caller can then
+// upload its images; it does not toast/reload on its own.
+export const createBranch = async (data) => {
+    try { const res = await api.post("/admin/branches", data); return res.data.branch; }
+    catch (err) { fail(err); return null; }
+};
+export const updateBranch = async (id, data) => {
+    try { await api.patch(`/admin/branches/${id}`, data); return true; }
     catch (err) { fail(err); return false; }
 };
-export const updateBranch = async (id, data, onSuccess) => {
-    try { await api.patch(`/admin/branches/${id}`, data); onSuccess?.(); toast.success("شعبه به‌روزرسانی شد."); return true; }
-    catch (err) { fail(err); return false; }
+// Multipart: keeps `keep` (existing filenames) and appends new files.
+export const setBranchImages = async (id, files = [], keep = []) => {
+    const fd = new FormData();
+    fd.append("keep", JSON.stringify(keep));
+    files.forEach((f) => fd.append("images", f));
+    try { const res = await api.patch(`/admin/branches/${id}/images`, fd); return res.data.images; }
+    catch (err) { fail(err); return null; }
 };
 export const assignManager = async (id, userId, onSuccess) => {
     try { await api.patch(`/admin/branches/${id}/assign-manager`, { userId }); onSuccess?.(); toast.success("مدیر شعبه منتسب شد."); return true; }
