@@ -1,3 +1,5 @@
+import { resolveImg } from "@/utils/imageSrc";
+
 const GalleryItem = ({ index, name, image, selectedImage, setSelectedImage, isBranchGallery }) => {
     return (
         <div
@@ -7,7 +9,7 @@ const GalleryItem = ({ index, name, image, selectedImage, setSelectedImage, isBr
             onClick={() => setSelectedImage(index)}
         >
             <img
-                src={isBranchGallery ? `/images/${image}` : `${process.env.NEXT_PUBLIC_IMAGE_URL}/${image}`}
+                src={resolveImg(image, isBranchGallery)}
                 alt={`${name} ترخینه`}
                 className="w-full h-full object-center object-cover"
             />
