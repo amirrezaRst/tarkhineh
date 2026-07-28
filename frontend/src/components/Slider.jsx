@@ -34,7 +34,11 @@ const Slider = () => {
     const [slides, setSlides] = useState(null);
     const [index, setIndex] = useState(0);
     const [paused, setPaused] = useState(false);
-    const show = pathname === "/" || pathname === "/menus" || pathname === "/branches";
+    // Homepage only: it is the brand's promotional surface. /branches and
+    // /menus are steps inside the ordering flow and carry their own headers
+    // (the branch hero, the category bar) — stacking a second full-bleed
+    // banner above those competes with the real subject of the page.
+    const show = pathname === "/";
 
     useEffect(() => {
         if (!show) return;
