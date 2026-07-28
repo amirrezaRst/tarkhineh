@@ -61,9 +61,12 @@ exports.addItemToCart = async (req, res) => {
         const user = req.user.id;
         const { menuItem, quantity, branch } = req.body;
 
-        const menuItemExists = await Menu.findById(menuItem).select("_id");
+        const menuItemExists = await Menu.findById(menuItem).select("_id available");
         if (!menuItemExists) {
             return res.status(404).json({ status: 404, message: 'Menu item not found.' });
+        }
+        if (menuItemExists.available === false) {
+            return res.status(409).json({ status: 409, message: 'This menu item is currently unavailable.' });
         }
 
         let cart = await Cart.findOne({ user })

@@ -38,12 +38,17 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
             className="w-[250px] bg-white flex-shrink-0 border border-border rounded-lg overflow-hidden"
         >
 
-            <img
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[0]}`}
-                alt={`ترخینه ${name}`}
-                className="w-full h-[220px] object-center object-cover cursor-pointer"
-                onClick={() => setIsOpen(true)}
-            />
+            <div className="relative">
+                <img
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[0]}`}
+                    alt={`ترخینه ${name}`}
+                    className="w-full h-[220px] object-center object-cover cursor-pointer"
+                    onClick={() => setIsOpen(true)}
+                />
+                {available === false &&
+                    <span className="absolute top-2 left-2 bg-destructive text-white text-super-xs font-bold px-2 py-0.5 rounded-full">ناموجود</span>
+                }
+            </div>
 
             {/*//TODO Card Content */}
             <div className="pt-2 pb-3.5 px-3">
@@ -68,7 +73,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
                 </div>
 
-                <CartButton id={_id} handleAddToCart={handleAddToCart} setLoading={setLoading} loading={loading} />
+                <CartButton id={_id} handleAddToCart={handleAddToCart} setLoading={setLoading} loading={loading} disabled={available === false} />
             </div>
 
             {/*//! Menu Item Details Menu */}

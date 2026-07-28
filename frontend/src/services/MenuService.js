@@ -13,6 +13,27 @@ export const fetchMenuPageItems = async (branchId, category, foodType, isPersian
     }
 }
 
+export const fetchSearchItems = async (branchId, search, setItems, signal) => {
+    try {
+        const data = await api.get(
+            `/branch/get-branch-items/${branchId}?sortBy=asc&search=${encodeURIComponent(search)}`,
+            { signal }
+        );
+        setItems(data?.branch?.menus);
+    } catch (err) {
+        if (err.name !== "AbortError") toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
+    }
+}
+
+export const fetchBranchReviews = async (branchId, setReviews, signal) => {
+    try {
+        const data = await api.get(`/branch/${branchId}/reviews?limit=6`, { signal });
+        setReviews(data?.reviews || []);
+    } catch (err) {
+        if (err.name !== "AbortError") setReviews([]);
+    }
+}
+
 export const fetchBranchPageItems = async (branchId, category, ratingSort, setItems, signal) => {
     try {
         const data = await api.get(
@@ -34,8 +55,10 @@ export const addItemToCart = async (user, menuItemId, branch, setRegisterModal, 
         setCart(cart.items);
         toast.success("آیتم با موفقیت به سبد خرید اضافه شد.");
     } catch (err) {
-        if (err.status === 400) toast.error("شعبه آیتم انتخابی با شعبه آیتم‌های موجود در سبد خرید مطابقت ندارد. لطفاً از همان شعبه انتخاب کنید.");
+        if (err.status === 409) toast.error("این آیتم در حال حاضر ناموجود است.");
+        else if (err.status === 400) toast.error("شعبه آیتم انتخابی با شعبه آیتم‌های موجود در سبد خرید مطابقت ندارد. لطفاً از همان شعبه انتخاب کنید.");
         else toast.error("خطایی از سمت سرور پیش آمده، لطفا بعدا دوباره امتحان کنید.");
+        setLoading(false);
     }
 };
 

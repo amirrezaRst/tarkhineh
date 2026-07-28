@@ -2,7 +2,7 @@ import { MinusIcon, PlusIcon, TrashIcon } from "@/assets/Icons";
 import useCartStore from "@/stores/useCartStore";
 import { useEffect, useState } from "react";
 
-const CartButton = ({ id, handleAddToCart, handleDecrease, setLoading, loading }) => {
+const CartButton = ({ id, handleAddToCart, handleDecrease, setLoading, loading, disabled }) => {
     const cart = useCartStore(state => state.cart);
     const [quantity, setQuantity] = useState(null);
 
@@ -22,6 +22,11 @@ const CartButton = ({ id, handleAddToCart, handleDecrease, setLoading, loading }
     }, [cart]);
 
 
+    if (disabled && !quantity) return (
+        <button disabled className="w-full bg-surface-sunken text-muted-fg rounded-md py-1.5 text-super-sm leading-6 mt-4 cursor-not-allowed">
+            ناموجود
+        </button>
+    );
 
     return (
         <>

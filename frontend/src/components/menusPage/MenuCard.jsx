@@ -44,12 +44,17 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
                 className="bg-white 3xl:h-[230px] xl:h-[210px] md:h-[250px] h-[200px] flex 2xl:gap-2 border border-border rounded-lg overflow-hidden hover:shadow-lg duration-300"
             >
 
-                <img
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images?.[0]}`}
-                    alt={`ترخینه ${name}`}
-                    className="h-full 3xl:w-[230px] 2xl:w-[210px] xl:w-[190px] lg:w-[170px] md:w-[240px] w-[140px] object-cover cursor-pointer"
-                    onClick={() => setIsOpen(true)}
-                />
+                <div className="relative h-full 3xl:w-[230px] 2xl:w-[210px] xl:w-[190px] lg:w-[170px] md:w-[240px] w-[140px] shrink-0">
+                    <img
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images?.[0]}`}
+                        alt={`ترخینه ${name}`}
+                        className="w-full h-full object-cover cursor-pointer"
+                        onClick={() => setIsOpen(true)}
+                    />
+                    {available === false &&
+                        <span className="absolute top-2 left-2 bg-destructive text-white text-super-xs font-bold px-2 py-0.5 rounded-full">ناموجود</span>
+                    }
+                </div>
 
                 {/*//TODO Card Content */}
                 <div className="w-full md:p-4 p-2.5 flex flex-col justify-between">
@@ -81,7 +86,7 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
 
                     <div className="flex xl:flex-row flex-col xl:items-center justify-between xl:gap-6 gap-3">
                         <StarRating rate={reviews?.averageRating} />
-                        <CartButton id={_id} handleAddToCart={handleAddToCart} handleDecrease={handleDecreaseQuantity} setLoading={setLoading} loading={loading} />
+                        <CartButton id={_id} handleAddToCart={handleAddToCart} handleDecrease={handleDecreaseQuantity} setLoading={setLoading} loading={loading} disabled={available === false} />
                     </div>
 
                 </div>
