@@ -49,6 +49,7 @@ app.use("/api", globalLimiter);
 // menu-images route so /public/couriers/* resolves here first.
 app.use("/public/couriers", express.static(path.join(__dirname, "public", "courier-images")));
 app.use("/public/branches", express.static(path.join(__dirname, "public", "branch-images")));
+app.use("/public/slides", express.static(path.join(__dirname, "public", "slide-images")));
 app.use("/public", express.static(path.join(__dirname, "public", "menu-images")));
 
 //! Routes
@@ -65,6 +66,8 @@ app.use("/api/like", require('./routes/likeRoutes'));
 app.use("/api/branch-manager", require('./routes/branchManagerRoutes'));
 app.use("/api/courier", require('./routes/courierRoutes'));
 app.use("/api/admin", require('./routes/adminRoutes'));
+app.use("/api/contact", require('./routes/contactRoutes'));
+app.use("/api/slide", require('./routes/slideRoutes'));
 
 //! Report Scheduler
 require('./utils/reportScheduler');

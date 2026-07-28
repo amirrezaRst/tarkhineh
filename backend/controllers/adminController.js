@@ -7,6 +7,7 @@ const Coupon = require('../models/CouponModel');
 const Discount = require('../models/DiscountModel');
 const Menu = require('../models/MenuModel');
 const Setting = require('../models/SettingModel');
+const Slide = require('../models/SlideModel');
 const { ROLES } = require('../config/roles');
 
 const TZ = "Asia/Tehran";
@@ -1084,6 +1085,86 @@ exports.updateSettings = async (req, res) => {
         res.status(200).json({ status: 200, message: "تنظیمات ذخیره شد.", data: { settings } });
     } catch (error) {
         console.error("Admin update settings error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// ----------------------------------------------------------------------------
+// HERO SLIDES — admin-managed public homepage carousel
+// ----------------------------------------------------------------------------
+exports.getSlides = async (req, res) => {
+    try {
+        const slides = await Slide.find().sort({ order: 1, createdAt: 1 });
+        res.status(200).json({ status: 200, message: "Slides fetched", data: { slides } });
+    } catch (error) {
+        console.error("Admin get slides error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+exports.createSlide = async (req, res) => {
+    try {
+        const image = Array.isArray(req.body.images) ? req.body.images[0] : null;
+        if (!image) return res.status(400).json({ status: 400, message: "تصویر اسلاید الزامی است." });
+
+        const count = await Slide.countDocuments();
+        const slide = await Slide.create({
+            image,
+            title: req.body.title || "",
+            subtitle: req.body.subtitle || "",
+            buttonText: req.body.buttonText || "",
+            buttonLink: req.body.buttonLink || "",
+            active: req.body.active !== "false",
+            order: count,
+        });
+        res.status(201).json({ status: 201, message: "اسلاید اضافه شد.", data: { slide } });
+    } catch (error) {
+        console.error("Admin create slide error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+exports.updateSlide = async (req, res) => {
+    try {
+        const slide = await Slide.findById(req.params.id);
+        if (!slide) return res.status(404).json({ status: 404, message: "اسلاید یافت نشد." });
+
+        const image = Array.isArray(req.body.images) ? req.body.images[0] : null;
+        if (image) slide.image = image;
+        ["title", "subtitle", "buttonText", "buttonLink"].forEach((k) => {
+            if (req.body[k] !== undefined) slide[k] = req.body[k];
+        });
+        if (req.body.active !== undefined) slide.active = req.body.active === true || req.body.active === "true";
+        if (req.body.order !== undefined) slide.order = Number(req.body.order);
+
+        await slide.save();
+        res.status(200).json({ status: 200, message: "اسلاید به‌روزرسانی شد.", data: { slide } });
+    } catch (error) {
+        console.error("Admin update slide error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+exports.deleteSlide = async (req, res) => {
+    try {
+        const slide = await Slide.findByIdAndDelete(req.params.id);
+        if (!slide) return res.status(404).json({ status: 404, message: "اسلاید یافت نشد." });
+        res.status(200).json({ status: 200, message: "اسلاید حذف شد." });
+    } catch (error) {
+        console.error("Admin delete slide error:", error);
+        res.status(500).json({ status: 500, message: "Internal server error" });
+    }
+};
+
+// Body: { ids: [slideId, ...] } in the desired display order.
+exports.reorderSlides = async (req, res) => {
+    try {
+        const { ids } = req.body;
+        if (!Array.isArray(ids) || !ids.length) return res.status(400).json({ status: 400, message: "لیست نامعتبر است." });
+        await Promise.all(ids.map((id, index) => Slide.findByIdAndUpdate(id, { order: index })));
+        res.status(200).json({ status: 200, message: "ترتیب اسلایدها ذخیره شد." });
+    } catch (error) {
+        console.error("Admin reorder slides error:", error);
         res.status(500).json({ status: 500, message: "Internal server error" });
     }
 };

@@ -250,6 +250,31 @@
 }
 
 
+/* ==========================================================================
+   Hero slider — slow Ken-Burns zoom on the active slide's background, paired
+   with an opacity crossfade handled inline via Tailwind transition classes.
+   ========================================================================== */
+@keyframes hero-slide-zoom {
+    from {
+        transform: scale(1.08);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+.hero-slide-bg {
+    animation: hero-slide-zoom 6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-slide-bg {
+        animation: none;
+    }
+}
+
+
 /*//! Custom Scrollbar */
 /* کل اسکرول‌بار */
 ::-webkit-scrollbar {

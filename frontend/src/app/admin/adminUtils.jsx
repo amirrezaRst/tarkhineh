@@ -89,3 +89,10 @@ export const branchImg = (images) => {
     if (/^https?:\/\//.test(first)) return first;
     return `${process.env.NEXT_PUBLIC_IMAGE_URL}/branches/${String(first).replace(/^\/?branches\//, "")}`;
 };
+
+// Hero-slide image served from the dedicated /public/slides mount.
+export const slideImg = (filename) => {
+    if (!filename) return null;
+    if (/^https?:\/\//.test(filename)) return filename;
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL}/slides/${String(filename).replace(/^\/?slides\//, "")}`;
+};
