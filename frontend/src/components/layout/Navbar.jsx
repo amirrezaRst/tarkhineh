@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { MenuIcon, SearchIcon, ShoppingCartIcon, UserIcon } from "@/assets/Icons";
+import { MenuIcon, ShoppingCartIcon, UserIcon } from "@/assets/Icons";
 import NavbarLinks from "./profile/NavbarLinks";
 import useUserStore from "@/stores/useUserStore";
 import ModalContainer from "../modal/ModalContainer";
@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import RegisterModal from "../register/RegisterModal";
 import PreserveQueryLink from "@/hooks/PreserveQueryLink";
 import useCartStore from "@/stores/useCartStore";
+import HeaderSearch from "./HeaderSearch";
 
 const Navbar = () => {
     const fetchUser = useUserStore((state) => state.fetchUser);
@@ -34,7 +35,6 @@ const Navbar = () => {
 
     return (
         <header className="sticky top-0 bg-white z-10 lg:border-b border-b-primary-subtle lg:shadow-none shadow">
-            <div className="w-full h-[4px] 3xl:bg-amber-400 2xl:bg-slate-600 xl:bg-stone-600 lg:bg-red-500 md:bg-yellow-400 sm:bg-violet-600 bg-teal-400" />
             <div className="container flex items-center justify-between md:py-3.5 py-4.5">
 
                 <button className="lg:hidden block">
@@ -48,9 +48,7 @@ const Navbar = () => {
                 <NavbarLinks />
 
                 <div className="flex gap-3 max-lg:justify-end max-lg:float-left">
-                    <button className="bg-primary-subtle rounded-md p-2 lg:block hidden">
-                        <SearchIcon className="fill-primary max-xl:w-5 max-xl:h-5" />
-                    </button>
+                    <HeaderSearch />
                     <div onClick={!user ? () => setIsModalOpen(true) : null}>
                         <PreserveQueryLink href={user ? "/cart" : ""}>
                             <button className="relative bg-primary-subtle rounded-md p-2">
