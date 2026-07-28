@@ -8,6 +8,7 @@ import Card from "@/components/panel/Card";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
 import { Skeleton } from "@/components/panel/Skeleton";
 import { updateSettings } from "@/services/AdminService";
+import SlidesManager from "./SlidesManager";
 
 const FIELDS = [
     { key: "deliveryFee", label: "هزینهٔ ارسال پیش‌فرض", unit: "تومان", hint: "برای سفارش‌های ارسال با پیک" },
@@ -43,12 +44,12 @@ const AdminSettings = () => {
         setBusy(false);
     };
 
-    if (loading) return <div className="w-full max-w-2xl"><PanelPageHeader title="تنظیمات پلتفرم" subtitle="پیکربندی سراسری فروشگاه" /><Skeleton className="h-96 rounded-2xl" /></div>;
+    if (loading) return <div className="w-full max-w-3xl"><PanelPageHeader title="تنظیمات پلتفرم" subtitle="پیکربندی سراسری فروشگاه" /><Skeleton className="h-96 rounded-2xl" /></div>;
 
     const inp = "w-full border border-border rounded-xl px-3.5 py-2.5 text-super-sm bg-surface tabular-nums focus:outline-none focus:ring-2 focus:ring-primary/40";
 
     return (
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-3xl space-y-6">
             <PanelPageHeader title="تنظیمات پلتفرم" subtitle="این مقادیر سراسری روی کل فروشگاه اعمال می‌شوند" />
             <Card className="p-6">
                 <form onSubmit={save} className="space-y-4">
@@ -75,6 +76,8 @@ const AdminSettings = () => {
                     </div>
                 </form>
             </Card>
+
+            <SlidesManager />
         </div>
     );
 };

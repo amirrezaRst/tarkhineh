@@ -1,35 +1,12 @@
+"use client";
+
 import HeaderBanner from "@/components/HeaderBanner";
 import RestaurantCard from "./RestaurantCard";
-import { branchList } from "@/constant/branchList";
-
-// const restaurants = [
-//     {
-//         branch: "تهرانپارس",
-//         address: "تهران پارس، فلکه سوم، پاساژ سیوان",
-//         phone: "۰۲۱-۵۴۸۹۱۲۵۰-۵۱",
-//         image: "/images/restaurant-image-1.jpg"
-//     },
-//     {
-//         branch: "چالوس",
-//         address: "چالوس، خیابان ۱۷ شهریور، بعد کوچه کوروش، جنب داروخانه دکتر میلانی",
-//         phone: "۰۲۱-۵۴۸۹۱۲۵۲-۵۳",
-//         image: "/images/restaurant-image-2.jpg"
-//     },
-//     {
-//         branch: "اقدسیه",
-//         address: "خیابان اقدسیه ، نرسیده به میدان خیام، پلاک ۸",
-//         phone: "۰۲۱-۵۴۸۹۱۲۵۴-۵۵",
-//         image: "/images/restaurant-image-3.jpg"
-//     },
-//     {
-//         branch: "ونک",
-//         address: "میدان ونک، خیابان فردوسی، نبش کوچه نیلوفر، پلاک ۲۶",
-//         phone: "۰۲۱-۵۴۸۹۱۲۵۶-۵۷",
-//         image: "/images/restaurant-image-4.jpg"
-//     }
-// ]
+import useBranches from "@/hooks/useBranches";
 
 const ContactUsPage = () => {
+    const branches = useBranches();
+
     return (
         <>
 
@@ -37,8 +14,8 @@ const ContactUsPage = () => {
 
             <section className="container md:py-20 py-16 space-y-9">
 
-                {branchList.map(({ name, address, phone, images, path }, index) =>
-                    <RestaurantCard key={index} name={name} address={address} phone={phone} images={images} path={path}/>
+                {(branches || []).map((b) =>
+                    <RestaurantCard key={b.id} name={b.name} address={b.address} phone={b.phone} hoursLabel={b.hoursLabel} isOpen={b.isOpen} images={b.images} path={b.id} map={b.map} />
                 )}
 
             </section>

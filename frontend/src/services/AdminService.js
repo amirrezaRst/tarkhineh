@@ -106,3 +106,27 @@ export const deleteMenuItem = async (id, onSuccess) => {
     try { await api.delete(`/menu/${id}`); onSuccess?.(); toast.success("آیتم منو حذف شد."); }
     catch (err) { fail(err); }
 };
+
+// ---- hero slides ----
+export const createSlide = async (file, data) => {
+    const fd = new FormData();
+    fd.append("images", file);
+    Object.entries(data).forEach(([k, v]) => fd.append(k, v));
+    try { const r = await api.post("/admin/slides", fd); toast.success("اسلاید اضافه شد."); return r.data.slide; }
+    catch (err) { fail(err); return null; }
+};
+export const updateSlide = async (id, data, file) => {
+    const fd = new FormData();
+    if (file) fd.append("images", file);
+    Object.entries(data).forEach(([k, v]) => fd.append(k, v));
+    try { await api.patch(`/admin/slides/${id}`, fd); toast.success("اسلاید به‌روزرسانی شد."); return true; }
+    catch (err) { fail(err); return false; }
+};
+export const deleteSlide = async (id, onSuccess) => {
+    try { await api.delete(`/admin/slides/${id}`); onSuccess?.(); toast.success("اسلاید حذف شد."); }
+    catch (err) { fail(err); }
+};
+export const reorderSlides = async (ids, onSuccess) => {
+    try { await api.patch("/admin/slides/reorder", { ids }); onSuccess?.(); }
+    catch (err) { fail(err); }
+};

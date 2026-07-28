@@ -1,23 +1,42 @@
+const mongoose = require('mongoose');
 const Review = require('../models/ReviewModel');
 const User = require('../models/UserModel');
 const { ROLES } = require('../config/roles');
 
 exports.getAllReviews = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 4; // Default to 4 reviews per page
+    const limit = Math.min(parseInt(req.query.limit) || 4, 20); // cap the page size
     const skip = (page - 1) * limit;
 
     try {
         // Only approved reviews are shown publicly (moderation gate).
         const query = { menuItem: req.params.id, status: "approved" };
-        const [reviews, total] = await Promise.all([
-            Review.find(query).skip(skip).limit(limit),
+        const [reviews, total, spread] = await Promise.all([
+            Review.find(query)
+                .populate("user", "fullName")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
             Review.countDocuments(query),
+            // Rating spread over EVERY approved review, not just this page —
+            // deriving it from the loaded page would misreport the breakdown
+            // as the reader pages through.
+            Review.aggregate([
+                { $match: { menuItem: new mongoose.Types.ObjectId(req.params.id), status: "approved" } },
+                { $group: { _id: "$rating", count: { $sum: 1 } } },
+            ]),
         ]);
+
+        const distribution = [0, 0, 0, 0, 0]; // index 0 = 1 star
+        spread.forEach((s) => { if (s._id >= 1 && s._id <= 5) distribution[s._id - 1] = s.count; });
+
         res.status(200).json({
             status: 200,
             message: "fetch review data successfully",
             total,
+            page,
+            pages: Math.ceil(total / limit) || 1,
+            distribution,
             reviews
         });
     }

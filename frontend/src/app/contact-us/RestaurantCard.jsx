@@ -5,9 +5,10 @@ import CardImage from "./CardImage";
 import PreserveQueryLink from "@/hooks/PreserveQueryLink";
 import ModalContainer from "@/components/modal/ModalContainer";
 import BranchCardModal from "@/components/homePage/BranchCardModal";
+import BranchOpenTag from "@/components/BranchOpenTag";
 
 
-const RestaurantCard = ({ name, address, phone, images, path }) => {
+const RestaurantCard = ({ name, address, phone, hoursLabel, isOpen: branchIsOpen, images, path, map }) => {
     const [isOpen, setIsOpen] = useState(false);
 
 
@@ -19,8 +20,9 @@ const RestaurantCard = ({ name, address, phone, images, path }) => {
             <CardImage imageSrc={images[0]} brach={name} setIsOpen={setIsOpen} />
 
             <div className="flex flex-col items-center xl:py-11 lg:py-9 md:py-5 pt-6 pb-8 xl:col-span-1 md:col-span-7">
-                <h2 className="lg:text-2xl md:text-1.5xl text-xl text-foreground text-center font-semibold xl:mb-9 lg:mb-6 mb-4">
+                <h2 className="lg:text-2xl md:text-1.5xl text-xl text-foreground text-center font-semibold xl:mb-9 lg:mb-6 mb-4 flex items-center justify-center gap-2">
                     شعبه {name}
+                    <BranchOpenTag isOpen={branchIsOpen} />
                 </h2>
 
                 <div
@@ -28,7 +30,7 @@ const RestaurantCard = ({ name, address, phone, images, path }) => {
                 >
                     <p className="">{address}</p>
                     <p className="">شماره تماس: <span dir="ltr">{phone}</span></p>
-                    <p className="">ساعت کاری: همه روزه از ساعت 12 تا 23 بجز روز های تعطیل</p>
+                    <p className="">ساعت کاری: {hoursLabel}</p>
 
                     <div
                         className="w-full absolute md:-bottom-32 group-hover:md:bottom-0 right-[50%] translate-x-[50%] flex items-center justify-center gap-4 md:pt-0 pt-2 duration-400"
@@ -40,11 +42,15 @@ const RestaurantCard = ({ name, address, phone, images, path }) => {
                                 صفحه شعبه
                             </button>
                         </PreserveQueryLink>
-                        <button
-                            className="h-10 bg-primary border border-primary rounded-md text-white text-super-sm leading-5 px-7"
-                        >
-                            دیدن در نقشه
-                        </button>
+                        {map &&
+                            <a href={map} target="_blank" rel="noreferrer">
+                                <button
+                                    className="h-10 bg-primary border border-primary rounded-md text-white text-super-sm leading-5 px-7"
+                                >
+                                    دیدن در نقشه
+                                </button>
+                            </a>
+                        }
                     </div>
 
                 </div>

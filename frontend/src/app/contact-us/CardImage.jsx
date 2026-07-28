@@ -6,7 +6,7 @@ const CardImage = ({ imageSrc, branch, setIsOpen }) => {
         <div className="relative w-full xl:col-span-1 md:col-span-5 md:h-auto h-[200px] md:rounded-l-lg rounded-b-lg overflow-hidden">
 
             <img
-                src={`/images/${imageSrc}`}
+                src={imageSrc}
                 alt={`شعبه ${branch}`}
                 className="w-full xl:h-[330px] md:h-[300px] h-[200px] object-cover object-center"
             />

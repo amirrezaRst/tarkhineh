@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ModalContent from "./ModalContent";
+import { createPortal } from "react-dom";
 import Overlay from "./Overlay";
 
 const ModalContainer = ({ children, isOpen, setIsOpen }) => {
     const [show, setShow] = useState(isOpen);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => setMounted(true), []);
 
     useEffect(() => {
         if (isOpen) {
@@ -23,15 +26,19 @@ const ModalContainer = ({ children, isOpen, setIsOpen }) => {
         };
     }, [isOpen]);
 
-    return (
+    if (!mounted) return null;
+
+    // Rendered through a portal on <body>: a `position: fixed` overlay is
+    // positioned against the nearest ancestor that has a transform/filter
+    // rather than the viewport, so any animated or transformed wrapper up the
+    // tree would otherwise trap the modal inside itself.
+    return createPortal(
         <Overlay show={show} setIsOpen={setIsOpen}>
-            {/* <ModalContent user={user} title={title} isOpen={isOpen} setIsOpen={setIsOpen}>
-                {children}
-            </ModalContent> */}
             <div onClick={(e) => e.stopPropagation()}>
                 {children}
             </div>
-        </Overlay>
+        </Overlay>,
+        document.body
     );
 }
 

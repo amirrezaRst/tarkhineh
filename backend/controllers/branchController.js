@@ -53,8 +53,10 @@ exports.getBranchById = async (req, res) => {
                     endDate: { $gte: new Date() }
                 }).select("discountType discountValue");
 
-                //! Finding the number of reviews and the average rating for each menu item
-                const reviews = await Review.find({ menuItem: menu._id });
+                //! Finding the number of reviews and the average rating for each menu item.
+                //! Only approved ones — the public review list is moderation-gated the
+                //! same way, so an unmoderated review must not inflate the count/rating.
+                const reviews = await Review.find({ menuItem: menu._id, status: "approved" });
                 const totalReviews = reviews.length;
                 const averageRating = totalReviews
                     ? (reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews).toFixed(1)
@@ -78,6 +80,12 @@ exports.getBranchById = async (req, res) => {
                 _id: branch._id,
                 name: branch.name,
                 manager: branch.manager,
+                address: branch.address,
+                phoneNumber: branch.phoneNumber,
+                openTime: branch.openTime,
+                closeTime: branch.closeTime,
+                images: branch.images,
+                isOpen: isBranchOpen(branch.openTime, branch.closeTime),
                 menus: menusWithDetails
             }
         });
@@ -90,7 +98,7 @@ exports.getBranchById = async (req, res) => {
 exports.getBranchItems = async (req, res) => {
     try {
         const { id } = req.params;
-        const { limit, category, sortBy, foodType, isPersian } = req.query;
+        const { limit, category, sortBy, foodType, isPersian, search } = req.query;
 
         const branch = await Branch.findById(id)
             .populate('manager', 'fullName email')
@@ -99,7 +107,8 @@ exports.getBranchItems = async (req, res) => {
                 match: {
                     ...(category && { category }),
                     ...(foodType && { foodType }),
-                    ...(isPersian && { isPersian: isPersian === 'true' })
+                    ...(isPersian && { isPersian: isPersian === 'true' }),
+                    ...(search && { name: { $regex: search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), $options: "i" } })
                 },
                 select: 'name price category images ingredients description available foodType isPersian createdAt'
             });
@@ -118,8 +127,10 @@ exports.getBranchItems = async (req, res) => {
                     endDate: { $gte: new Date() }
                 }).select("discountType discountValue");
 
-                //! Finding the number of reviews and the average rating for each menu item
-                const reviews = await Review.find({ menuItem: menu._id });
+                //! Finding the number of reviews and the average rating for each menu item.
+                //! Only approved ones — the public review list is moderation-gated the
+                //! same way, so an unmoderated review must not inflate the count/rating.
+                const reviews = await Review.find({ menuItem: menu._id, status: "approved" });
                 const totalReviews = reviews.length;
                 const averageRating = totalReviews
                     ? (reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews).toFixed(1)
@@ -166,6 +177,25 @@ exports.getBranchItems = async (req, res) => {
 
 
 
+
+
+//? Get recent approved reviews for a branch (public "نظرات کاربران" section)
+exports.getBranchReviews = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const limit = parseInt(req.query.limit) || 6;
+
+        const reviews = await Review.find({ branch: id, status: "approved" })
+            .populate("user", "fullName")
+            .populate("menuItem", "name")
+            .sort({ createdAt: -1 })
+            .limit(limit);
+
+        res.status(200).json({ status: 200, message: "fetch reviews successfully", reviews });
+    } catch (error) {
+        res.status(500).json({ status: 500, message: "Error fetching reviews.", error: error.message });
+    }
+};
 
 
 //! Post Request

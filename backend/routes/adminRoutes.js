@@ -9,6 +9,7 @@ const {
     getCoupons, createCoupon, updateCoupon, deleteCoupon,
     getDiscounts, createDiscount, updateDiscount, deleteDiscount,
     getReviews, updateReviewStatus, deleteReview,
+    getSlides, createSlide, updateSlide, deleteSlide, reorderSlides,
 } = require('../controllers/adminController');
 const Authenticate = require('../middleware/Authenticate');
 const Authorize = require('../middleware/Authorize');
@@ -18,6 +19,7 @@ const uploadImage = require('../utils/upload');
 const router = express.Router();
 const adminOnly = [Authenticate, Authorize([ROLES.ADMIN])];
 const branchPhotos = uploadImage({ fieldName: "images", fileSize: 5000000, destination: '../public/branch-images/', width: 1000, height: 700, quality: 78, maxCount: 6 });
+const slidePhoto = uploadImage({ fieldName: "images", fileSize: 5000000, destination: '../public/slide-images/', width: 1600, height: 600, quality: 80, maxCount: 1 });
 
 router.get("/overview", adminOnly, getOverview);
 router.get("/search", adminOnly, getSearch);
@@ -26,6 +28,12 @@ router.get("/customers", adminOnly, getCustomers);
 router.get("/activity", adminOnly, getActivity);
 router.get("/settings", adminOnly, getSettings);
 router.patch("/settings", adminOnly, updateSettings);
+
+router.get("/slides", adminOnly, getSlides);
+router.post("/slides", adminOnly, ...slidePhoto, createSlide);
+router.patch("/slides/reorder", adminOnly, reorderSlides);
+router.patch("/slides/:id", adminOnly, ...slidePhoto, updateSlide);
+router.delete("/slides/:id", adminOnly, deleteSlide);
 
 router.get("/branches", adminOnly, getBranches);
 router.get("/branches/:id", adminOnly, getBranchDetail);

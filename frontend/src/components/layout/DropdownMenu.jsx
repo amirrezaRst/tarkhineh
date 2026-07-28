@@ -1,25 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 import { ChevronIcon } from "@/assets/Icons";
 import { useSearchParams } from "next/navigation";
 import PreserveQueryLink from "@/hooks/PreserveQueryLink";
+import useBranch from "@/hooks/useBranch";
 
 
 const DropdownMenu = ({ children, handleActive, text, pathname, path }) => {
     const [isDropOpen, setIsDropOpen] = useState(false);
-    const [branchName, setBranchName] = useState(null);
 
     const branch = useSearchParams().get("branch");
-
-    useEffect(() => {
-        if (branch) {
-            if (branch == "aghdasiyeh") setBranchName("اقدسیه");
-            else if (branch == "tehranpars") setBranchName("تهرانپارس");
-            else if (branch == "vanak") setBranchName("ونک");
-            else if (branch == "chalous") setBranchName("چالوس");
-        }
-    }, [branch]);
+    const { branch: info } = useBranch(branch);
+    const branchName = info?.name || null;
 
 
     return (

@@ -1,24 +1,21 @@
 import MenuCard from "@/components/menusPage/MenuCard";
-import { fetchMenuPageItems } from "@/services/MenuService";
+import { fetchSearchItems } from "@/services/MenuService";
 import { useEffect, useState } from "react";
 
-const MenuSection = ({ title, branchId, category, foodType, isPersian }) => {
+const SearchResultsSection = ({ branchId, search }) => {
     const [items, setItems] = useState();
 
     useEffect(() => {
-        if (!branchId) return;
+        if (!branchId || !search) return;
         const controller = new AbortController();
-        fetchMenuPageItems(branchId, category, foodType, isPersian, setItems, controller.signal);
+        fetchSearchItems(branchId, search, setItems, controller.signal);
         return () => controller.abort();
-    }, [branchId, category])
-
+    }, [branchId, search]);
 
     return (
         <section>
-            <h2
-                className={`lg:text-2.5xl text-xl text-foreground md:font-semibold font-bold`}
-            >
-                {title}
+            <h2 className="lg:text-2.5xl text-xl text-foreground md:font-semibold font-bold">
+                نتایج جستجو برای «{search}»
             </h2>
 
             <article className="grid lg:grid-cols-2 xl:gap-8 lg:gap-3.5 gap-6 md:mt-10 mt-3.5">
@@ -28,7 +25,7 @@ const MenuSection = ({ title, branchId, category, foodType, isPersian }) => {
                 ))}
                 {items?.length === 0 &&
                     <p className="mt-0 text-foreground font-light">
-                        اینجا خالی است، اما ترخینه همیشه در حال آماده کردن بهترین‌هاست.
+                        آیتمی با این عنوان پیدا نشد.
                     </p>
                 }
 
@@ -37,4 +34,4 @@ const MenuSection = ({ title, branchId, category, foodType, isPersian }) => {
     );
 }
 
-export default MenuSection;
+export default SearchResultsSection;

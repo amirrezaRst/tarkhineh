@@ -7,9 +7,10 @@ import { resolveImg } from "@/utils/imageSrc";
 
 import ModalContainer from "../modal/ModalContainer";
 import BranchCardModal from "./BranchCardModal";
+import BranchOpenTag from "../BranchOpenTag";
 
 
-const BranchCard = ({ images, name, address, path }) => {
+const BranchCard = ({ images, name, address, path, isOpen: branchIsOpen }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -32,7 +33,10 @@ const BranchCard = ({ images, name, address, path }) => {
                 </div>
             </div>
             <div className="relative md:block flex flex-col justify-center px-4 md:pb-8 pb-5 pt-5 flex-1 text-center">
-                <h3 className="md:text-xl font-medium text-foreground md:mb-3.5 mb-2">{name}</h3>
+                <h3 className="md:text-xl font-medium text-foreground md:mb-3.5 mb-2 flex items-center justify-center gap-2">
+                    {name}
+                    <BranchOpenTag isOpen={branchIsOpen} />
+                </h3>
                 <p className="text-muted-fg md:text-base text-sm md:mb-4">{address}</p>
                 <Link href={`/branches?branch=${path}`}>
                     <button className="md:flex items-center flex-nowrap hidden absolute -bottom-20 group-hover:bottom-0 right-[50%] translate-x-[50%] border border-primary-hover rounded-md text-primary-hover text-super-sm py-1 px-4 leading-6 transition-all duration-600">

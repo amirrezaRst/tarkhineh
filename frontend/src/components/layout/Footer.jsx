@@ -1,10 +1,16 @@
+"use client";
+
 import Link from "next/link";
 
 import { InstagramIcon, TelegramIcon, TwitterIcon } from "@/assets/Icons";
 import PreserveQueryLink from "@/hooks/PreserveQueryLink";
+import useBranches from "@/hooks/useBranches";
+import ContactForm from "./ContactForm";
 
 
 const Footer = () => {
+    const branches = useBranches();
+
     return (
         <footer className="w-full py-20 bg-[url('/images/footer-background-hero.jpg')] bg-cover bg-center">
             <div className="container grid xl:grid-cols-2 xl:gap-4 gap-14">
@@ -21,10 +27,10 @@ const Footer = () => {
                             <li><PreserveQueryLink href="/faq">پرسش های متداول</PreserveQueryLink></li>
                             <li><PreserveQueryLink href="/rules">قوانین ترخینه</PreserveQueryLink></li>
                             <li><PreserveQueryLink href="/privacy">حریم خصوصی</PreserveQueryLink></li>
-                            <div className="flex items-center gap-5">
-                                <a href=""><TwitterIcon /></a>
-                                <a href=""><InstagramIcon /></a>
-                                <a href=""><TelegramIcon /></a>
+                            <div className="flex items-center gap-5 text-border-subtle/60">
+                                <TwitterIcon />
+                                <InstagramIcon />
+                                <TelegramIcon />
                             </div>
                         </ul>
                     </div>
@@ -35,10 +41,11 @@ const Footer = () => {
                             شعبه های ترخینه
                         </h6>
                         <ul className="space-y-4 text-border-subtle md:text-super-sm text-sm font-light">
-                            <li><Link href={{ pathname: "/branches", query: { branch: "tehranpars" } }}>شهبه تهرانپارس</Link></li>
-                            <li><Link href={{ pathname: "/branches", query: { branch: "chalous" } }}>شعبه چالوس</Link></li>
-                            <li><Link href={{ pathname: "/branches", query: { branch: "aghdasiyeh" } }}>شعبه اقدسیه</Link></li>
-                            <li><Link href={{ pathname: "/branches", query: { branch: "vanak" } }}>شعبه ونک</Link></li>
+                            {(branches || []).map((b) => (
+                                <li key={b.id}>
+                                    <Link href={{ pathname: "/branches", query: { branch: b.id } }}>شعبه {b.name}</Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
@@ -50,41 +57,7 @@ const Footer = () => {
                         پیام به ترخینه
                     </h6>
 
-                    <form action="" className="">
-                        <div className="grid md:grid-cols-2 gap-4">
-
-                            <div className="space-y-3">
-                                <input
-                                    type="text"
-                                    placeholder="نام و نام خانوادگی"
-                                    className="bg-transparent w-full backdrop-blur-sm border border-muted-fg rounded-lg py-2.5 px-5 text-sm placeholder:text-background text-background"
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="شماره تماس"
-                                    className="bg-transparent w-full backdrop-blur-sm border border-muted-fg rounded-lg py-2.5 px-5 text-sm placeholder:text-background text-background"
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="آدرس ایمیل (اختیاری)"
-                                    className="bg-transparent w-full backdrop-blur-sm border border-muted-fg rounded-lg py-2.5 px-5 text-sm placeholder:text-background text-background"
-                                />
-                            </div>
-
-                            <textarea
-                                name=""
-                                id=""
-                                placeholder="پیام شما"
-                                className="bg-transparent w-full md:h-full h-40 backdrop-blur-sm border border-muted-fg rounded-lg py-2.5 px-5 text-sm placeholder:text-background text-background"
-                            />
-
-                        </div>
-
-                        <p className="text-sm text-border mt-2 text-left">۰/۲۰۰</p>
-                        <button className="text-background text-super-sm border border-muted-fg rounded-lg float-left mt-2 py-2.5 px-16">
-                            ارسال پیام
-                        </button>
-                    </form>
+                    <ContactForm />
 
                 </div>
 

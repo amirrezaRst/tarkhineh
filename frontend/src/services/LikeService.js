@@ -10,12 +10,16 @@ export const likeMenuItemItem = async (user, menuItem, setIsLiked) => {
     }
 };
 
+// Reading the like state is a passive, per-card background check: a logged-out
+// visitor simply has no likes, and a failure here must stay silent — otherwise
+// every card on the page fires its own error toast.
 export const checkLikeStatus = async (userId, itemId, setIsLiked) => {
+    if (!userId) return setIsLiked(false);
     try {
         const { liked } = await api.get(`/like/status/${userId}/${itemId}`);
         setIsLiked(!!liked);
     } catch {
-        toast.error("خطایی رخ داده است. لطفا دوباره تلاش کنید.");
+        setIsLiked(false);
     }
 };
 
