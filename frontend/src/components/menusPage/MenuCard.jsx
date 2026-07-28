@@ -14,7 +14,7 @@ import { addItemToCart, decreaseItemQuantity } from "@/services/MenuService";
 import useCartStore from "@/stores/useCartStore";
 
 
-const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available, branch }) => {
+const MenuCard = ({ _id, name, price, images, discount, reviews, description, ingredients, available, branch, category, foodType, isPersian }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [registerModal, setRegisterModal] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -94,7 +94,14 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
             </div>
 
             <ModalContainer isOpen={isOpen} setIsOpen={setIsOpen}>
-                <MenuModal name={name} description={description} images={images} ingredients={ingredients} reviews={reviews} setIsOpen={setIsOpen} />
+                <MenuModal
+                    _id={_id} name={name} description={description} images={images}
+                    ingredients={ingredients} reviews={reviews} available={available}
+                    price={price} discount={discount} finalPrice={finalPrice}
+                    category={category} foodType={foodType} isPersian={isPersian}
+                    handleAddToCart={handleAddToCart} handleDecrease={handleDecreaseQuantity}
+                    loading={loading} setLoading={setLoading} setIsOpen={setIsOpen}
+                />
             </ModalContainer>
 
             <ModalContainer isOpen={registerModal} setIsOpen={setRegisterModal}>

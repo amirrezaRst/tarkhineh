@@ -53,8 +53,10 @@ exports.getBranchById = async (req, res) => {
                     endDate: { $gte: new Date() }
                 }).select("discountType discountValue");
 
-                //! Finding the number of reviews and the average rating for each menu item
-                const reviews = await Review.find({ menuItem: menu._id });
+                //! Finding the number of reviews and the average rating for each menu item.
+                //! Only approved ones — the public review list is moderation-gated the
+                //! same way, so an unmoderated review must not inflate the count/rating.
+                const reviews = await Review.find({ menuItem: menu._id, status: "approved" });
                 const totalReviews = reviews.length;
                 const averageRating = totalReviews
                     ? (reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews).toFixed(1)
@@ -125,8 +127,10 @@ exports.getBranchItems = async (req, res) => {
                     endDate: { $gte: new Date() }
                 }).select("discountType discountValue");
 
-                //! Finding the number of reviews and the average rating for each menu item
-                const reviews = await Review.find({ menuItem: menu._id });
+                //! Finding the number of reviews and the average rating for each menu item.
+                //! Only approved ones — the public review list is moderation-gated the
+                //! same way, so an unmoderated review must not inflate the count/rating.
+                const reviews = await Review.find({ menuItem: menu._id, status: "approved" });
                 const totalReviews = reviews.length;
                 const averageRating = totalReviews
                     ? (reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews).toFixed(1)
