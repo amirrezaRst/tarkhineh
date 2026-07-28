@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { ChevronIcon, GalleryIcon } from "@/assets/Icons";
+import { resolveImg } from "@/utils/imageSrc";
 
 import ModalContainer from "../modal/ModalContainer";
 import BranchCardModal from "./BranchCardModal";
@@ -15,13 +15,10 @@ const BranchCard = ({ images, name, address, path }) => {
     return (
         <div className="bg-white md:h-[410px] h-[140px] md:block flex group border border-border hover:border-primary rounded-lg transition-all duration-300 overflow-hidden">
             <div className="relative md:w-full w-[45%] md:h-[280px] group-hover:md:h-[230px] transition-all duration-500">
-                <Image
-                    src={`/images/${images[0]}`}
+                <img
+                    src={resolveImg(images[0], true)}
                     alt={name}
                     className="w-full h-full object-cover object-center"
-                    width={200}
-                    height={200}
-                    quality={100}
                 />
                 <div
                     className="absolute top-0 right-0 w-full h-full md:bg-black/50 flex md:items-center md:justify-center justify-start items-end p-2 md:opacity-0 group-hover:opacity-100 duration-600"

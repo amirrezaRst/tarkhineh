@@ -6,11 +6,25 @@ import PanelSidebar from "./PanelSidebar";
 import useUserStore from "@/stores/useUserStore";
 import { branchNamesDic } from "@/constant/branchDictionary";
 import { setAvailability } from "@/services/CourierService";
+import AdminBell from "./AdminBell";
+import GlobalSearch from "./GlobalSearch";
 
 // Topbar title per route. The dashboard greets by name; sub-pages name the
 // section. Falls back to a neutral title for any unmapped panel route.
 const titleForPath = (pathname, name) => {
     const map = {
+        "/admin": name ? `خوش آمدید، ${name}` : "داشبورد کل",
+        "/admin/orders": "سفارش‌های سراسری",
+        "/admin/couriers": "پیک‌های سراسری",
+        "/admin/branches": "مدیریت شعبه‌ها",
+        "/admin/users": "کاربران و نقش‌ها",
+        "/admin/menu": "منوی کاتالوگ",
+        "/admin/finance": "مالی و پرداخت‌ها",
+        "/admin/promotions": "کوپن و تخفیف",
+        "/admin/reviews": "نظرات و امتیازها",
+        "/admin/customers": "تحلیل مشتریان",
+        "/admin/reports": "گزارشات و تحلیل کل",
+        "/admin/settings": "تنظیمات پلتفرم",
         "/panel/branch": name ? `خوش آمدید، ${name}` : "خوش آمدید",
         "/panel/branch/orders": "مدیریت سفارش‌ها",
         "/panel/branch/menu": "منوی شعبه",
@@ -138,6 +152,11 @@ const PanelLayout = ({ children }) => {
                     <div className="flex items-center gap-2.5 shrink-0">
                         {user.role === "courier" ? (
                             <CourierAvailabilityToggle />
+                        ) : user.role === "admin" ? (
+                            <>
+                                <GlobalSearch />
+                                <AdminBell />
+                            </>
                         ) : (
                             <>
                                 <StoreStatusPill />

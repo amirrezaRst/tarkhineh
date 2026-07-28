@@ -8,13 +8,16 @@ exports.getAllReviews = async (req, res) => {
     const skip = (page - 1) * limit;
 
     try {
-        const reviews = await Review.find({ menuItem: req.params.id })
-            .skip(skip)
-            .limit(limit)
+        // Only approved reviews are shown publicly (moderation gate).
+        const query = { menuItem: req.params.id, status: "approved" };
+        const [reviews, total] = await Promise.all([
+            Review.find(query).skip(skip).limit(limit),
+            Review.countDocuments(query),
+        ]);
         res.status(200).json({
             status: 200,
             message: "fetch review data successfully",
-            total: reviews.length,
+            total,
             reviews
         });
     }

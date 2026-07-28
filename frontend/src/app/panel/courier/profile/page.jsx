@@ -111,7 +111,7 @@ const CourierProfile = () => {
                             <h2 className="text-super-base font-extrabold">تحویل‌های این هفته</h2>
                             <div className="text-super-xs text-muted-fg">مجموع: <b className="tabular-nums">{PersianNumber(weekTotal)}</b></div>
                         </div>
-                        <BarChart data={weekData} height={110} />
+                        <BarChart data={weekData} height={110} formatValue={(v) => `${PersianNumber(v)} تحویل`} />
                     </Card>
                 </div>
             </div>

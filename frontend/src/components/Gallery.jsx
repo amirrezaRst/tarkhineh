@@ -1,4 +1,5 @@
 import { XmarkIcon } from "@/assets/Icons";
+import { resolveImg } from "@/utils/imageSrc";
 import GalleryImagesList from "./GalleryImagesList";
 
 const Gallery = ({ name, images, selectedImage, setSelectedImage, setIsOpen, isBranchGallery }) => {
@@ -11,7 +12,7 @@ const Gallery = ({ name, images, selectedImage, setSelectedImage, setIsOpen, isB
                 />
             }
             <img
-                src={isBranchGallery ? `/images/${images[selectedImage]}` : `${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[selectedImage]}`}
+                src={resolveImg(images[selectedImage], isBranchGallery)}
                 alt={`${name} ترخینه`}
                 className="w-full h-full object-center object-cover"
             />

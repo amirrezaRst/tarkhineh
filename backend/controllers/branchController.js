@@ -4,12 +4,22 @@ const Discount = require('../models/DiscountModel');
 const Review = require('../models/ReviewModel');
 
 
+// Current open/closed state from "HH:MM" hours (Asia/Tehran); null if unset.
+const isBranchOpen = (openTime, closeTime) => {
+    if (!openTime || !closeTime) return null;
+    const now = new Date().toLocaleTimeString("en-GB", { timeZone: "Asia/Tehran", hour12: false, hour: "2-digit", minute: "2-digit" });
+    const m = (s) => { const [h, mm] = s.split(":").map(Number); return h * 60 + mm; };
+    const o = m(openTime), c = m(closeTime), n = m(now);
+    return c > o ? (n >= o && n < c) : (n >= o || n < c);
+};
+
 //! Get Request
 //? Get all branches
 exports.getAllBranches = async (req, res) => {
     try {
-        const branches = await Branch.find().populate('manager', 'fullName email');
-        res.status(200).json({ status: 200, message: "fetch data successfully", branches });
+        const branches = await Branch.find().populate('manager', 'fullName email').lean();
+        const withState = branches.map((b) => ({ ...b, isOpen: isBranchOpen(b.openTime, b.closeTime) }));
+        res.status(200).json({ status: 200, message: "fetch data successfully", branches: withState });
     } catch (error) {
         res.status(500).json({ status: 500, message: "Error fetching branches.", error: error.message });
     }

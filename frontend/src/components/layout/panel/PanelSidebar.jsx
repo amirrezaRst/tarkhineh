@@ -1,6 +1,6 @@
 "use client";
 
-import { DashboardIcon, DeliveryIcon, DiagramIcon, FastFoodIcon, FastFoodMenuIcon, HistoryIcon, LogoutIcon, UserIcon, WalletMoneyIcon } from "@/assets/Icons";
+import { DashboardIcon, DeliveryIcon, DiagramIcon, DiscountIcon, FastFoodIcon, FastFoodMenuIcon, GearIcon, HistoryIcon, HomeIcon, LogoutIcon, StarIcon, UserHeartIcon, UserIcon, WalletMoneyIcon } from "@/assets/Icons";
 import useUserStore from "@/stores/useUserStore";
 import useCartStore from "@/stores/useCartStore";
 import { handleLogout } from "@/services/UserService";
@@ -12,13 +12,32 @@ import { usePathname, useRouter } from "next/navigation";
 // fill-current). Order within a group is by importance.
 const sidebarByRole = {
     admin: [
-        { section: null, items: [{ label: "داشبورد", href: "/admin", icon: DashboardIcon }] },
+        { section: null, items: [{ label: "داشبورد کل", href: "/admin", icon: DashboardIcon }] },
         {
-            section: "مدیریت", items: [
-                { label: "مدیریت رستوران‌ها", href: "/admin/restaurants", icon: FastFoodIcon },
-                { label: "گزارشات کلی", href: "/admin/reports", icon: DiagramIcon },
+            section: "نظارت", items: [
+                { label: "سفارش‌های سراسری", href: "/admin/orders", icon: FastFoodIcon },
+                { label: "پیک‌های سراسری", href: "/admin/couriers", icon: DeliveryIcon },
             ]
         },
+        {
+            section: "مدیریت", items: [
+                { label: "شعبه‌ها", href: "/admin/branches", icon: HomeIcon },
+                { label: "کاربران و نقش‌ها", href: "/admin/users", icon: UserIcon },
+                { label: "منوی کاتالوگ", href: "/admin/menu", icon: FastFoodMenuIcon },
+            ]
+        },
+        {
+            section: "تعامل", items: [
+                { label: "کوپن و تخفیف", href: "/admin/promotions", icon: DiscountIcon },
+                { label: "نظرات و امتیازها", href: "/admin/reviews", icon: StarIcon },
+            ]
+        },
+        { section: "مالی و تحلیل", items: [
+            { label: "مالی و پرداخت‌ها", href: "/admin/finance", icon: WalletMoneyIcon },
+            { label: "تحلیل مشتریان", href: "/admin/customers", icon: UserHeartIcon },
+            { label: "گزارشات کل", href: "/admin/reports", icon: DiagramIcon },
+        ] },
+        { section: "پیکربندی", items: [{ label: "تنظیمات پلتفرم", href: "/admin/settings", icon: GearIcon }] },
     ],
     branch_manager: [
         { section: null, items: [{ label: "داشبورد", href: "/panel/branch", icon: DashboardIcon }] },

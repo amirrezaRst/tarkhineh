@@ -25,11 +25,13 @@ const ReviewModel = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Branch'
     },
-    // status: {
-    //     type: String,
-    //     enum: ['pending', 'approved', 'rejected'],
-    //     default: 'pending'
-    // }
+    // Moderation: new reviews are hidden from the public site until an admin
+    // approves them, so offensive/abusive comments never surface unreviewed.
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Review', ReviewModel);
