@@ -4,10 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import DropdownMenu from "../DropdownMenu";
 import PreserveQueryLink from "@/hooks/PreserveQueryLink";
+import useBranches from "@/hooks/useBranches";
 
 
 const NavbarLinks = () => {
     const pathname = usePathname();
+    const branches = useBranches();
 
     const handleActive = (path) => {
         if (pathname === path) return "px-2 py-1 text-primary border-b-2 border-b-accent"
@@ -23,30 +25,15 @@ const NavbarLinks = () => {
 
                 <DropdownMenu handleActive={handleActive} text="شعبه ها" pathname={pathname} path="/branches">
                     <ul className="flex flex-col items-center text-foreground xl:text-base text-super-sm">
-                        <Link
-                            href={{ pathname: "/branches", query: { branch: "tehranpars" } }}
-                            className="w-full border-b border-b-border-subtle last:border-b-0 py-2.5"
-                        >
-                            <li>تهرانپارس</li>
-                        </Link>
-                        <Link
-                            href={{ pathname: "/branches", query: { branch: "chalous" } }}
-                            className="w-full border-b border-b-border-subtle last:border-b-0 py-2.5"
-                        >
-                            <li>چالوس</li>
-                        </Link>
-                        <Link
-                            href={{ pathname: "/branches", query: { branch: "aghdasiyeh" } }}
-                            className="w-full border-b border-b-border-subtle last:border-b-0 py-2.5"
-                        >
-                            <li>اقدسیه</li>
-                        </Link>
-                        <Link
-                            href={{ pathname: "/branches", query: { branch: "vanak" } }}
-                            className="w-full border-b border-b-border-subtle last:border-b-0 py-2.5"
-                        >
-                            <li>ونک</li>
-                        </Link>
+                        {(branches || []).map((b) => (
+                            <Link
+                                key={b.id}
+                                href={{ pathname: "/branches", query: { branch: b.id } }}
+                                className="w-full border-b border-b-border-subtle last:border-b-0 py-2.5"
+                            >
+                                <li>{b.name}</li>
+                            </Link>
+                        ))}
                     </ul>
                 </DropdownMenu>
 

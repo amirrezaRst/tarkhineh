@@ -2,17 +2,11 @@ import MenuCard from "@/components/branchesPage/MenuCard";
 import { fetchBranchPageItems } from "@/services/MenuService";
 import { useEffect, useState } from "react";
 
-const MenuSection = ({ title, branchId, category, ratingSort, bgColor = 'white' }) => {
+const MenuSection = ({ title, branchId, branchName, category, ratingSort, bgColor = 'white' }) => {
     const [items, setItems] = useState([]);
-    const [branchName, setBranchName] = useState(null);
 
     useEffect(() => {
         if (!branchId) return;
-        if (branchId == "675de19cf836156025ee8575") setBranchName("اقدسیه");
-        else if (branchId == "675f4c1655060567771c7884") setBranchName("تهرانپارس");
-        else if (branchId == "675f4bfe55060567771c7881") setBranchName("ونک");
-        else if (branchId == "675f4c3155060567771c7887") setBranchName("چالوس");
-
         const controller = new AbortController();
         fetchBranchPageItems(branchId, category, ratingSort, setItems, controller.signal);
         return () => controller.abort();

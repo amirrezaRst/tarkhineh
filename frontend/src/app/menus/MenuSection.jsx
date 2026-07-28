@@ -1,21 +1,9 @@
 import MenuCard from "@/components/menusPage/MenuCard";
 import { fetchMenuPageItems } from "@/services/MenuService";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const MenuSection = ({ title, category, foodType, isPersian }) => {
+const MenuSection = ({ title, branchId, category, foodType, isPersian }) => {
     const [items, setItems] = useState();
-    const [branchId, setBranchId] = useState(null)
-    const branch = useSearchParams().get("branch");
-
-    useEffect(() => {
-        if (branch) {
-            if (branch == "aghdasiyeh") setBranchId("675de19cf836156025ee8575");
-            else if (branch == "tehranpars") setBranchId("675f4c1655060567771c7884");
-            else if (branch == "vanak") setBranchId("675f4bfe55060567771c7881");
-            else if (branch == "chalous") setBranchId("675f4c3155060567771c7887");
-        }
-    }, [branch]);
 
     useEffect(() => {
         if (!branchId) return;

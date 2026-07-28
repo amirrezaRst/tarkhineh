@@ -1,18 +1,12 @@
+"use client";
+
 import { LocationIcon } from "@/assets/Icons";
 import useCartStore from "@/stores/useCartStore";
-import { branchList } from "@/constant/branchList";
-import { useEffect, useState } from "react";
+import useBranch from "@/hooks/useBranch";
 
 const BranchLocation = () => {
     const { deliveryType, cartBranch } = useCartStore();
-    const [branch, setBranch] = useState();
-
-    useEffect(() => {
-        const branch = branchList.find(item => item.id == cartBranch);
-        setBranch(branch);
-    }, [cartBranch, deliveryType])
-
-
+    const { branch } = useBranch(cartBranch);
 
     if (deliveryType == "person" && branch) return (
         <div className="flex gap-6 border border-border rounded-lg xl:px-9 px-4 xl:py-10 md:py-8 py-4">
@@ -25,23 +19,27 @@ const BranchLocation = () => {
                 <div className="space-y-3 text-super-sm text-muted-fg mt-8">
                     <p>{branch?.address}</p>
                     <p>شماره تماس: <span dir="ltr">{branch?.phone}</span></p>
-                    <p>ساعت کاری: همه‌روزه از ساعت ۱۲ تا ۲۳ بجز روزهای تعطیل</p>
+                    <p>ساعت کاری: {branch?.hoursLabel}</p>
                 </div>
 
-                <a href={branch?.map}>
-                    <button className="border border-muted-fg rounded text-muted-fg py-2 px-6 mt-6">
-                        مشاهده در نقشه
-                    </button>
-                </a>
+                {branch?.map &&
+                    <a href={branch.map} target="_blank" rel="noreferrer">
+                        <button className="border border-muted-fg rounded text-muted-fg py-2 px-6 mt-6">
+                            مشاهده در نقشه
+                        </button>
+                    </a>
+                }
             </div>
 
-            <iframe
-                src={branch?.largeMap}
-                className="flex-1 h-64 border border-border rounded"
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-            />
+            {branch?.largeMap &&
+                <iframe
+                    src={branch.largeMap}
+                    className="flex-1 h-64 border border-border rounded"
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                />
+            }
         </div>
     );
 };

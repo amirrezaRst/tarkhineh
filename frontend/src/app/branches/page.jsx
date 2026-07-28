@@ -5,22 +5,13 @@ import MenuSection from "./MenuSection";
 import AboutBranchSection from "./AboutBranchSection";
 import { useSearchParams } from "next/navigation";
 import CommentSection from "./CommentSection";
-import { useEffect, useState } from "react";
+import useBranch from "@/hooks/useBranch";
 
 
 
 const BranchesPage = () => {
     const branch = useSearchParams().get("branch");
-    const [branchId, setBranchId] = useState(null);
-
-    useEffect(() => {
-        if (branch) {
-            if (branch == "aghdasiyeh") setBranchId("675de19cf836156025ee8575");
-            else if (branch == "tehranpars") setBranchId("675f4c1655060567771c7884");
-            else if (branch == "vanak") setBranchId("675f4bfe55060567771c7881");
-            else if (branch == "chalous") setBranchId("675f4c3155060567771c7887");
-        }
-    }, [branch])
+    const { branchId, branch: info, status } = useBranch(branch);
 
 
     return (
@@ -29,46 +20,52 @@ const BranchesPage = () => {
             {/*//! Select Branch Section */}
             <SelectBranchSection branch={branch} href={"branches"} />
 
-            {branch ?
+            {branch && status === "not-found" &&
+                <p className="container text-center text-muted-fg py-16">
+                    شعبه‌ای با این مشخصات پیدا نشد.
+                </p>
+            }
+
+            {branchId && info ?
                 <>
                     {/*//! Branch Foods Section */}
-                    <MenuSection title="غذاهای" branchId={branchId} category={"main"} />
+                    <MenuSection title="غذاهای" branchId={branchId} branchName={info.name} category={"main"} />
 
                     {/*//! Popular Foods Section */}
-                    <MenuSection title="غذاهای محبوب" branchId={branchId} category={"main"} ratingSort bgColor="green" />
+                    <MenuSection title="غذاهای محبوب" branchId={branchId} branchName={info.name} category={"main"} ratingSort bgColor="green" />
 
 
 
                     {/*//! Branch Appetizers Section */}
-                    <MenuSection title="پیش غذاهای" branchId={branchId} category={"side"} />
+                    <MenuSection title="پیش غذاهای" branchId={branchId} branchName={info.name} category={"side"} />
 
                     {/*//! Popular Appetizers Section */}
-                    <MenuSection title="پیش غذاهای محبوب" branchId={branchId} category={"side"} ratingSort bgColor="green" />
+                    <MenuSection title="پیش غذاهای محبوب" branchId={branchId} branchName={info.name} category={"side"} ratingSort bgColor="green" />
 
 
 
                     {/*//! Branch Appetizers Section */}
-                    <MenuSection title="دسرهای" branchId={branchId} category={"dessert"} />
+                    <MenuSection title="دسرهای" branchId={branchId} branchName={info.name} category={"dessert"} />
 
                     {/*//! Popular Appetizers Section */}
-                    <MenuSection title="دسرهای محبوب" branchId={branchId} category={"dessert"} ratingSort bgColor="green" />
+                    <MenuSection title="دسرهای محبوب" branchId={branchId} branchName={info.name} category={"dessert"} ratingSort bgColor="green" />
 
 
 
                     {/*//! Branch Appetizers Section */}
-                    <MenuSection title="نوشیدنی های" branchId={branchId} category={"drink"} />
+                    <MenuSection title="نوشیدنی های" branchId={branchId} branchName={info.name} category={"drink"} />
 
                     {/*//! Popular Appetizers Section */}
-                    <MenuSection title="نوشیدنی های محبوب" branchId={branchId} category={"drink"} ratingSort bgColor="green" />
+                    <MenuSection title="نوشیدنی های محبوب" branchId={branchId} branchName={info.name} category={"drink"} ratingSort bgColor="green" />
 
 
 
                     {/*//! About Branch Section */}
-                    <AboutBranchSection branch={branch} />
+                    <AboutBranchSection info={info} />
 
 
                     {/*//! User Comments Section */}
-                    <CommentSection />
+                    <CommentSection branchId={branchId} />
                 </>
                 :
                 null
