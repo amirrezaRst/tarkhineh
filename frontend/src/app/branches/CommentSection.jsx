@@ -1,6 +1,21 @@
-import CommentCard from "@/components/branchesPage/CommentCard";
+"use client";
 
-const CommentSection = () => {
+import { useEffect, useState } from "react";
+import CommentCard from "@/components/branchesPage/CommentCard";
+import { fetchBranchReviews } from "@/services/MenuService";
+
+const CommentSection = ({ branchId }) => {
+    const [reviews, setReviews] = useState(null);
+
+    useEffect(() => {
+        if (!branchId) return;
+        const controller = new AbortController();
+        fetchBranchReviews(branchId, setReviews, controller.signal);
+        return () => controller.abort();
+    }, [branchId]);
+
+    if (reviews && reviews.length === 0) return null;
+
     return (
         <section
             className={`md:container md:py-20 py-12 mt-10 mb-5`}
@@ -9,15 +24,9 @@ const CommentSection = () => {
 
             {/*//! Comments List */}
             <div className="flex md:gap-8 gap-5 overflow-x-auto pb-2">
-
-                {
-                    [{ fullName: "آرزو محمدعلیزاده", profile: "/images/profile-1.jpg" },
-                    { fullName: "سردار وظیفه", profile: "/images/profile-2.jpg" },
-                    { fullName: "علی عسگری", profile: "/images/profile-3.jpg" }].map((item, index) =>
-                        <CommentCard key={index} {...item} />
-                    )
-                }
-
+                {(reviews || []).map((r) => (
+                    <CommentCard key={r._id} text={r.text} rating={r.rating} user={r.user} menuItem={r.menuItem} createdAt={r.createdAt} />
+                ))}
             </div>
 
         </section>
