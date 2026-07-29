@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const userModel = require("../models/UserModel");
 const { generateAccessToken, generateRefreshToken } = require("../utils/tokenUtils");
 const { setRefreshTokenCookie, setTokenCookie, clearAuthCookies } = require("../utils/cookieUtils");
+const { blockToken } = require("../utils/tokenBlocklist");
 
 //! Get Request
 exports.allUser = async (req, res) => {
@@ -177,7 +178,7 @@ exports.refreshToken = async (req, res) => {
 
 exports.logout = async (req, res) => {
     try {
-        const { refreshToken } = req.cookies;
+        const { refreshToken, token } = req.cookies;
 
         if (refreshToken) {
             try {
@@ -185,6 +186,19 @@ exports.logout = async (req, res) => {
                 await userModel.findByIdAndUpdate(decoded.id, { refreshToken: null });
             } catch (err) {
                 // token already invalid/expired - nothing to invalidate server-side
+            }
+        }
+
+        // The access token is still cryptographically valid for up to a day
+        // after this — clearing the cookie only stops the browser from
+        // sending it, it doesn't revoke it. Blocklisting it here is what
+        // actually makes logout take effect immediately.
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                await blockToken(token, decoded.exp);
+            } catch (err) {
+                // already invalid/expired - nothing to block
             }
         }
 
