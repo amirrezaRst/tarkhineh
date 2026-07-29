@@ -1,6 +1,7 @@
 import { MinusIcon, PlusIcon, TrashIcon } from "@/assets/Icons";
 import useCartStore from "@/stores/useCartStore";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
+import { Skeleton } from "@/components/Skeleton";
 import { useEffect, useState } from "react";
 
 const CartButton = ({ id, handleAddToCart, handleDecrease, setLoading, loading, disabled }) => {
@@ -32,7 +33,7 @@ const CartButton = ({ id, handleAddToCart, handleDecrease, setLoading, loading, 
     return (
         <>
             {quantity === null ?
-                <div className="w-full py-3" /> : quantity > 0 ? <div
+                <Skeleton className="w-full h-9 rounded-xl mt-4" /> : quantity > 0 ? <div
                     className="bg-primary-subtle w-full text-primary flex items-center justify-around rounded-xl mt-4 px-3"
                 >
 

@@ -276,7 +276,7 @@ const CartLayout = ({ children, cart, step, setStep, handler }) => {
                     onClick={step < 3 ? () => setStep(step + 1) : () => handler(finalAmount, finalDiscount)}
                 >
                     {loading ?
-                        "loading..." : step === 1 ?
+                        "در حال پردازش…" : step === 1 ?
                             <>
                                 تکمیل اطلاعات <ChevronIcon className="lg:w-6 lg:h-6 w-5 h-5 fill-primary-fg rotate-90" />
                             </> : step === 2 ?
