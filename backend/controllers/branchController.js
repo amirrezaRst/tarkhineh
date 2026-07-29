@@ -2,6 +2,8 @@ const Branch = require('../models/BranchModel');
 const UserModel = require('../models/UserModel');
 const Discount = require('../models/DiscountModel');
 const Review = require('../models/ReviewModel');
+const cache = require('../middleware/cacheMiddleware');
+const { branchesAllKey, branchByIdKey } = require('../utils/cacheKeys');
 
 
 // Current open/closed state from "HH:MM" hours (Asia/Tehran); null if unset.
@@ -230,6 +232,7 @@ exports.updateBranch = async (req, res) => {
         if (!updatedBranch) {
             return res.status(404).json({ status: 404, message: "Branch not found." });
         }
+        await cache.invalidate(branchesAllKey(), branchByIdKey(id));
         res.status(200).json({ status: 200, message: "Branch updated successfully.", branch: updatedBranch });
     } catch (error) {
         res.status(500).json({ status: 500, message: "Error updating branch.", error: error.message });
@@ -246,6 +249,7 @@ exports.deleteBranch = async (req, res) => {
         if (!deletedBranch) {
             return res.status(404).json({ status: 404, message: "Branch not found." });
         }
+        await cache.invalidate(branchesAllKey(), branchByIdKey(id));
         res.status(200).json({ status: 200, message: "Branch deleted successfully." });
     } catch (error) {
         res.status(500).json({ status: 500, message: "Error deleting branch.", error: error.message });

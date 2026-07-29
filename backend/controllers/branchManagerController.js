@@ -4,6 +4,8 @@ const Branch = require('../models/BranchModel');
 const Order = require('../models/OrderModel');
 const User = require('../models/UserModel');
 const { ROLES } = require('../config/roles');
+const cache = require('../middleware/cacheMiddleware');
+const { branchByIdKey } = require('../utils/cacheKeys');
 
 
 // Resolve a named date range (or explicit from/to) to a createdAt filter.
@@ -153,6 +155,8 @@ exports.toggleMenuAvailability = async (req, res) => {
         const update = available ? { $addToSet: { menus: menuId } } : { $pull: { menus: menuId } };
         const branch = await Branch.findByIdAndUpdate(branchId, update, { new: true }).select("menus");
         if (!branch) return res.status(404).json({ status: 404, message: "Branch not found" });
+
+        await cache.invalidate(branchByIdKey(branchId));
 
         res.status(200).json({
             status: 200,
