@@ -6,12 +6,13 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 
-const connectDb = require('./config/db');
-const { globalLimiter } = require('./middleware/rateLimiters');
-
 //! Config Env
+//! Must run before any local module is required — several of them (redis
+//! config, rate limiters) read process.env at import time.
 dotEnv.config({ path: './config/config.env' });
 
+const connectDb = require('./config/db');
+const { globalLimiter } = require('./middleware/rateLimiters');
 
 //! Connect to Database
 require('./config/redis');
