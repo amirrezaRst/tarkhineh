@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/utils/apiClient";
 import { toast } from "react-toastify";
 import Card from "@/components/panel/Card";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { deleteSlide, reorderSlides, updateSlide } from "@/services/AdminService";
 import { slideImg } from "../adminUtils";
 import { PlusIcon, EditIcon, TrashIcon, ChevronRightIcon } from "../icons";

@@ -9,7 +9,7 @@ import PersianNumber from "@/utils/ConvertToPersianNumber";
 import Card from "@/components/panel/Card";
 import MetricBar from "@/components/panel/MetricBar";
 import BarChart from "@/components/panel/charts/BarChart";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { Avatar, StatusPill, STATUS_META, branchImg } from "../../adminUtils";
 import { EditIcon, TrashIcon } from "../../icons";
 import { deleteBranch } from "@/services/AdminService";

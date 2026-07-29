@@ -8,7 +8,7 @@ import PersianNumber from "@/utils/ConvertToPersianNumber";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
 import Card from "@/components/panel/Card";
 import BarChart from "@/components/panel/charts/BarChart";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { setAvailability } from "@/services/CourierService";
 import { courierImg, initials, VEHICLE_LABEL } from "../../branch/couriers/courierUtils";
 

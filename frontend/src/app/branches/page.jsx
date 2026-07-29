@@ -10,7 +10,7 @@ import BranchMenu from "./BranchMenu";
 import CommentSection from "./CommentSection";
 import useBranch from "@/hooks/useBranch";
 import { fetchAllBranchItems } from "@/services/MenuService";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton, SkeletonMenuCardVertical } from "@/components/Skeleton";
 
 const BranchesPage = () => {
     const branch = useSearchParams().get("branch");
@@ -80,12 +80,28 @@ const HeroSkeleton = () => (
 );
 
 const MenuSkeleton = () => (
-    <div className="container md:pt-16 pt-12">
-        <Skeleton className="h-8 w-56 rounded-lg" />
-        <div className="grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5 mt-8">
-            {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-[330px] rounded-2xl" />)}
+    <>
+        {/* popular rail */}
+        <div className="container md:pt-16 pt-12">
+            <Skeleton className="h-7 w-52 mb-2" />
+            <Skeleton className="h-3 w-64 mb-6" />
+            <div className="flex gap-5 overflow-hidden">
+                {[0, 1, 2, 3].map((i) => <div key={i} className="w-[270px] shrink-0"><SkeletonMenuCardVertical /></div>)}
+            </div>
         </div>
-    </div>
+
+        {/* category tabs + grid */}
+        <div className="container md:pt-16 pt-12">
+            <Skeleton className="h-7 w-40 mb-2" />
+            <Skeleton className="h-3 w-32 mb-6" />
+            <div className="flex gap-6 mb-6">
+                {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-5 w-20" />)}
+            </div>
+            <div className="grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5">
+                {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <SkeletonMenuCardVertical key={i} />)}
+            </div>
+        </div>
+    </>
 );
 
 export default BranchesPage;

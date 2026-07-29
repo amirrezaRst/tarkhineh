@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { branchNamesDic } from "@/constant/branchDictionary";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
-import { SkeletonOrderRow } from "@/components/panel/Skeleton";
+import { SkeletonOrderRow } from "@/components/Skeleton";
 import OrderCard from "./OrderCard";
 import OrderDetail from "./OrderDetail";
 

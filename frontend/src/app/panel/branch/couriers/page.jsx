@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { branchNamesDic } from "@/constant/branchDictionary";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { setCourierCapacity } from "@/services/BranchManagerService";
 import CourierCard from "./CourierCard";
 import AddCourierModal from "./AddCourierModal";

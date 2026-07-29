@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import Card from "@/components/panel/Card";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { Avatar, RolePill, ROLE_META, faDate } from "../adminUtils";
 import { deleteUser } from "@/services/AdminService";
 import { SwapIcon, TrashIcon } from "../icons";

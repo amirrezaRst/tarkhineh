@@ -8,7 +8,7 @@ import FormatPrice from "@/utils/FormatPrice";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import Card from "@/components/panel/Card";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { Avatar, branchImg } from "../adminUtils";
 import { PlusIcon, PinIcon, ClockIcon, ImageIcon } from "../icons";
 import BranchFormModal from "./BranchFormModal";

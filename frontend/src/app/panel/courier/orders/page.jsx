@@ -5,7 +5,7 @@ import { api } from "@/utils/apiClient";
 import { toast } from "react-toastify";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
-import { Skeleton, SkeletonOrderRow } from "@/components/panel/Skeleton";
+import { Skeleton, SkeletonOrderRow } from "@/components/Skeleton";
 import DeliveryCard from "../DeliveryCard";
 import CompleteDeliveryModal from "../CompleteDeliveryModal";
 import { LedgerCard, AvailabilityControl } from "../courierWidgets";

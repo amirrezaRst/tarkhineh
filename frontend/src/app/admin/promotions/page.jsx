@@ -7,7 +7,7 @@ import FormatPrice from "@/utils/FormatPrice";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import Card from "@/components/panel/Card";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { CAT_LABEL, faDate } from "../adminUtils";
 import { deleteCoupon, deleteDiscount } from "@/services/AdminService";
 import { EditIcon, TrashIcon, PlusIcon } from "../icons";

@@ -9,7 +9,7 @@ import Card from "@/components/panel/Card";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
 import BarChart from "@/components/panel/charts/BarChart";
 import InteractiveTrendChart from "@/components/panel/charts/InteractiveTrendChart";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 
 const PERIODS = [{ key: "today", label: "امروز" }, { key: "week", label: "هفته" }, { key: "month", label: "ماه" }];
 const STATUS = [

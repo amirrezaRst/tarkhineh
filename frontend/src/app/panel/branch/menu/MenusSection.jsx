@@ -8,7 +8,7 @@ import { branchNamesDic } from "@/constant/branchDictionary";
 import { toggleMenuAvailability } from "@/services/BranchManagerService";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
 import MetricBar from "@/components/panel/MetricBar";
-import { SkeletonMenuCard } from "@/components/panel/Skeleton";
+import { SkeletonMenuCard } from "@/components/Skeleton";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import MenuCard from "./MenuCard";
 
