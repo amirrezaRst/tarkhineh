@@ -7,6 +7,7 @@ import FormatPrice from "@/utils/FormatPrice";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import { StatusPill } from "@/app/admin/adminUtils";
 import { SearchIcon, BagIcon, PersonIcon, HomeMiniIcon, CloseIcon } from "@/app/admin/icons";
+import { SkeletonSearchRow } from "@/components/Skeleton";
 
 const faTime = (d) => new Date(d).toLocaleDateString("fa-IR", { month: "short", day: "numeric" });
 
@@ -73,7 +74,7 @@ const GlobalSearch = () => {
             {showPanel && (
                 <div className="absolute left-0 mt-2 w-72 sm:w-96 bg-surface border border-border rounded-2xl shadow-soft-lg z-50 overflow-hidden stagger-in">
                     <div className="max-h-[65vh] overflow-y-auto">
-                        {loading && <div className="text-super-sm text-muted-fg text-center py-8">در حال جستجو…</div>}
+                        {loading && <div className="py-2">{[0, 1, 2].map((i) => <SkeletonSearchRow key={i} />)}</div>}
                         {!loading && data && !hasResults && <div className="text-super-sm text-muted-fg text-center py-8">نتیجه‌ای برای «{q.trim()}» یافت نشد.</div>}
 
                         {!loading && data?.branches?.length > 0 && (

@@ -9,7 +9,7 @@ import FormatPrice from "@/utils/FormatPrice";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import Card from "@/components/panel/Card";
 import OrderStatusBadge from "@/components/panel/OrderStatusBadge";
-import { SkeletonOrderRow } from "@/components/panel/Skeleton";
+import { Skeleton, SkeletonLight, SkeletonOrderRow } from "@/components/Skeleton";
 import AreaChart from "@/components/panel/charts/AreaChart";
 import Donut from "@/components/panel/charts/Donut";
 import BarChart from "@/components/panel/charts/BarChart";
@@ -89,7 +89,9 @@ const BranchPanel = () => {
                     <div className="relative">
                         <p className="text-white/75 text-super-sm">درآمد امروز</p>
                         <p className="text-4.5xl font-extrabold tabular-nums leading-tight mt-1.5">
-                            {loading ? "—" : FormatPrice(stats?.revenue ?? 0)}
+                            {loading
+                                ? <SkeletonLight className="inline-block h-9 w-28 align-middle" />
+                                : FormatPrice(stats?.revenue ?? 0)}
                             <span className="text-base font-medium text-white/80 mr-2">تومان</span>
                         </p>
                         <div className="flex items-center gap-2.5 mt-2">
@@ -111,7 +113,7 @@ const BranchPanel = () => {
                         {!loading && <Trend value={stats?.trends?.orders} />}
                     </div>
                     <div>
-                        <div className="text-[27px] font-extrabold leading-none tabular-nums">{loading ? "—" : PersianNumber(stats?.ordersCount ?? 0)}</div>
+                        <div className="text-[27px] font-extrabold leading-none tabular-nums">{loading ? <Skeleton className="inline-block h-6 w-14" /> : PersianNumber(stats?.ordersCount ?? 0)}</div>
                         <div className="text-super-xs text-muted-fg mt-1.5">سفارش‌های امروز</div>
                     </div>
                 </div>
@@ -126,7 +128,7 @@ const BranchPanel = () => {
                     </div>
                     <div>
                         <div className="text-[23px] font-extrabold leading-none tabular-nums">
-                            {loading ? "—" : FormatPrice(stats?.avgBasket ?? 0)} <span className="text-xs font-semibold text-muted-fg">ت</span>
+                            {loading ? <Skeleton className="inline-block h-6 w-16" /> : <>{FormatPrice(stats?.avgBasket ?? 0)} <span className="text-xs font-semibold text-muted-fg">ت</span></>}
                         </div>
                         <div className="text-super-xs text-muted-fg mt-1.5">میانگین سبد خرید</div>
                     </div>
@@ -148,16 +150,16 @@ const BranchPanel = () => {
                     </div>
                     <div className="flex items-end justify-between">
                         <div>
-                            <div className="text-[27px] font-extrabold leading-none tabular-nums">{loading ? "—" : PersianNumber(stats?.activeOrders ?? 0)}</div>
+                            <div className="text-[27px] font-extrabold leading-none tabular-nums">{loading ? <Skeleton className="inline-block h-6 w-14" /> : PersianNumber(stats?.activeOrders ?? 0)}</div>
                             <div className="text-super-xs text-muted-fg mt-1.5">سفارش‌های در جریان</div>
                         </div>
                         <div className="flex gap-3.5 text-center">
                             <div>
-                                <div className="font-extrabold tabular-nums">{loading ? "—" : PersianNumber(stats?.activeBreakdown?.pending ?? 0)}</div>
+                                <div className="font-extrabold tabular-nums">{loading ? <Skeleton className="inline-block h-4 w-6" /> : PersianNumber(stats?.activeBreakdown?.pending ?? 0)}</div>
                                 <div className="text-[11px] text-muted-fg">در انتظار</div>
                             </div>
                             <div>
-                                <div className="font-extrabold tabular-nums">{loading ? "—" : PersianNumber(stats?.activeBreakdown?.on_the_way ?? 0)}</div>
+                                <div className="font-extrabold tabular-nums">{loading ? <Skeleton className="inline-block h-4 w-6" /> : PersianNumber(stats?.activeBreakdown?.on_the_way ?? 0)}</div>
                                 <div className="text-[11px] text-muted-fg">در حال ارسال</div>
                             </div>
                         </div>
