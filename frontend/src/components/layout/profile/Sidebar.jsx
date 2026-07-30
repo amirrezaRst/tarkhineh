@@ -1,3 +1,5 @@
+"use client";
+
 import UserInfo from './UserInfo';
 import SidebarNav from './SidebarNav';
 import useUserStore from '@/stores/useUserStore';

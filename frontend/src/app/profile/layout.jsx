@@ -1,12 +1,14 @@
-"use client";
-
 import Sidebar from "@/components/layout/profile/Sidebar";
-import { usePathname } from "next/navigation";
+import ProfileHeading from "./ProfileHeading";
 
+// Private, per-user account pages — nothing here is meaningful outside the
+// logged-in owner's own session.
+export const metadata = {
+    title: "حساب کاربری",
+    robots: { index: false, follow: false },
+};
 
 const ProfileLayout = ({ children }) => {
-    const pathname = usePathname();
-
     return (
         <>
             <div
@@ -19,18 +21,7 @@ const ProfileLayout = ({ children }) => {
                     className="min-h-[70vh] lg:col-span-9 md:col-span-10 col-span-full md:-order-1 -order-2 border border-border rounded-lg md:p-6 px-4 py-5"
                 >
 
-                    <h2 className="md:text-1.5xl text-xl text-foreground font-medium pb-3 border-b border-b-border/60">
-                        {pathname === "/profile" ?
-                            "پروفایل من" :
-                            pathname === "/profile/orders" ?
-                                "پیگیری سفارشات" :
-                                pathname === "/profile/interests" ?
-                                    "علاقمندی‌ها" :
-                                    pathname === "/profile/address" ?
-                                        "آدرس های من" : null
-                        }
-
-                    </h2>
+                    <ProfileHeading />
 
                     <main className="pt-6 md:pb-16 pb-14">
 

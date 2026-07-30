@@ -3,6 +3,11 @@ import HeaderBanner from "@/components/HeaderBanner";
 import AccordionList from "@/components/AccordionList";
 import { PrivacyList } from "@/constant/privacyList";
 
+export const metadata = {
+    title: "حریم شخصی کاربران",
+    description: "سیاست حریم خصوصی ترخینه: نحوه‌ی گردآوری، استفاده و محافظت از اطلاعات کاربران.",
+};
+
 const RulesPage = () => {
     return (
         <>
