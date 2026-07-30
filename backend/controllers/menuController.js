@@ -1,7 +1,18 @@
 const Menu = require('../models/MenuModel');
+const Branch = require('../models/BranchModel');
 const Discount = require('../models/DiscountModel');
 const uploadImage = require('../utils/upload');
 const { createMenuValidation } = require('../validation/menuValidation');
+const cache = require('../middleware/cacheMiddleware');
+const { branchByIdKey } = require('../utils/cacheKeys');
+
+// A menu item doesn't know its own branch(es) — Branch.menus is the only link
+// — so a write has to look them up before it can invalidate the right
+// per-branch cache entries.
+const invalidateBranchesForMenuItem = async (menuItemId) => {
+    const branches = await Branch.find({ menus: menuItemId }).select('_id');
+    await cache.invalidate(branches.map((b) => branchByIdKey(b._id)));
+};
 
 const upload = uploadImage({
     fieldName: "images", // نام فیلد فایل‌ها در درخواست
@@ -75,6 +86,7 @@ exports.updateMenuItem = [upload, createMenuValidation, async (req, res) => {
             return res.status(404).json({ status: 404, message: "Menu item not found." });
         }
 
+        await invalidateBranchesForMenuItem(req.params.id);
         res.status(200).json({ status: 200, message: "Menu item updated successfully.", menuItem: updatedMenuItem });
     } catch (error) {
         console.error(error);
@@ -90,6 +102,7 @@ exports.deleteMenuItem = async (req, res) => {
         if (!deletedMenuItem) {
             return res.status(404).json({ status: 404, message: "Menu item not found." });
         }
+        await invalidateBranchesForMenuItem(req.params.id);
         res.status(200).json({ status: 200, message: "Menu item deleted successfully." });
     } catch (error) {
         console.error(error);

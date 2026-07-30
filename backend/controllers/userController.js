@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const userModel = require("../models/UserModel");
 const { generateAccessToken, generateRefreshToken } = require("../utils/tokenUtils");
 const { setRefreshTokenCookie, setTokenCookie, clearAuthCookies } = require("../utils/cookieUtils");
+const { blockToken } = require("../utils/tokenBlocklist");
+const otpStore = require("../utils/otpStore");
 
 //! Get Request
 exports.allUser = async (req, res) => {
@@ -66,14 +68,21 @@ exports.registerUser = async (req, res) => {
     try {
         const user = await userModel.findOne({ phoneNumber }).select("phoneNumber");
 
-        const otpCode = Math.floor(10000 + Math.random() * 90000);
+        const otpCode = Math.floor(10000 + Math.random() * 90000).toString();
         //! it is necessary to add the SMS sending module here
 
-        if (user) {
-            user.otpCode = otpCode.toString();
-            user.otpExpires = Date.now() + 10 * 60 * 1000; //! 10 minutes
+        const useRedis = otpStore.otpBackedByRedis();
+        if (useRedis) {
+            await otpStore.setOtp(phoneNumber, otpCode);
+        }
+        //! 10 minutes — only written to Mongo when Redis isn't available to hold it
+        const otpFields = useRedis ? {} : { otpCode, otpExpires: Date.now() + 10 * 60 * 1000 };
 
-            await user.save();
+        if (user) {
+            if (!useRedis) {
+                Object.assign(user, otpFields);
+                await user.save();
+            }
             return res.status(200).json({
                 status: 200,
                 message: "OTP sent",
@@ -83,8 +92,7 @@ exports.registerUser = async (req, res) => {
             const newUser = new userModel({
                 phoneNumber,
                 email: null,
-                otpCode: otpCode.toString(),
-                otpExpires: Date.now() + 10 * 60 * 1000, //! 10 minutes
+                ...otpFields,
             });
 
             await newUser.save();
@@ -106,13 +114,20 @@ exports.verifyOtp = async (req, res) => {
             return res.status(404).json({ status: 404, message: "User not found" });
         }
 
-        if (user.otpCode !== otpCode || user.otpExpires < Date.now()) {
-            return res.status(403).json({ status: 403, message: "Invalid or expired OTP" });
+        if (otpStore.otpBackedByRedis()) {
+            const storedCode = await otpStore.getOtp(phoneNumber);
+            if (!storedCode || storedCode !== otpCode) {
+                return res.status(403).json({ status: 403, message: "Invalid or expired OTP" });
+            }
+            await otpStore.clearOtp(phoneNumber); //! single-use
+        } else {
+            if (user.otpCode !== otpCode || user.otpExpires < Date.now()) {
+                return res.status(403).json({ status: 403, message: "Invalid or expired OTP" });
+            }
+            //! remove the OTP code and expiry date from the user
+            user.otpCode = undefined;
+            user.otpExpires = undefined;
         }
-
-        //! remove the OTP code and expiry date from the user
-        user.otpCode = undefined;
-        user.otpExpires = undefined;
 
         const tokenData = {
             id: user._id,
@@ -177,7 +192,7 @@ exports.refreshToken = async (req, res) => {
 
 exports.logout = async (req, res) => {
     try {
-        const { refreshToken } = req.cookies;
+        const { refreshToken, token } = req.cookies;
 
         if (refreshToken) {
             try {
@@ -185,6 +200,19 @@ exports.logout = async (req, res) => {
                 await userModel.findByIdAndUpdate(decoded.id, { refreshToken: null });
             } catch (err) {
                 // token already invalid/expired - nothing to invalidate server-side
+            }
+        }
+
+        // The access token is still cryptographically valid for up to a day
+        // after this — clearing the cookie only stops the browser from
+        // sending it, it doesn't revoke it. Blocklisting it here is what
+        // actually makes logout take effect immediately.
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                await blockToken(token, decoded.exp);
+            } catch (err) {
+                // already invalid/expired - nothing to block
             }
         }
 
