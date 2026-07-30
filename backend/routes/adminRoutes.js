@@ -15,17 +15,23 @@ const Authenticate = require('../middleware/Authenticate');
 const Authorize = require('../middleware/Authorize');
 const { ROLES } = require('../config/roles');
 const uploadImage = require('../utils/upload');
+const cache = require('../middleware/cacheMiddleware');
+const { adminOverviewKey, adminReportsKey, adminFinanceKey, adminActivityKey } = require('../utils/cacheKeys');
 
 const router = express.Router();
 const adminOnly = [Authenticate, Authorize([ROLES.ADMIN])];
 const branchPhotos = uploadImage({ fieldName: "images", fileSize: 5000000, destination: '../public/branch-images/', width: 1000, height: 700, quality: 78, maxCount: 6 });
 const slidePhoto = uploadImage({ fieldName: "images", fileSize: 5000000, destination: '../public/slide-images/', width: 1600, height: 600, quality: 80, maxCount: 1 });
 
-router.get("/overview", adminOnly, getOverview);
+// Short TTLs, no invalidation (see cacheKeys.js) — these are cross-collection
+// aggregates with "live-ish" figures (today's order status, the activity
+// feed), so the cache window is kept small enough that new activity shows up
+// promptly rather than exactly-invalidated.
+router.get("/overview", adminOnly, cache(30, adminOverviewKey), getOverview);
 router.get("/search", adminOnly, getSearch);
-router.get("/reports", adminOnly, getReports);
+router.get("/reports", adminOnly, cache(45, (req) => adminReportsKey(req.query.period || "month")), getReports);
 router.get("/customers", adminOnly, getCustomers);
-router.get("/activity", adminOnly, getActivity);
+router.get("/activity", adminOnly, cache(15, adminActivityKey), getActivity);
 router.get("/settings", adminOnly, getSettings);
 router.patch("/settings", adminOnly, updateSettings);
 
@@ -46,7 +52,7 @@ router.delete("/branches/:id", adminOnly, deleteBranch);
 router.get("/orders", adminOnly, getOrders);
 router.patch("/orders/:id/cancel", adminOnly, cancelOrder);
 router.get("/couriers", adminOnly, getCouriers);
-router.get("/finance", adminOnly, getFinance);
+router.get("/finance", adminOnly, cache(45, (req) => adminFinanceKey(req.query.period || "month")), getFinance);
 router.patch("/orders/:id/refund", adminOnly, refundOrder);
 
 router.get("/coupons", adminOnly, getCoupons);

@@ -15,3 +15,13 @@ exports.branchItemsKey = (id, query = {}) => {
 };
 
 exports.branchStatsKey = (branchId, period) => `cache:branch-stats:${branchId}:${period}`;
+
+// Admin dashboard endpoints. Each aggregates across the whole Order/User/
+// Review collection with no single write path that would be practical to
+// invalidate on (any order status change, any new review, anywhere, could
+// affect these) — so these rely on TTL alone rather than invalidation, same
+// tradeoff as branchItemsKey above.
+exports.adminOverviewKey = () => 'cache:admin:overview';
+exports.adminReportsKey = (period) => `cache:admin:reports:${period}`;
+exports.adminFinanceKey = (period) => `cache:admin:finance:${period}`;
+exports.adminActivityKey = () => 'cache:admin:activity';
