@@ -3,6 +3,10 @@ import HeaderBanner from "@/components/HeaderBanner";
 import AccordionList from "@/components/AccordionList";
 import { RulesList } from "@/constant/rulesList";
 
+export const metadata = {
+    title: "قوانین و مقررات",
+    description: "قوانین سفارش، حداقل سفارش، فاصله تحویل و مقررات استفاده از خدمات ترخینه.",
+};
 
 const RulesPage = () => {
     return (

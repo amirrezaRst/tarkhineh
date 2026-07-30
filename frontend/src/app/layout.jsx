@@ -4,9 +4,37 @@ import MainLayout from "@/components/layout/MainLayout";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/Skeleton";
 
+const siteName = "ترخینه";
+const siteDescription = "ترخینه، سفارش آنلاین غذای سالم و گیاهی از نزدیک‌ترین شعبه به شما.";
+
 export const metadata = {
-  title: "ترخینه | سفارش آنلاین غذای سالم و گیاهی",
-  description: "ترخینه، سفارش آنلاین غذای سالم و گیاهی از نزدیک‌ترین شعبه به شما.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"),
+  title: {
+    default: `${siteName} | سفارش آنلاین غذای سالم و گیاهی`,
+    // A page-level `export const metadata = { title: "..." }` gets this
+    // appended automatically, so pages only need their own specific part.
+    template: `%s | ${siteName}`,
+  },
+  description: siteDescription,
+  keywords: ["ترخینه", "سفارش غذا", "غذای سالم", "غذای گیاهی", "رستوران زنجیره‌ای", "سفارش آنلاین غذا"],
+  openGraph: {
+    // images intentionally omitted — Next picks up app/opengraph-image.png
+    // automatically via the file convention.
+    type: "website",
+    locale: "fa_IR",
+    siteName,
+    title: siteName,
+    description: siteDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteName,
+    description: siteDescription,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 const vazir = Vazirmatn({ subsets: ["arabic"] });
