@@ -6,6 +6,7 @@ const Discount = require('../models/DiscountModel');
 const Coupon = require('../models/CouponModel');
 const ZarinpalCheckout = require("zarinpal-checkout");
 const { ROLES, STAFF_ROLES } = require('../config/roles');
+const { acquireOrderLock, releaseOrderLock } = require('../utils/orderLock');
 
 const zarinpal = ZarinpalCheckout.create(
     process.env.ZARINPAL_MERCHANT_ID,
@@ -97,8 +98,14 @@ exports.getOrdersByUser = async (req, res) => {
 
 //! Post Request
 exports.createOrder = async (req, res) => {
+    const user = req.user.id;
+
+    const gotLock = await acquireOrderLock(user);
+    if (!gotLock) {
+        return res.status(409).json({ status: 409, message: "درخواست سفارش شما در حال پردازش است، لطفا چند لحظه صبر کنید." });
+    }
+
     try {
-        const user = req.user.id;
         const { deliveryType, deliveryAddress, paymentMethod, customerNote, couponCode } = req.body;
 
         //! Validate user
@@ -236,6 +243,8 @@ exports.createOrder = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ status: 500, message: "Error creating order", error: error.message });
+    } finally {
+        await releaseOrderLock(user);
     }
 };
 
