@@ -48,7 +48,7 @@ const RegisterForm = ({ setPage, setIsOpen, setPhoneNumber }) => {
                 type="submit"
                 disabled={loading}
             >
-                ادامه
+                {loading ? "در حال ارسال کد…" : "ادامه"}
             </button>
 
             <p className="text-sm text-foreground">

@@ -20,7 +20,7 @@ const AddressPage = ({ cartPage, selectedAddress, setSelectedAddress }) => {
                     <div
                         className="grid lg:grid-cols-2 xl:gap-7 lg:gap-3.5 gap-5 mt-4"
                     >
-                        <AddressCardSkeleton />
+                        {[0, 1].map((i) => <AddressCardSkeleton key={i} />)}
                     </div>
                 ) :
                 user?.addresses?.length === 0 ?

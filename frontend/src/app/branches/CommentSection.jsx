@@ -5,6 +5,7 @@ import CommentCard from "@/components/branchesPage/CommentCard";
 import { fetchBranchReviews } from "@/services/MenuService";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import { StarIcon, OutlineStarIcon } from "@/assets/Icons";
+import { Skeleton, SkeletonCommentCard } from "@/components/Skeleton";
 
 const CommentSection = ({ branchId }) => {
     const [reviews, setReviews] = useState(null);
@@ -24,9 +25,10 @@ const CommentSection = ({ branchId }) => {
         return { avg: (sum / reviews.length).toFixed(1), dist, total: reviews.length };
     }, [reviews]);
 
-    // Nothing to show while loading, and the whole section disappears when the
-    // branch genuinely has no approved reviews yet.
-    if (!reviews || reviews.length === 0) return null;
+    // The whole section disappears once we know the branch genuinely has no
+    // approved reviews — but while that's still unknown (reviews === null),
+    // show a skeleton instead of nothing.
+    if (reviews && reviews.length === 0) return null;
 
     return (
         <section className="container md:py-20 py-12">
@@ -35,6 +37,19 @@ const CommentSection = ({ branchId }) => {
                 تجربهٔ کسانی که از این شعبه سفارش داده‌اند
             </p>
 
+            {reviews === null &&
+                <div className="grid lg:grid-cols-[260px_1fr] gap-6 items-start">
+                    <div className="bg-surface border border-border rounded-2xl shadow-soft p-6 text-center space-y-3">
+                        <Skeleton className="h-10 w-16 mx-auto" />
+                        <Skeleton className="h-3 w-32 mx-auto" />
+                    </div>
+                    <div className="grid gap-3.5">
+                        {[0, 1, 2].map((i) => <SkeletonCommentCard key={i} />)}
+                    </div>
+                </div>
+            }
+
+            {reviews &&
             <div className="grid lg:grid-cols-[260px_1fr] gap-6 items-start">
                 {summary &&
                     <div className="bg-surface border border-border rounded-2xl shadow-soft p-6 text-center">
@@ -76,6 +91,7 @@ const CommentSection = ({ branchId }) => {
                     ))}
                 </div>
             </div>
+            }
         </section>
     );
 }

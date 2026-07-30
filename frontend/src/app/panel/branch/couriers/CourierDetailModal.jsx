@@ -8,7 +8,7 @@ import FormatPrice from "@/utils/FormatPrice";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import BarChart from "@/components/panel/charts/BarChart";
 import OrderStatusBadge from "@/components/panel/OrderStatusBadge";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { updateCourier, deleteCourier } from "@/services/BranchManagerService";
 import CourierAvatar from "./CourierAvatar";
 import { VEHICLE_LABEL, courierState, STATE_META } from "./courierUtils";

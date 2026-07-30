@@ -263,6 +263,62 @@
 
 
 /* ==========================================================================
+   Skeleton loading — a light sweep across a `--surface-sunken` base, instead
+   of a flat opacity pulse. Every skeleton in the app (public site + panels)
+   is built from the `.skeleton` primitive in components/Skeleton.jsx, which
+   applies this class; nothing should hand-roll `animate-pulse` + a hardcoded
+   grey any more. Token-driven, so it re-themes for free under `.dark`.
+   ========================================================================== */
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton {
+    background-color: hsl(var(--surface-sunken));
+    background-image: linear-gradient(100deg,
+            hsl(var(--surface-raised) / 0) 35%,
+            hsl(var(--surface-raised) / 0.8) 50%,
+            hsl(var(--surface-raised) / 0) 65%);
+    background-size: 250% 100%;
+    animation: skeleton-shimmer 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skeleton {
+        animation: none;
+        background-image: none;
+    }
+}
+
+/* Same shimmer, but for a skeleton sitting directly on a dark/tinted surface
+   (e.g. the branch dashboard's gradient hero tile) where `--surface-sunken`
+   wouldn't read against the background. White-based instead of token-based
+   on purpose — it's always drawn on a dark, colour-agnostic surface. */
+.skeleton-light {
+    background-color: rgba(255, 255, 255, 0.15);
+    background-image: linear-gradient(100deg,
+            rgba(255, 255, 255, 0) 35%,
+            rgba(255, 255, 255, 0.35) 50%,
+            rgba(255, 255, 255, 0) 65%);
+    background-size: 250% 100%;
+    animation: skeleton-shimmer 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skeleton-light {
+        animation: none;
+        background-image: none;
+    }
+}
+
+
+/* ==========================================================================
    Hero slider — slow Ken-Burns zoom on the active slide's background, paired
    with an opacity crossfade handled inline via Tailwind transition classes.
    ========================================================================== */

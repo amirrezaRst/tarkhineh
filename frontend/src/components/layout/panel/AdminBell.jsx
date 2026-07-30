@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { api } from "@/utils/apiClient";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import { BagIcon, PersonIcon, ReviewStarIcon } from "@/app/admin/icons";
+import { SkeletonActivityRow } from "@/components/Skeleton";
 
 const POLL_MS = 45000;
 const relative = (t) => {
@@ -71,7 +72,9 @@ const AdminBell = () => {
 
                     {/* body — independently scrollable */}
                     <div className="min-h-0 flex-1 overflow-y-auto">
-                        {events.length === 0 ? (
+                        {data === null ? (
+                            [0, 1, 2, 3].map((i) => <SkeletonActivityRow key={i} />)
+                        ) : events.length === 0 ? (
                             <p className="text-super-sm text-muted-fg text-center py-10">فعالیتی نیست.</p>
                         ) : events.map((e, i) => {
                             const Icon = TYPE_ICON[e.type] || BagIcon;

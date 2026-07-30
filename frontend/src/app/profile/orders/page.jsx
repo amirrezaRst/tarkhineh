@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import OrderCard from "./OrderCard";
+import OrderCardSkeleton from "./OrderCardSkeleton";
 import OrderCategories from "./OrderCategories";
 import useUserStore from "@/stores/useUserStore";
 import { api } from "@/utils/apiClient";
@@ -94,15 +95,15 @@ const OrdersPage = () => {
             </div>
 
             <section className="space-y-8 md:mt-14 mt-10">
-                {loading && <p className="text-center text-gray-500">در حال بارگذاری...</p>}
+                {loading && [0, 1, 2].map((i) => <OrderCardSkeleton key={i} />)}
 
-                {getVisibleOrders().length > 0 ? (
+                {!loading && (getVisibleOrders().length > 0 ? (
                     getVisibleOrders().map((order) => (
                         <OrderCard key={order._id} {...order} onStatusUpdate={() => fetchOrders(category)} />
                     ))
                 ) : (
-                    !loading && <p className="text-center text-gray-400">سفارشی پیدا نشد.</p>
-                )}
+                    <p className="text-center text-muted-fg">سفارشی پیدا نشد.</p>
+                ))}
             </section>
         </>
     );

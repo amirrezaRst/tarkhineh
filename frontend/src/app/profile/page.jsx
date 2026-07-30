@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useUserStore from "@/stores/useUserStore";
 import { handleEditUser } from "@/services/UserService";
+import { Skeleton } from "@/components/Skeleton";
 
 const ProfilePage = () => {
     const [isEdit, setIsEdit] = useState(false);
@@ -64,10 +65,7 @@ const ProfilePage = () => {
                     className="grid md:grid-cols-2 gap-x-4 md:gap-y-5 gap-y-4"
                 >
                     {[...Array(4)].map((_, index) => (
-                        <div
-                            key={index}
-                            className={`animate-pulse bg-subtle-fg py-[0.57rem] px-4 rounded-md md:text-base text-super-sm h-12`}
-                        />
+                        <Skeleton key={index} className="h-12 rounded-md" />
                     ))}
                 </div>
             }

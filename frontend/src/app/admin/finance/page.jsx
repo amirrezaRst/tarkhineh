@@ -9,7 +9,7 @@ import Card from "@/components/panel/Card";
 import MetricBar from "@/components/panel/MetricBar";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
 import Donut from "@/components/panel/charts/Donut";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { PAYMENT_LABEL } from "../adminUtils";
 import { refundOrder } from "@/services/AdminService";
 

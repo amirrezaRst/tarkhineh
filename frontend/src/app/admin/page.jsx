@@ -10,7 +10,7 @@ import MetricBar from "@/components/panel/MetricBar";
 import StatHeroLedger from "@/components/panel/StatHeroLedger";
 import InteractiveTrendChart from "@/components/panel/charts/InteractiveTrendChart";
 import Donut from "@/components/panel/charts/Donut";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { RolePill } from "./adminUtils";
 
 const STATUS = [

@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import Card from "@/components/panel/Card";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { updateSettings } from "@/services/AdminService";
 import SlidesManager from "./SlidesManager";
 

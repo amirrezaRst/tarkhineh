@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import FormatPrice from "@/utils/FormatPrice";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import MetricBar from "@/components/panel/MetricBar";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import DeliveryCard from "./DeliveryCard";
 import CompleteDeliveryModal from "./CompleteDeliveryModal";
 import { LedgerCard, AvailabilityControl } from "./courierWidgets";

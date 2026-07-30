@@ -2,6 +2,7 @@
 
 import BranchCard from "@/components/branchesPage/BranchCard";
 import useBranches from "@/hooks/useBranches";
+import { SkeletonBranchCard } from "@/components/Skeleton";
 
 const SelectBranchSection = ({ branch, href }) => {
     const branches = useBranches();
@@ -15,9 +16,12 @@ const SelectBranchSection = ({ branch, href }) => {
 
             {/* //! Branches List */}
             <div className="grid xl:grid-cols-4 md:grid-cols-2 xl:gap-7 md:gap-10 gap-5 md:mt-11 mt-5">
-                {(branches || []).map((b) => (
-                    <BranchCard key={b.id} imageSrc={b.images[0]} name={b.name} address={b.address} href={href} path={b.id} isOpen={b.isOpen} />
-                ))}
+                {branches === null
+                    ? [0, 1, 2, 3].map((i) => <SkeletonBranchCard key={i} />)
+                    : branches.map((b) => (
+                        <BranchCard key={b.id} imageSrc={b.images[0]} name={b.name} address={b.address} href={href} path={b.id} isOpen={b.isOpen} />
+                    ))
+                }
             </div>
 
         </section>

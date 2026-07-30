@@ -7,6 +7,7 @@ import FormatPrice from "@/utils/FormatPrice";
 import { fetchMenuReviews } from "@/services/MenuService";
 import ModalGallery from "./ModalGallery";
 import CartButton from "../menusPage/CartButton";
+import { Skeleton } from "@/components/Skeleton";
 
 const CAT_LABEL = { main: "غذای اصلی", side: "پیش‌غذا", dessert: "دسر", drink: "نوشیدنی" };
 const FOOD_TYPE_LABEL = { iranian: "ایرانی", "non-iranian": "غیرایرانی", pizza: "پیتزا", sandwich: "ساندویچ" };
@@ -209,7 +210,20 @@ const InfoPanel = ({ description, ingredients }) => (
 );
 
 const ReviewsPanel = ({ list, total, page, pages, busy, dist, onMore }) => {
-    if (busy && !list.length) return <p className="text-center text-muted-fg text-super-sm py-10">در حال بارگذاری نظرات…</p>;
+    if (busy && !list.length) return (
+        <div className="py-3.5">
+            {[0, 1, 2].map((i) => (
+                <div key={i} className="flex gap-3 py-3.5 border-b border-border last:border-b-0">
+                    <Skeleton className="shrink-0 w-9 h-9 rounded-full" />
+                    <div className="min-w-0 flex-1 space-y-2">
+                        <Skeleton className="h-3 w-24" />
+                        <Skeleton className="h-3 w-full" />
+                        <Skeleton className="h-3 w-2/3" />
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
 
     if (!list.length) return (
         <div className="text-center py-10 px-3">

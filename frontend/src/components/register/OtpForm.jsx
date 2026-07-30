@@ -63,7 +63,7 @@ const OtpForm = ({ setPage, phoneNumber, setPhoneNumber, setIsOpen }) => {
                 type="submit"
                 disabled={loading}
             >
-                ثبت کد
+                {loading ? "در حال بررسی کد…" : "ثبت کد"}
             </button>
         </form>
     );

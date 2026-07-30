@@ -13,7 +13,7 @@ import StatHeroLedger from "@/components/panel/StatHeroLedger";
 import Donut from "@/components/panel/charts/Donut";
 import BarChart from "@/components/panel/charts/BarChart";
 import InteractiveTrendChart from "@/components/panel/charts/InteractiveTrendChart";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { courierImg, initials } from "../couriers/courierUtils";
 
 const CAT_LABEL = { main: "غذای اصلی", side: "پیش‌غذا", dessert: "دسر", drink: "نوشیدنی" };
@@ -167,24 +167,33 @@ const BranchPanelReports = () => {
 
                 <Card className={cardCls}>
                     <div className="mb-4"><h2 className="text-super-base font-extrabold">وضعیت سفارش‌ها</h2><p className="text-super-xs text-muted-fg mt-0.5">این بازه · برای دیدن سفارش‌ها کلیک کنید</p></div>
-                    <div className="flex items-center gap-4">
-                        <Donut segments={donutSegments} centerValue={PersianNumber(donutTotal)} centerLabel="سفارش" onSegmentClick={(s) => openOrders(s.key)} />
-                        <div className="flex-1 flex flex-col gap-1">
-                            {STATUS_SEGMENTS.filter((s) => (stats?.statusBreakdown?.[s.key] || 0) > 0 || donutTotal === 0).map((s) => {
-                                const v = stats?.statusBreakdown?.[s.key] || 0;
-                                const pct = donutTotal ? Math.round((v / donutTotal) * 100) : 0;
-                                return (
-                                    <button key={s.key} onClick={() => openOrders(s.key)} disabled={v === 0}
-                                        className="flex items-center gap-2.5 text-super-sm rounded-lg px-2 py-1.5 -mx-2 hover:bg-surface-sunken transition-colors disabled:opacity-60 disabled:hover:bg-transparent">
-                                        <span className="w-2.5 h-2.5 rounded-[3px]" style={{ background: s.color }} />
-                                        <span className="text-muted-fg">{s.label}</span>
-                                        <span className="mr-auto font-extrabold tabular-nums">{PersianNumber(pct)}٪</span>
-                                        {v > 0 && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-subtle-fg"><path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
-                                    </button>
-                                );
-                            })}
+                    {loading ? (
+                        <div className="flex items-center gap-4">
+                            <Skeleton className="h-32 w-32 rounded-full shrink-0" />
+                            <div className="flex-1 space-y-2.5">
+                                {[0, 1, 2].map((i) => <Skeleton key={i} className="h-5 w-full" />)}
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="flex items-center gap-4">
+                            <Donut segments={donutSegments} centerValue={PersianNumber(donutTotal)} centerLabel="سفارش" onSegmentClick={(s) => openOrders(s.key)} />
+                            <div className="flex-1 flex flex-col gap-1">
+                                {STATUS_SEGMENTS.filter((s) => (stats?.statusBreakdown?.[s.key] || 0) > 0 || donutTotal === 0).map((s) => {
+                                    const v = stats?.statusBreakdown?.[s.key] || 0;
+                                    const pct = donutTotal ? Math.round((v / donutTotal) * 100) : 0;
+                                    return (
+                                        <button key={s.key} onClick={() => openOrders(s.key)} disabled={v === 0}
+                                            className="flex items-center gap-2.5 text-super-sm rounded-lg px-2 py-1.5 -mx-2 hover:bg-surface-sunken transition-colors disabled:opacity-60 disabled:hover:bg-transparent">
+                                            <span className="w-2.5 h-2.5 rounded-[3px]" style={{ background: s.color }} />
+                                            <span className="text-muted-fg">{s.label}</span>
+                                            <span className="mr-auto font-extrabold tabular-nums">{PersianNumber(pct)}٪</span>
+                                            {v > 0 && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-subtle-fg"><path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
                 </Card>
             </div>
 
@@ -192,7 +201,9 @@ const BranchPanelReports = () => {
             <div className="grid lg:grid-cols-2 gap-4">
                 <Card className={cardCls}>
                     <div className="mb-4"><h2 className="text-super-base font-extrabold">پرفروش‌ترین آیتم‌ها</h2><p className="text-super-xs text-muted-fg mt-0.5">بر اساس تعداد فروش</p></div>
-                    {(stats?.topItems?.length ?? 0) === 0 ? (
+                    {loading ? (
+                        <div className="flex flex-col gap-3">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-6 w-full" />)}</div>
+                    ) : (stats?.topItems?.length ?? 0) === 0 ? (
                         <p className="text-muted-fg text-super-sm py-4">در این بازه فروشی ثبت نشده است.</p>
                     ) : (
                         <div className="flex flex-col gap-3">
@@ -211,13 +222,15 @@ const BranchPanelReports = () => {
 
                 <Card className={cardCls}>
                     <div className="mb-4"><h2 className="text-super-base font-extrabold">فروش بر اساس روز هفته</h2><p className="text-super-xs text-muted-fg mt-0.5">۷ روز گذشته</p></div>
-                    <BarChart data={weekdayData} formatValue={(v) => `${FormatPrice(v)} تومان`} />
+                    {loading ? <Skeleton className="h-[150px] rounded-xl" /> : <BarChart data={weekdayData} formatValue={(v) => `${FormatPrice(v)} تومان`} />}
                     <div className="mt-5">
                         <div className="text-super-sm font-bold mb-2">تفکیک روش پرداخت</div>
-                        <div className="flex h-3.5 rounded-full overflow-hidden bg-surface-sunken">
-                            <div className="bg-primary" style={{ width: `${onlinePct}%` }} />
-                            <div className="bg-warning" style={{ width: `${cashPct}%` }} />
-                        </div>
+                        {loading ? <Skeleton className="h-3.5 rounded-full" /> : (
+                            <div className="flex h-3.5 rounded-full overflow-hidden bg-surface-sunken">
+                                <div className="bg-primary" style={{ width: `${onlinePct}%` }} />
+                                <div className="bg-warning" style={{ width: `${cashPct}%` }} />
+                            </div>
+                        )}
                         <div className="flex gap-4 mt-2 text-super-xs">
                             <span className="inline-flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-primary" /> آنلاین {PersianNumber(onlinePct)}٪</span>
                             <span className="inline-flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-warning" /> نقدی {PersianNumber(cashPct)}٪</span>
@@ -230,16 +243,20 @@ const BranchPanelReports = () => {
             <div className="grid lg:grid-cols-[1.7fr_1fr] gap-4 mt-4">
                 <Card className={cardCls}>
                     <div className="mb-4"><h2 className="text-super-base font-extrabold">ساعات پرترافیک</h2><p className="text-super-xs text-muted-fg mt-0.5">تعداد سفارش بر اساس ساعت — این بازه</p></div>
-                    <BarChart data={peakData} formatValue={(v) => `${PersianNumber(v)} سفارش`} />
+                    {loading ? <Skeleton className="h-[150px] rounded-xl" /> : <BarChart data={peakData} formatValue={(v) => `${PersianNumber(v)} سفارش`} />}
                 </Card>
 
                 <Card className={cardCls}>
                     <div className="mb-4"><h2 className="text-super-base font-extrabold">زمان آماده‌سازی و تحویل</h2><p className="text-super-xs text-muted-fg mt-0.5">میانگین در این بازه</p></div>
-                    <div className="flex flex-col gap-2.5">
-                        <TimingRow icon="check" label="زمان تایید سفارش" value={faMin(timings.accept)} tone="primary" />
-                        <TimingRow icon="truck" label="زمان تحویل توسط پیک" value={faMin(timings.delivery)} tone="info" />
-                        <TimingRow icon="clock" label="کل زمان انجام سفارش" value={faMin(timings.fulfillment)} tone="warning" />
-                    </div>
+                    {loading ? (
+                        <div className="flex flex-col gap-2.5">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-[52px] rounded-xl" />)}</div>
+                    ) : (
+                        <div className="flex flex-col gap-2.5">
+                            <TimingRow icon="check" label="زمان تایید سفارش" value={faMin(timings.accept)} tone="primary" />
+                            <TimingRow icon="truck" label="زمان تحویل توسط پیک" value={faMin(timings.delivery)} tone="info" />
+                            <TimingRow icon="clock" label="کل زمان انجام سفارش" value={faMin(timings.fulfillment)} tone="warning" />
+                        </div>
+                    )}
                 </Card>
             </div>
 
@@ -247,7 +264,9 @@ const BranchPanelReports = () => {
             <div className="grid lg:grid-cols-2 gap-4 mt-4">
                 <Card className={cardCls}>
                     <div className="mb-4"><h2 className="text-super-base font-extrabold">عملکرد پیک‌ها</h2><p className="text-super-xs text-muted-fg mt-0.5">برترین‌ها بر اساس تعداد تحویل</p></div>
-                    {courierPerf.length === 0 ? (
+                    {loading ? (
+                        <div className="flex flex-col gap-2.5">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-9 w-full" />)}</div>
+                    ) : courierPerf.length === 0 ? (
                         <p className="text-muted-fg text-super-sm py-4">در این بازه تحویلی توسط پیک ثبت نشده است.</p>
                     ) : (
                         <div className="flex flex-col gap-2.5">
@@ -273,7 +292,9 @@ const BranchPanelReports = () => {
 
                 <Card className={cardCls}>
                     <div className="mb-4"><h2 className="text-super-base font-extrabold">فروش بر اساس دسته‌بندی</h2><p className="text-super-xs text-muted-fg mt-0.5">سهم هر دسته از فروش این بازه</p></div>
-                    {salesByCat.length === 0 ? (
+                    {loading ? (
+                        <div className="flex flex-col gap-3.5">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-6 w-full" />)}</div>
+                    ) : salesByCat.length === 0 ? (
                         <p className="text-muted-fg text-super-sm py-4">در این بازه فروشی ثبت نشده است.</p>
                     ) : (
                         <div className="flex flex-col gap-3.5">

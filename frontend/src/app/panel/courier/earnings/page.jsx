@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import FormatPrice from "@/utils/FormatPrice";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import Card from "@/components/panel/Card";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { LedgerCard, WeekBarsCard } from "../courierWidgets";
 import { shortId, faTime, faDate } from "../courierClientUtils";
 

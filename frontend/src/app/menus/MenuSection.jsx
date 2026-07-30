@@ -1,12 +1,14 @@
 import MenuCard from "@/components/menusPage/MenuCard";
 import { fetchMenuPageItems } from "@/services/MenuService";
 import { useEffect, useState } from "react";
+import { SkeletonMenuCard } from "@/components/Skeleton";
 
 const MenuSection = ({ title, branchId, category, foodType, isPersian }) => {
     const [items, setItems] = useState();
 
     useEffect(() => {
         if (!branchId) return;
+        setItems(undefined); // back to skeleton on branch/category change
         const controller = new AbortController();
         fetchMenuPageItems(branchId, category, foodType, isPersian, setItems, controller.signal);
         return () => controller.abort();
@@ -22,6 +24,8 @@ const MenuSection = ({ title, branchId, category, foodType, isPersian }) => {
             </h2>
 
             <article className="grid lg:grid-cols-2 xl:gap-8 lg:gap-3.5 gap-6 md:mt-10 mt-3.5">
+
+                {items === undefined && [0, 1].map((i) => <SkeletonMenuCard key={i} />)}
 
                 {items?.length > 0 && items?.map((item, index) => (
                     <MenuCard key={index} {...item} branch={branchId && branchId} />

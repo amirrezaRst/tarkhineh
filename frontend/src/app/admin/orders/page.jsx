@@ -8,7 +8,7 @@ import FormatPrice from "@/utils/FormatPrice";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import Card from "@/components/panel/Card";
 import PanelPageHeader from "@/components/panel/PanelPageHeader";
-import { Skeleton } from "@/components/panel/Skeleton";
+import { Skeleton } from "@/components/Skeleton";
 import { StatusPill } from "../adminUtils";
 import OrderDetailModal from "./OrderDetailModal";
 
