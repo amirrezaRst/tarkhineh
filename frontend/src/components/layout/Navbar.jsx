@@ -63,7 +63,7 @@ const Navbar = () => {
                     </div>
                     <div onClick={!user ? () => setIsModalOpen(true) : null}>
                         <PreserveQueryLink href={user ? "/profile" : ""} onClick={!user ? () => setIsModalOpen(true) : null}>
-                            <button className="bg-primary-subtle rounded-md p-2">
+                            <button className="bg-primary-subtle rounded-md p-2" aria-label={user ? "پروفایل من" : "ورود / ثبت‌نام"}>
                                 <UserIcon className="fill-primary max-xl:w-5 max-xl:h-5" />
                             </button>
                         </PreserveQueryLink>

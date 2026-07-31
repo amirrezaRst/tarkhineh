@@ -1,13 +1,16 @@
 import { toast } from "react-toastify";
 import { api } from "@/utils/apiClient";
 
-export const handleRegister = async (data, setPage, setPhoneNumber, setLoading, setError) => {
+export const handleRegister = async (data, setPage, setPhoneNumber, setLoading, setError, setDemoOtpCode) => {
     setLoading(true);
     setPhoneNumber(data['phone-number']);
 
     try {
-        await api.post("/user/register", { phoneNumber: data['phone-number'] });
+        const res = await api.post("/user/register", { phoneNumber: data['phone-number'] });
         setPage(1);
+        // Only present when the backend's DEMO_MODE is on (no real SMS
+        // provider — see userController.registerUser).
+        setDemoOtpCode?.(res.otpCode ?? null);
         toast.success("کد تایید به شماره موبایل شما ارسال شد.");
     } catch (err) {
         if (err.status === 409) {

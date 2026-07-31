@@ -69,7 +69,11 @@ exports.registerUser = async (req, res) => {
         const user = await userModel.findOne({ phoneNumber }).select("phoneNumber");
 
         const otpCode = Math.floor(10000 + Math.random() * 90000).toString();
-        //! it is necessary to add the SMS sending module here
+        //! No SMS provider is wired up — this is a portfolio project with no
+        //! real users, so DEMO_MODE returns the code in the response itself
+        //! instead of pretending to text it. Off by default; only meant for
+        //! a public demo deployment, never a real product.
+        const demoMode = process.env.DEMO_MODE === 'true';
 
         const useRedis = otpStore.otpBackedByRedis();
         if (useRedis) {
@@ -86,7 +90,8 @@ exports.registerUser = async (req, res) => {
             return res.status(200).json({
                 status: 200,
                 message: "OTP sent",
-                user: { _id: user._id, phoneNumber: user.phoneNumber }
+                user: { _id: user._id, phoneNumber: user.phoneNumber },
+                ...(demoMode && { otpCode }),
             });
         } else {
             const newUser = new userModel({
@@ -96,7 +101,12 @@ exports.registerUser = async (req, res) => {
             });
 
             await newUser.save();
-            return res.status(201).json({ status: 201, message: "User created and OTP sent", user: newUser });
+            return res.status(201).json({
+                status: 201,
+                message: "User created and OTP sent",
+                user: newUser,
+                ...(demoMode && { otpCode }),
+            });
         }
     }
     catch (error) {

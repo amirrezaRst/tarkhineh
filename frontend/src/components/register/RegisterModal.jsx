@@ -10,6 +10,10 @@ const RegisterModal = ({ setIsOpen }) => {
 
     const [page, setPage] = useState(0);
     const [phoneNumber, setPhoneNumber] = useState('');
+    // Only ever set when the backend's DEMO_MODE is on — see
+    // userController.registerUser. No real SMS provider is wired up (this
+    // is a portfolio project), so the code is shown here instead.
+    const [demoOtpCode, setDemoOtpCode] = useState(null);
 
     return (
         <div
@@ -44,11 +48,21 @@ const RegisterModal = ({ setIsOpen }) => {
             </p>
 
 
+            {page === 1 && demoOtpCode &&
+                <div className="text-right bg-primary-subtle border border-primary/30 rounded-lg px-4 py-3 mb-4">
+                    <p className="text-primary text-super-sm font-medium mb-0.5">حالت دمو — بدون پیامک واقعی</p>
+                    <p className="text-foreground text-sm">
+                        کد تایید شما: <span className="font-bold tracking-widest">{ConvertToPersianNumbers(demoOtpCode)}</span>
+                    </p>
+                </div>
+            }
+
             {page === 0 ? <>
                 <RegisterForm
                     setPage={setPage}
                     setIsOpen={setIsOpen}
                     setPhoneNumber={setPhoneNumber}
+                    setDemoOtpCode={setDemoOtpCode}
                 />
             </> :
                 <OtpForm
@@ -56,6 +70,7 @@ const RegisterModal = ({ setIsOpen }) => {
                     phoneNumber={phoneNumber}
                     setPhoneNumber={setPhoneNumber}
                     setIsOpen={setIsOpen}
+                    setDemoOtpCode={setDemoOtpCode}
                 />
             }
 
