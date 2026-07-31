@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { handleRegister } from "@/services/UserService";
 
-const RegisterForm = ({ setPage, setIsOpen, setPhoneNumber }) => {
+const RegisterForm = ({ setPage, setIsOpen, setPhoneNumber, setDemoOtpCode }) => {
     const { register, handleSubmit, formState: { errors }, setError } = useForm();
     const [loading, setLoading] = useState(false);
 
@@ -15,7 +15,7 @@ const RegisterForm = ({ setPage, setIsOpen, setPhoneNumber }) => {
         <form
             className="text-right"
             onSubmit={
-                handleSubmit((data) => handleRegister(data, setPage, setPhoneNumber, setLoading, setError))
+                handleSubmit((data) => handleRegister(data, setPage, setPhoneNumber, setLoading, setError, setDemoOtpCode))
             }
         >
 

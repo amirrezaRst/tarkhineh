@@ -7,7 +7,7 @@ import FormatTime from "@/utils/FormatTime";
 import { handleRegister, handleSendOtp } from "@/services/UserService";
 import useCartStore from "@/stores/useCartStore";
 
-const OtpForm = ({ setPage, phoneNumber, setPhoneNumber, setIsOpen }) => {
+const OtpForm = ({ setPage, phoneNumber, setPhoneNumber, setIsOpen, setDemoOtpCode }) => {
     const [otp, setOtp] = useState();
     const [error, setError] = useState({});
     const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ const OtpForm = ({ setPage, phoneNumber, setPhoneNumber, setIsOpen }) => {
                             className="cursor-pointer"
                             onClick={() => {
                                 setTimer(120);
-                                handleRegister({ "phone-number": phoneNumber }, setPage, setPhoneNumber, setLoading, setError)
+                                handleRegister({ "phone-number": phoneNumber }, setPage, setPhoneNumber, setLoading, setError, setDemoOtpCode)
                             }}
                         >
                             ارسال کد مجدد
