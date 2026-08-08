@@ -25,7 +25,7 @@ const MainLayout = ({ children }) => {
                 </>
             )}
 
-            {children}
+            {isPanelRoute ? children : <main>{children}</main>}
 
             {!isPanelRoute && <Footer />}
 

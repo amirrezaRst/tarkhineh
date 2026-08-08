@@ -269,28 +269,37 @@
    applies this class; nothing should hand-roll `animate-pulse` + a hardcoded
    grey any more. Token-driven, so it re-themes for free under `.dark`.
    ========================================================================== */
+/* Animates `transform` (GPU-composited, no per-frame repaint) instead of
+   `background-position` (the original approach — visually identical, but
+   Lighthouse's "avoid non-composited animations" flags it since it forces a
+   repaint every frame). The sweeping highlight is now a ::after overlay
+   that translates across the element rather than a sliding background. */
 @keyframes skeleton-shimmer {
-    0% {
-        background-position: 200% 0;
-    }
-
     100% {
-        background-position: -200% 0;
+        transform: translateX(100%);
     }
 }
 
 .skeleton {
+    position: relative;
+    overflow: hidden;
     background-color: hsl(var(--surface-sunken));
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
     background-image: linear-gradient(100deg,
             hsl(var(--surface-raised) / 0) 35%,
             hsl(var(--surface-raised) / 0.8) 50%,
             hsl(var(--surface-raised) / 0) 65%);
-    background-size: 250% 100%;
     animation: skeleton-shimmer 2.2s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .skeleton {
+    .skeleton::after {
         animation: none;
         background-image: none;
     }
@@ -301,17 +310,25 @@
    wouldn't read against the background. White-based instead of token-based
    on purpose — it's always drawn on a dark, colour-agnostic surface. */
 .skeleton-light {
+    position: relative;
+    overflow: hidden;
     background-color: rgba(255, 255, 255, 0.15);
+}
+
+.skeleton-light::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
     background-image: linear-gradient(100deg,
             rgba(255, 255, 255, 0) 35%,
             rgba(255, 255, 255, 0.35) 50%,
             rgba(255, 255, 255, 0) 65%);
-    background-size: 250% 100%;
     animation: skeleton-shimmer 2.2s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .skeleton-light {
+    .skeleton-light::after {
         animation: none;
         background-image: none;
     }
