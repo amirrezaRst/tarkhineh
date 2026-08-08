@@ -1,0 +1,61 @@
+name: Deploy Tarkhineh
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: backend
+        run: npm test
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Deploy to server
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          SSH_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" | base64 -d > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # TODO: this only opens a connection and closes it — no command runs
+          # on the remote host, so nothing on the server actually updates.
+          # Needs a real remote command, e.g.:
+          #   ssh -o StrictHostKeyChecking=accept-new -i ~/.ssh/deploy_key deploy@$SSH_HOST \
+          #     'cd /path/to/tarkhineh && git pull && cd backend && npm ci && cd ../frontend && npm ci --legacy-peer-deps && npm run build && pm2 restart tarkhineh-backend tarkhineh-frontend'
+          # Left as-is (matching what was given) until confirmed what should
+          # actually run on the server.
+          ssh -o StrictHostKeyChecking=accept-new -i ~/.ssh/deploy_key deploy@$SSH_HOST
