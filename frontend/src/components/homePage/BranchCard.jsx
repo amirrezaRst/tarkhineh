@@ -19,6 +19,8 @@ const BranchCard = ({ images, name, address, path, isOpen: branchIsOpen }) => {
                 <img
                     src={resolveImg(images[0], true)}
                     alt={name}
+                    width={600}
+                    height={400}
                     className="w-full h-full object-cover object-center"
                 />
                 <div
@@ -27,6 +29,7 @@ const BranchCard = ({ images, name, address, path, isOpen: branchIsOpen }) => {
                 >
                     <button
                         className="md:w-16 md:h-16 w-11 h-11 md:bg-white/20 hover:md:bg-white/30 bg-black/30 hover:bg-black/40 rounded-full flex items-center justify-center duration-300"
+                        aria-label={`نمایش گالری تصاویر ${name}`}
                     >
                         <GalleryIcon className="md:w-8 md:h-8 w-7 h-7" />
                     </button>

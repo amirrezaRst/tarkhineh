@@ -46,11 +46,11 @@ const HeaderSearch = () => {
                         placeholder="جستجو در منو..."
                         className="bg-transparent px-3 h-full w-48 text-super-sm focus:outline-none"
                     />
-                    <button type="button" onClick={() => setOpen(false)} className="p-2">
+                    <button type="button" onClick={() => setOpen(false)} className="p-2" aria-label="بستن جستجو">
                         <XmarkIcon className="w-4 h-4 fill-primary" />
                     </button>
                 </form> :
-                <button onClick={() => setOpen(true)} className="bg-primary-subtle rounded-md p-2">
+                <button onClick={() => setOpen(true)} className="bg-primary-subtle rounded-md p-2" aria-label="جستجو">
                     <SearchIcon className="fill-primary max-xl:w-5 max-xl:h-5" />
                 </button>
             }

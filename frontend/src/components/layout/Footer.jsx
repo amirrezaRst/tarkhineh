@@ -20,26 +20,29 @@ const Footer = () => {
 
                     {/*//TODO Links */}
                     <div>
-                        <h6 className="text-white md:text-lg font-semibold mb-6">
+                        <h5 className="text-white md:text-lg font-semibold mb-6">
                             دسترسی آسان
-                        </h6>
+                        </h5>
                         <ul className="space-y-4 text-border-subtle md:text-super-sm text-sm font-light">
                             <li><PreserveQueryLink href="/faq">پرسش های متداول</PreserveQueryLink></li>
                             <li><PreserveQueryLink href="/rules">قوانین ترخینه</PreserveQueryLink></li>
                             <li><PreserveQueryLink href="/privacy">حریم خصوصی</PreserveQueryLink></li>
-                            <div className="flex items-center gap-5 text-border-subtle/60">
-                                <TwitterIcon />
-                                <InstagramIcon />
-                                <TelegramIcon />
-                            </div>
                         </ul>
+                        {/* Not list items — a <div> as a direct child of <ul> is
+                            invalid list markup (Lighthouse a11y flagged this).
+                            mt-4 keeps the same gap the list's own space-y-4 gave it. */}
+                        <div className="flex items-center gap-5 text-border-subtle/60 mt-4">
+                            <TwitterIcon />
+                            <InstagramIcon />
+                            <TelegramIcon />
+                        </div>
                     </div>
 
                     {/*//TODO Links */}
                     <div>
-                        <h6 className="text-white md:text-lg font-semibold mb-6">
+                        <h5 className="text-white md:text-lg font-semibold mb-6">
                             شعبه های ترخینه
-                        </h6>
+                        </h5>
                         <ul className="space-y-4 text-border-subtle md:text-super-sm text-sm font-light">
                             {(branches || []).map((b) => (
                                 <li key={b.id}>
@@ -53,9 +56,9 @@ const Footer = () => {
 
                 {/*//TODO Left Side */}
                 <div className="">
-                    <h6 className="text-white lg:text-2.5xl text-1.5xl font-semibold mb-7">
+                    <h5 className="text-white lg:text-2.5xl text-1.5xl font-semibold mb-7">
                         پیام به ترخینه
-                    </h6>
+                    </h5>
 
                     <ContactForm />
 

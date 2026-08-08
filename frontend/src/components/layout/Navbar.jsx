@@ -37,12 +37,12 @@ const Navbar = () => {
         <header className="sticky top-0 bg-white z-10 lg:border-b border-b-primary-subtle lg:shadow-none shadow">
             <div className="container flex items-center justify-between md:py-3.5 py-4.5">
 
-                <button className="lg:hidden block">
+                <button className="lg:hidden block" aria-label="منوی موبایل">
                     <MenuIcon className="fill-primary w-7 h-7" />
                 </button>
 
                 <Link href="/">
-                    <img src="/images/logo.png" alt="تریخینه لوگو" className="xl:w-[160px] md:w-[140px] w-32" />
+                    <img src="/images/logo.png" alt="تریخینه لوگو" width={310} height={102} className="xl:w-[160px] md:w-[140px] w-32" />
                 </Link>
 
                 <NavbarLinks />
@@ -51,7 +51,7 @@ const Navbar = () => {
                     <HeaderSearch />
                     <div onClick={!user ? () => setIsModalOpen(true) : null}>
                         <PreserveQueryLink href={user ? "/cart" : ""}>
-                            <button className="relative bg-primary-subtle rounded-md p-2">
+                            <button className="relative bg-primary-subtle rounded-md p-2" aria-label="سبد خرید">
                                 <ShoppingCartIcon className="fill-primary max-xl:w-5 max-xl:h-5" />
                                 <span
                                     className={`w-5 h-5 rounded-full bg-primary absolute -top-1.5 -right-1.5 text-white text-super-xs ${!cart || cart?.length === 0 ? "opacity-0" : "opacity-100"}`}
@@ -72,7 +72,7 @@ const Navbar = () => {
 
             </div>
 
-            <ModalContainer isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
+            <ModalContainer isOpen={isModalOpen} setIsOpen={setIsModalOpen} ariaLabel="ورود / ثبت‌نام">
 
                 <RegisterModal setIsOpen={setIsModalOpen} />
 

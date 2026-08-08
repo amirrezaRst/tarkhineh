@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Overlay from "./Overlay";
 
-const ModalContainer = ({ children, isOpen, setIsOpen }) => {
+const ModalContainer = ({ children, isOpen, setIsOpen, ariaLabel }) => {
     const [show, setShow] = useState(isOpen);
     const [mounted, setMounted] = useState(false);
 
@@ -33,7 +33,7 @@ const ModalContainer = ({ children, isOpen, setIsOpen }) => {
     // rather than the viewport, so any animated or transformed wrapper up the
     // tree would otherwise trap the modal inside itself.
     return createPortal(
-        <Overlay show={show} setIsOpen={setIsOpen}>
+        <Overlay show={show} setIsOpen={setIsOpen} ariaLabel={ariaLabel}>
             <div onClick={(e) => e.stopPropagation()}>
                 {children}
             </div>

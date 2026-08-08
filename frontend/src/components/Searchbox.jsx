@@ -28,7 +28,7 @@ const Searchbox = () => {
                     placeholder="جستجو در منو..."
                     className="w-full h-full bg-transparent px-4 text-foreground placeholder:text-foreground focus:ring-0 focus:outline-none"
                 />
-                <button type="submit" className="w-11 h-11 absolute top-0 left-0 flex items-center justify-center">
+                <button type="submit" className="w-11 h-11 absolute top-0 left-0 flex items-center justify-center" aria-label="جستجو">
                     <SearchIcon className="fill-foreground" />
                 </button>
             </form>
