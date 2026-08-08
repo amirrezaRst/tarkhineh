@@ -21,6 +21,12 @@ const corsOptions = {
 
 const app = express();
 
+//! Behind a reverse proxy (nginx/Caddy) in production, so trust its
+//! X-Forwarded-* headers for one hop — otherwise req.ip and the rate
+//! limiter both see the proxy's address instead of the real client, and
+//! req.secure never reflects the client's actual TLS connection.
+app.set('trust proxy', 1);
+
 //! Security headers.
 //! The frontend loads menu images cross-origin from /public, which helmet's
 //! default same-origin Cross-Origin-Resource-Policy would block.
