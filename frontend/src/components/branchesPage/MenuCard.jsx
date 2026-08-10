@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import FormatPrice from "@/utils/FormatPrice";
 import PersianNumber from "@/utils/ConvertToPersianNumber";
 import MenuCardDiscount from "./MenuCardDiscount";
@@ -44,11 +45,13 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
         <>
             <article className="group h-full flex flex-col bg-surface border border-border rounded-2xl overflow-hidden shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-soft-lg hover:border-accent">
 
-                <div className="relative">
-                    <img
+                <div className="relative h-[160px]">
+                    <Image
                         src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images?.[0]}`}
                         alt={`ترخینه ${name}`}
-                        className="w-full h-[160px] object-center object-cover cursor-pointer"
+                        fill
+                        sizes="(max-width: 768px) 50vw, 300px"
+                        className="object-center object-cover cursor-pointer"
                         onClick={() => setIsOpen(true)}
                     />
 

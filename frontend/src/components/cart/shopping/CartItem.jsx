@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { MinusIcon, PlusIcon, TrashIcon } from "@/assets/Icons";
 import { decreaseItemQuantity, increaseItemQuantity, removeItemFromCart } from "@/services/MenuService";
 import useUserStore from "@/stores/useUserStore";
@@ -33,9 +34,11 @@ const CartItem = ({ id, menuItem, quantity, branch }) => {
 
     return (
         <div className="flex border border-border rounded-lg overflow-hidden">
-            <img src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images?.[0]}`}
+            <Image src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images?.[0]}`}
                 alt={`ترخینه ${name}`}
-                className="xl:w-40 w-[8.5rem] object-cover"
+                width={160}
+                height={160}
+                className="xl:w-40 w-[8.5rem] h-auto self-stretch object-cover"
             />
 
             {/*//! Cart Content */}

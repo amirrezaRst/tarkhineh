@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import StarRating from "./StarRating";
 import MenuCardDiscount from "./MenuCardDiscount";
 import MenuCardLike from "./MenuCardLike";
@@ -45,10 +46,12 @@ const MenuCard = ({ _id, name, price, images, discount, reviews, description, in
             >
 
                 <div className="relative h-full 3xl:w-[230px] 2xl:w-[210px] xl:w-[190px] lg:w-[170px] md:w-[240px] w-[140px] shrink-0">
-                    <img
+                    <Image
                         src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images?.[0]}`}
                         alt={`ترخینه ${name}`}
-                        className="w-full h-full object-cover cursor-pointer"
+                        fill
+                        sizes="(max-width: 768px) 140px, 230px"
+                        className="object-cover cursor-pointer"
                         onClick={() => setIsOpen(true)}
                     />
                     {available === false &&

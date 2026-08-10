@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import InterestCard from "./InterestCard";
 import InterestCardSkeleton from "./InterestCardSkeleton";
 import { fetchInterestItems } from "@/services/LikeService";
@@ -28,7 +29,7 @@ const InterestList = ({ userId, category }) => {
                         <div className="relative w-full min-h-96 h-full overflow-hidden flex flex-col items-center justify-center">
 
 
-                            <img src="/images/spider-background.png" alt="" className="absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] opacity-35" />
+                            <Image src="/images/spider-background.png" alt="" width={325} height={313} className="h-auto absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] opacity-35" />
 
                             <div className="flex flex-col items-center gap-7 z-10">
                                 <p className="text-1.5xl text-muted-fg">

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 import { MenuIcon, ShoppingCartIcon, UserIcon } from "@/assets/Icons";
 import NavbarLinks from "./profile/NavbarLinks";
@@ -42,7 +43,7 @@ const Navbar = () => {
                 </button>
 
                 <Link href="/">
-                    <img src="/images/logo.png" alt="تریخینه لوگو" width={310} height={102} className="xl:w-[160px] md:w-[140px] w-32" />
+                    <Image src="/images/logo.png" alt="تریخینه لوگو" width={310} height={102} priority className="xl:w-[160px] md:w-[140px] w-32" />
                 </Link>
 
                 <NavbarLinks />

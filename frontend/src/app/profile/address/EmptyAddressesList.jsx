@@ -1,12 +1,16 @@
+import Image from "next/image";
+
 const EmptyAddressesList = ({ cartPage }) => {
     return (
         <div className={`relative w-full ${cartPage ? "min-h-56" : "min-h-96"} h-full overflow-hidden flex flex-col items-center justify-center`}>
 
 
-            <img
+            <Image
                 src="/images/spider-background.png"
                 alt=""
-                className={`${cartPage && "scale-[60%]"} absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] opacity-35`}
+                width={325}
+                height={313}
+                className={`h-auto ${cartPage && "scale-[60%]"} absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] opacity-35`}
             />
 
             <div className="flex flex-col items-center gap-7 z-10">

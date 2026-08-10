@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { PersonalWalletIcon, WarningIcon } from "@/assets/Icons";
 import useCartStore from "@/stores/useCartStore";
 
@@ -34,13 +35,13 @@ const PaymentGateway = () => {
                 {gateways.map((gateway, index) => (
                     <div
                         key={index}
-                        className={`xl:w-28 xl:h-28 md:w-20 md:h-20 w-16 h-16 rounded-md overflow-hidden border ring-1 cursor-pointer duration-300 hover:shadow-lg ${selectedGateway === gateway
+                        className={`relative xl:w-28 xl:h-28 md:w-20 md:h-20 w-16 h-16 rounded-md overflow-hidden border ring-1 cursor-pointer duration-300 hover:shadow-lg ${selectedGateway === gateway
                             ? "border-primary ring-primary"
                             : "border-border ring-border grayscale"
                             }`}
                         onClick={() => setPaymentGateway(gateway)}
                     >
-                        <img src={`/images/${gateway}-gateway.jpg`} alt={gateway} className="w-full h-full" />
+                        <Image src={`/images/${gateway}-gateway.jpg`} alt={gateway} fill sizes="112px" />
                     </div>
                 ))}
             </div>
