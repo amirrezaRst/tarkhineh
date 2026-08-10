@@ -46,12 +46,17 @@ app.use(mongoSanitize());
 app.use("/api", globalLimiter);
 
 //! Static Folder
+// Uploaded filenames are shortid()-generated and never reused/overwritten -
+// a given filename's content never changes, so it's safe to tell browsers
+// to cache them without revalidating.
+const staticImageOptions = { maxAge: "7d", immutable: true };
+
 // Courier photos live in their own dir; mount it before the generic /public
 // menu-images route so /public/couriers/* resolves here first.
-app.use("/public/couriers", express.static(path.join(__dirname, "public", "courier-images")));
-app.use("/public/branches", express.static(path.join(__dirname, "public", "branch-images")));
-app.use("/public/slides", express.static(path.join(__dirname, "public", "slide-images")));
-app.use("/public", express.static(path.join(__dirname, "public", "menu-images")));
+app.use("/public/couriers", express.static(path.join(__dirname, "public", "courier-images"), staticImageOptions));
+app.use("/public/branches", express.static(path.join(__dirname, "public", "branch-images"), staticImageOptions));
+app.use("/public/slides", express.static(path.join(__dirname, "public", "slide-images"), staticImageOptions));
+app.use("/public", express.static(path.join(__dirname, "public", "menu-images"), staticImageOptions));
 
 //! Routes
 app.use("/api/user", require('./routes/userRoutes'));
