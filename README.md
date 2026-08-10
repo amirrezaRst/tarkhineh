@@ -8,6 +8,7 @@
 -->
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 [![Last Commit](https://img.shields.io/github/last-commit/amirrezaRst/tarkhineh)](https://github.com/amirrezaRst/tarkhineh)
+[![CI](https://github.com/amirrezaRst/tarkhineh/actions/workflows/deploy.yml/badge.svg)](https://github.com/amirrezaRst/tarkhineh/actions/workflows/deploy.yml)
 
 ### Portfolio project — actively maintained
 
@@ -58,6 +59,7 @@ A core focus of this project is enforcing **strict branch-scoped access control*
 - **Redis** backs response caching on the read-heavy endpoints (N+1-query branch/menu lookups, multi-aggregation admin/report endpoints), OTP storage, and a per-user lock that closes a real double-submit window in checkout.
 - **Real SEO**: per-page metadata (dynamic per branch), a live sitemap.xml generated from the actual branch list, robots.txt, and a proper favicon/OG image/PWA manifest.
 - **Automated tests**: Vitest (unit + integration, via Supertest against a real Express app) on the backend, Playwright E2E on the frontend — see [Testing](#testing).
+- **CI**: every push to `master` runs the backend test suite (against a real MongoDB service container), frontend lint, and a production frontend build via GitHub Actions.
 - Integrated **Zarinpal payment gateway** for checkout.
 
 > One originally-planned headline feature — a smart, location-based courier **dispatch** strategy — is **not yet implemented**; couriers are currently assigned manually. See [Roadmap](#roadmap).
@@ -87,7 +89,6 @@ Planned / partially-built work, tracked honestly so the docs match the code:
 - 🚚 **Smart courier dispatch** (assign orders to the nearest/least-loaded courier by geolocation) — couriers are currently assigned manually by branch staff; the courier model has no location field yet.
 - 📱 **Real SMS delivery of OTP codes** — deliberately out of scope for a portfolio project with no real users; see [Demo Mode](#demo-mode) for how login actually works here instead.
 - 📊 **Error monitoring / analytics** (e.g. Sentry) — not wired up; no real traffic to monitor yet.
-- ⚙️ **CI** (tests running automatically on push) — the test suite exists (see [Testing](#testing)) but isn't yet wired into GitHub Actions.
 - 🧪 **Broader test coverage** — current tests are a real but small slice (auth/token logic, one core route, one E2E flow); checkout/payment/coupon logic isn't covered yet.
 
 ---
@@ -96,7 +97,7 @@ Planned / partially-built work, tracked honestly so the docs match the code:
 
 ### Frontend
 - **Next.js 15** (App Router)
-- **React 19 (RC)**
+- **React 19**
 - **Tailwind CSS**
 - **Zustand**
 - **React Hook Form**
@@ -122,9 +123,9 @@ Planned / partially-built work, tracked honestly so the docs match the code:
 ![Tarkhineh Desktop](./frontend/public/github/tarkhineh-project-fullpage.jpg)
 ![Tarkhineh Mobile](./frontend/public/github/tarkhineh-project-mobile.jpg)
 
-<!-- 
-> Live Demo: **TBA** (add your deployment link here) 
--->
+> ⚠️ These screenshots predate the homepage/branch-page redesign and the app-wide skeleton loading system — they'll be refreshed once the live deployment below has real data again.
+
+> 🔗 Live demo: **[tarkhineh.arostami.dev](https://tarkhineh.arostami.dev)** — see [Demo Mode](#demo-mode) for how to log in without a real SMS provider.
 
 ---
 
