@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image";
 import { ChevronIcon, XmarkIcon } from "@/assets/Icons";
 import { useState } from "react";
 import RegisterForm from "./RegisterForm";
@@ -21,10 +22,12 @@ const RegisterModal = ({ setIsOpen }) => {
         >
 
             <div className="relative md:mb-7 mb-4">
-                <img
+                <Image
                     src="/images/logo.png"
                     alt="رستوران های زنجیره ای ترخینه"
-                    className="md:w-[130px] w-[120px] mx-auto"
+                    width={310}
+                    height={102}
+                    className="md:w-[130px] w-[120px] mx-auto h-auto"
                 />
                 <XmarkIcon
                     className="fill-muted-fg md:w-8 md:h-8 w-6 h-6 absolute left-0 top-0 cursor-pointer"

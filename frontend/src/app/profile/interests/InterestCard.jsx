@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ShoppingCartIcon } from "@/assets/Icons";
 import StarRating from "@/components/menusPage/StarRating";
 import InterestCardLike from "./InterestCardLike";
@@ -20,11 +21,15 @@ const InterestCard = ({ id, name, price, images, discount, reviews }) => {
             className="bg-white border border-border rounded-lg overflow-hidden flex flex-col"
         >
 
-            <img
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[0]}`}
-                alt={`ترخینه ${name}`}
-                className="w-full lg:h-[180px] md:h-40 h-44 object-cover object-center"
-            />
+            <div className="relative w-full lg:h-[180px] md:h-40 h-44">
+                <Image
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${images[0]}`}
+                    alt={`ترخینه ${name}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover object-center"
+                />
+            </div>
 
             {/*// Content */}
             <div className="md:py-5 md:px-4 p-3.5 flex flex-col justify-between flex-1">

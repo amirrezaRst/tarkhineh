@@ -1,3 +1,4 @@
+import Image from "next/image";
 import ConvertToPersianNumbers from "@/utils/ConvertToPersianNumber";
 
 const UserInfo = ({ user }) => {
@@ -5,8 +6,8 @@ const UserInfo = ({ user }) => {
         <div className="hidden md:flex items-center lg:justify-start justify-center xl:gap-5 gap-3 pb-3.5 border-b border-b-muted-fg/50">
 
             {/*//TODO Profile Image */}
-            <div className="xl:w-[4.5rem] xl:h-[4.5rem] w-16 h-16 border border-border/80 rounded-full">
-                <img src="/images/profile-image.png" alt="" className="w-full h-full object-center object-cover" />
+            <div className="relative xl:w-[4.5rem] xl:h-[4.5rem] w-16 h-16 border border-border/80 rounded-full overflow-hidden">
+                <Image src="/images/profile-image.png" alt="" fill sizes="72px" className="object-center object-cover" />
             </div>
             <div className="lg:flex hidden flex-col justify-center items-start gap-2">
                 <h5 className="xl:text-lg text-foreground">

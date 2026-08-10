@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ClockIcon, LocationIcon, PhoneIcon } from "@/assets/Icons";
 
 // Branch identity: the branch's own photo, its live open/closed state, and the
@@ -14,10 +15,13 @@ const BranchHero = ({ info }) => {
     return (
         <>
             <header className="relative isolate flex items-end overflow-hidden md:min-h-[440px] min-h-[340px] md:pt-16 pt-12 md:pb-32 pb-24">
-                <img
+                <Image
                     src={info.images[0]}
                     alt={`شعبه ${info.name} ترخینه`}
-                    className="absolute inset-0 -z-20 w-full h-full object-cover object-center"
+                    fill
+                    priority
+                    sizes="100vw"
+                    className="-z-20 object-cover object-center"
                 />
                 {/* two scrims: a directional one so the right-hand copy always
                     clears its background, plus a bottom anchor so the facts bar

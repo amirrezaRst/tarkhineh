@@ -1,17 +1,20 @@
+import Image from "next/image";
 import { resolveImg } from "@/utils/imageSrc";
 
 const GalleryItem = ({ index, name, image, selectedImage, setSelectedImage, isBranchGallery }) => {
     return (
         <div
-            className={`md:w-[4.5rem] md:h-[4.5rem] w-10 h-10 border-2 rounded-md overflow-hidden transition-all cursor-pointer
+            className={`relative md:w-[4.5rem] md:h-[4.5rem] w-10 h-10 border-2 rounded-md overflow-hidden transition-all cursor-pointer
                 ${index == selectedImage ? "scale-110 border-2 border-border" : "scale-100 border-transparent"}`
             }
             onClick={() => setSelectedImage(index)}
         >
-            <img
+            <Image
                 src={resolveImg(image, isBranchGallery)}
                 alt={`${name} ترخینه`}
-                className="w-full h-full object-center object-cover"
+                fill
+                sizes="72px"
+                className="object-center object-cover"
             />
         </div >
     );

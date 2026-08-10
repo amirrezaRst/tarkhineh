@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { XmarkIcon } from "@/assets/Icons";
 import { resolveImg } from "@/utils/imageSrc";
 import GalleryImagesList from "./GalleryImagesList";
@@ -11,10 +12,12 @@ const Gallery = ({ name, images, selectedImage, setSelectedImage, setIsOpen, isB
                     onClick={() => setIsOpen(false)}
                 />
             }
-            <img
+            <Image
                 src={resolveImg(images[selectedImage], isBranchGallery)}
                 alt={`${name} ترخینه`}
-                className="w-full h-full object-center object-cover"
+                fill
+                sizes="(max-width: 768px) 90vw, 800px"
+                className="object-center object-cover"
             />
 
             {/* Images List */}

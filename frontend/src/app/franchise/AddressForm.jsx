@@ -1,3 +1,4 @@
+import Image from "next/image";
 import FormField from "@/components/FormField";
 
 const AddressForm = () => {
@@ -12,8 +13,8 @@ const AddressForm = () => {
                 <FormField placeholder="استان" className={"-order-1"} />
                 <FormField placeholder="شهر" className={"-order-1"} />
 
-                <div className="flex lg:col-span-1 md:col-span-2 md:row-span-2 bg-red-400 lg:-order-1 order-1">
-                    <img src="/images/map-image.jpg" alt="" className="w-full h-full " />
+                <div className="relative flex lg:col-span-1 md:col-span-2 md:row-span-2 bg-red-400 lg:-order-1 order-1">
+                    <Image src="/images/map-image.jpg" alt="" fill sizes="(max-width: 1024px) 100vw, 33vw" className="object-cover" />
                 </div>
 
                 <FormField placeholder="منطقه" className={"-order-1"} />
