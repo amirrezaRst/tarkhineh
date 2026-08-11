@@ -120,10 +120,15 @@ Planned / partially-built work, tracked honestly so the docs match the code:
 
 ## Screenshots <a name="screenshots"></a>
 
+**Homepage**
+
 ![Tarkhineh Desktop](./frontend/public/github/tarkhineh-project-fullpage.jpg)
 ![Tarkhineh Mobile](./frontend/public/github/tarkhineh-project-mobile.jpg)
 
-> ⚠️ These screenshots predate the homepage/branch-page redesign and the app-wide skeleton loading system — they'll be refreshed once the live deployment below has real data again.
+**Branch page**
+
+![Tarkhineh Branch Page Desktop](./frontend/public/github/tarkhineh-project-branch-fullpage.jpg)
+![Tarkhineh Branch Page Mobile](./frontend/public/github/tarkhineh-project-branch-mobile.jpg)
 
 > 🔗 Live demo: **[tarkhineh.arostami.dev](https://tarkhineh.arostami.dev)** — see [Demo Mode](#demo-mode) for how to log in without a real SMS provider.
 
